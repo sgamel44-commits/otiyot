@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Otiyot — Hebrew Phonics for English Speakers</title>
+<style>
+  :root {
+    --bg: #fef6e4;
+    --ink: #001858;
+    --accent: #f582ae;
+    --accent2: #8bd3dd;
+    --warm: #f3d2c1;
+    --card: #fffaf0;
+    --good: #84dcc6;
+    --muted: #6b4e16;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: ui-rounded, "Hiragino Maru Gothic ProN", "Quicksand",
+      system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    padding: 1.25rem 1rem 4rem;
+    min-height: 100vh;
+  }
+  header { text-align: center; margin-bottom: 0.5rem; }
+  h1 { margin: 0; font-size: 2rem; letter-spacing: 0.5px; }
+  .tagline { color: var(--muted); font-size: 0.95rem; margin-top: 0.25rem; }
+  .voice-warning {
+    text-align: center;
+    background: #ffd6a5;
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 0.5rem 0.75rem;
+    margin: 0.75rem auto 0;
+    max-width: 560px;
+    font-size: 0.85rem;
+    display: none;
+  }
+  .voice-warning.show { display: block; }
+
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 1.25rem 0 1.5rem;
+    flex-wrap: wrap;
+  }
+  .tab {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    border-radius: 999px;
+    padding: 0.5rem 1.1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: inherit;
+    color: var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: transform 0.08s;
+  }
+  .tab:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  .tab.active { background: var(--accent); color: white; }
+
+  .panel { display: none; max-width: 900px; margin: 0 auto; }
+  .panel.active { display: block; }
+  h2, h3 { color: var(--muted); margin: 0.5rem 0; }
+  h2 { font-size: 1.05rem; font-weight: 700; }
+  h3 { font-size: 1rem; font-weight: 700; margin-top: 1.5rem; text-align: center; }
+
+  .heb {
+    font-family: "SBL Hebrew", "David", "Frank Ruehl CLM", "Times New Roman", serif;
+    line-height: 1.15;
+  }
+
+  /* ---------- Alphabet ---------- */
+  .letter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+    gap: 0.75rem;
+  }
+  .letter-card {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    border-radius: 18px;
+    padding: 0.65rem 0.4rem 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: transform 0.08s, background 0.15s;
+  }
+  .letter-card:hover { background: var(--warm); }
+  .letter-card:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  .letter-card .heb { font-size: 2.6rem; }
+  .latin { font-size: 0.85rem; margin-top: 0.25rem; color: var(--muted); font-weight: 700; }
+  .name { font-size: 0.7rem; color: #999; margin-top: 2px; }
+
+  /* ---------- Nikkud Lab ---------- */
+  .lab { text-align: center; }
+  .lab-display {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    border-radius: 24px;
+    box-shadow: 5px 5px 0 var(--ink);
+    margin: 0.75rem auto 1rem;
+    min-height: 180px;
+    max-width: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 1rem;
+  }
+  .lab-display .heb { font-size: 7rem; }
+  .lab-display .phon {
+    margin-left: 1rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  .row { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin: 0.5rem 0 1rem; }
+  .pill {
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 0.45rem 0.6rem;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    color: var(--ink);
+    transition: background 0.15s;
+  }
+  .pill .heb { font-size: 1.5rem; }
+  .pill:hover { background: var(--warm); }
+  .pill.active { background: var(--accent2); }
+
+  .nikkud-chip {
+    background: var(--accent2);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 0.4rem 0.7rem;
+    cursor: grab;
+    font-family: inherit;
+    text-align: center;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+  .nikkud-chip:active { cursor: grabbing; transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+  .nikkud-chip .heb { font-size: 1.8rem; }
+  .nikkud-chip .latin { font-size: 0.85rem; margin-top: 0; color: var(--ink); }
+  .nikkud-chip.active { background: var(--accent); color: white; }
+  .nikkud-chip.dragging { opacity: 0.4; }
+  .lab-display.drop-target,
+  .stage.drop-target {
+    background: var(--good);
+    transform: scale(1.02);
+    transition: transform 0.12s;
+  }
+
+  /* ---------- Sound Studio ---------- */
+  .studio { text-align: center; }
+  .stage {
+    background: var(--card);
+    border: 3px dashed var(--ink);
+    border-radius: 24px;
+    box-shadow: 5px 5px 0 var(--ink);
+    margin: 0.75rem auto 1rem;
+    min-height: 140px;
+    max-width: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    direction: rtl;
+  }
+  .stage .heb { font-size: 5rem; word-break: break-all; }
+  .stage .placeholder { color: #bbb; font-size: 1rem; direction: ltr; }
+  .stage-phon { color: var(--muted); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 0.5rem; font-style: italic; min-height: 1.2em; }
+  .studio-letters .pill .heb { font-size: 1.4rem; }
+
+  /* ---------- Spell It ---------- */
+  .spell-board { text-align: center; }
+  .word-display {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    border-radius: 24px;
+    box-shadow: 5px 5px 0 var(--ink);
+    padding: 1.25rem;
+    margin: 0.5rem auto 1rem;
+    max-width: 420px;
+  }
+  .word-emoji { font-size: 4.5rem; line-height: 1; }
+  .word-english { font-size: 1.5rem; font-weight: 800; margin-top: 0.3rem; letter-spacing: 1px; }
+  .word-hint { font-size: 0.9rem; color: var(--muted); margin-top: 0.25rem; }
+  .word-counter { font-size: 0.75rem; color: var(--muted); margin-top: 0.4rem; opacity: 0.7; font-variant-numeric: tabular-nums; }
+  .word-hebrew {
+    margin-top: 0.6rem;
+    padding: 0.45rem 0.95rem;
+    background: rgba(139, 211, 221, 0.35);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.08s;
+  }
+  .word-hebrew:hover { background: rgba(139, 211, 221, 0.65); }
+  .word-hebrew:active { transform: translateY(1px); }
+  .word-hebrew .heb { font-size: 2.1rem; line-height: 1; }
+  .word-tr { font-size: 0.9rem; color: var(--muted); font-style: italic; }
+  .reveal-label { font-size: 0.85rem; color: var(--muted); }
+  .reveal-tr { font-size: 0.95rem; color: var(--muted); margin-bottom: 0.5rem; font-style: italic; }
+
+  .rtl-hint {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+  }
+  .slots {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+    margin: 0.5rem 0 0.75rem;
+    flex-wrap: wrap;
+    direction: rtl; /* Hebrew right-to-left */
+  }
+  .slot {
+    width: 84px;
+    height: 100px;
+    border: 3px dashed var(--ink);
+    border-radius: 14px;
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    padding: 0 4px;
+  }
+  .slot .heb { font-size: 3rem; }
+  .slot.filled { border-style: solid; background: var(--warm); }
+  .slot.correct { background: var(--good); border-color: var(--good); }
+  .slot.wrong { background: #ffb4a2; }
+
+  .bank-tile {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    border-radius: 14px;
+    padding: 0.45rem 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: transform 0.08s;
+    min-width: 64px;
+    text-align: center;
+  }
+  .bank-tile:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  .bank-tile.used { opacity: 0.25; pointer-events: none; }
+  .bank-tile .heb { font-size: 2.1rem; }
+  .bank-tile .latin { font-size: 0.75rem; color: var(--muted); margin-top: 2px; font-weight: 700; }
+
+  .spell-controls { margin-top: 0.5rem; display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    background: var(--accent);
+    color: white;
+    border: 3px solid var(--ink);
+    border-radius: 999px;
+    padding: 0.65rem 1.3rem;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: transform 0.08s;
+  }
+  .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  .btn.ghost { background: var(--card); color: var(--ink); }
+  .btn.alt { background: var(--accent2); color: var(--ink); }
+  .btn.small { padding: 0.35rem 0.75rem; font-size: 0.85rem; box-shadow: 2px 2px 0 var(--ink); }
+
+  /* ---------- Story ---------- */
+  .story { text-align: center; }
+  .story-header { margin-bottom: 1rem; }
+  .story-title-en { margin: 0; font-size: 1.4rem; font-weight: 800; }
+  .story-title-he {
+    font-family: "SBL Hebrew", "David", serif;
+    font-size: 1.6rem;
+    margin-top: 0.25rem;
+    cursor: pointer;
+    direction: rtl;
+  }
+  .story-title-he:hover { background: var(--warm); border-radius: 6px; padding: 0 4px; }
+  .story-nav {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    align-items: center;
+    margin: 0.75rem 0;
+    font-weight: 700;
+  }
+  .story-attribution {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 0.25rem;
+  }
+  .text-picker {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 0.4rem 0.85rem;
+    cursor: pointer;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+  .text-picker:hover { background: var(--warm); }
+  .poem-stanza {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    border-radius: 18px;
+    box-shadow: 5px 5px 0 var(--ink);
+    padding: 1.25rem;
+    max-width: 760px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  @media (max-width: 640px) {
+    .poem-stanza { grid-template-columns: 1fr; }
+  }
+  .poem-col-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.4rem;
+    text-align: center;
+  }
+  .hebrew-col {
+    direction: rtl;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    justify-content: flex-start;
+    align-content: flex-start;
+  }
+  .english-col {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: baseline;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+  .word-with-gloss {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.4rem 0.55rem 0.3rem;
+    border-radius: 10px;
+    background: var(--vc, transparent);
+    cursor: pointer;
+    transition: filter 0.1s, transform 0.08s;
+    border: 2px solid transparent;
+  }
+  .word-with-gloss:hover { filter: brightness(0.93); border-color: var(--ink); }
+  .word-with-gloss:active { transform: translateY(1px); }
+  .word-with-gloss .word-heb {
+    font-family: "SBL Hebrew", "David", serif;
+    font-size: 1.7rem;
+    line-height: 1.1;
+  }
+  .word-gloss {
+    font-size: 0.7rem;
+    color: var(--ink);
+    font-style: italic;
+    margin-top: 3px;
+    direction: ltr;
+    opacity: 0.75;
+  }
+  .phrase {
+    padding: 0.3rem 0.55rem;
+    border-radius: 8px;
+    background: var(--vc, transparent);
+    cursor: pointer;
+    font-weight: 700;
+    transition: filter 0.1s, transform 0.08s;
+    border: 2px solid transparent;
+  }
+  .phrase:hover { filter: brightness(0.93); border-color: var(--ink); }
+  .phrase:active { transform: translateY(1px); }
+  .word-with-gloss.speaking,
+  .phrase.speaking { border-color: var(--ink); filter: brightness(0.9); }
+  .word {
+    cursor: pointer;
+    padding: 0 2px;
+    border-radius: 4px;
+    transition: background 0.1s;
+    display: inline-block;
+  }
+  .word:hover { background: var(--warm); }
+  .word.vocab {
+    background: var(--vc, rgba(245, 130, 174, 0.25));
+    font-weight: 700;
+  }
+  .word.vocab:hover { filter: brightness(0.93); }
+  .word.speaking { background: var(--good); }
+
+  .vocab-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 0.75rem;
+    max-width: 720px;
+    margin: 0.75rem auto 0;
+  }
+  .vocab-card {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    border-top-width: 12px;
+    border-top-color: var(--vc, var(--ink));
+    border-radius: 14px;
+    padding: 0.75rem;
+    box-shadow: 3px 3px 0 var(--ink);
+    text-align: center;
+  }
+  .vocab-card-en {
+    font-weight: 700;
+    font-size: 0.95rem;
+    background: var(--vc, transparent);
+    padding: 2px 10px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .vocab-card-he {
+    font-family: "SBL Hebrew", "David", serif;
+    font-size: 1.9rem;
+    margin: 0.25rem 0;
+    direction: rtl;
+  }
+  .vocab-card-tr { font-size: 0.8rem; color: var(--muted); font-style: italic; }
+  .vocab-card-actions { margin-top: 0.5rem; display: flex; gap: 0.4rem; justify-content: center; }
+
+  .vocab-spell-area {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    border-radius: 18px;
+    box-shadow: 5px 5px 0 var(--ink);
+    padding: 1.25rem;
+    max-width: 720px;
+    margin: 1.5rem auto 0;
+    display: none;
+  }
+  .vocab-spell-area.show { display: block; }
+  .vocab-spell-prompt { text-align: center; margin-bottom: 0.5rem; }
+  .vocab-spell-prompt .en { font-size: 1.4rem; font-weight: 800; }
+  .vocab-spell-prompt .tr { display: block; font-size: 0.9rem; color: var(--muted); font-style: italic; margin-top: 0.25rem; }
+  .vocab-spell-reveal {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px dashed var(--ink);
+    text-align: center;
+    display: none;
+  }
+  .vocab-spell-reveal.show { display: block; }
+  .vocab-spell-reveal .heb {
+    font-size: 2.6rem;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    opacity: 0;
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events: none;
+    font-weight: 700;
+    z-index: 10;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>אותיות · Otiyot</h1>
+  <div class="tagline">Hebrew sounds. English words. Tap, drag, spell, read.</div>
+  <div class="voice-warning" id="voice-warning">
+    Heads up: no Hebrew voice detected. Sounds are approximated. Try Safari on Mac/iOS, Chrome on Android, or install a Hebrew voice in System Settings.
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-panel="alphabet">Aleph-Bet</button>
+  <button class="tab" data-panel="nikkud">Nikkud Lab</button>
+  <button class="tab" data-panel="studio">Sound Studio</button>
+  <button class="tab" data-panel="spell">Spell It!</button>
+  <button class="tab" data-panel="story">Poem</button>
+</nav>
+
+<section id="alphabet" class="panel active">
+  <div class="letter-grid" id="letter-grid"></div>
+</section>
+
+<section id="nikkud" class="panel">
+  <div class="lab">
+    <h2>1. Pick a letter</h2>
+    <div class="row" id="lab-letters"></div>
+    <div class="lab-display" id="lab-display"
+         ondragover="event.preventDefault()"></div>
+    <h2>2. Drag a vowel onto the letter (or tap)</h2>
+    <div class="row" id="nikkud-bank"></div>
+    <button class="btn ghost" id="lab-clear">Clear vowel</button>
+  </div>
+</section>
+
+<section id="studio" class="panel">
+  <div class="studio">
+    <h2>Drag letters & vowels onto the stage to build sounds</h2>
+    <div class="stage" id="stage" ondragover="event.preventDefault()"></div>
+    <div class="stage-phon" id="stage-phon"></div>
+    <div class="row">
+      <button class="btn" id="stage-play">🔊 Play</button>
+      <button class="btn ghost" id="stage-undo">↶ Undo</button>
+      <button class="btn ghost" id="stage-clear">Clear</button>
+    </div>
+    <h3>Letters</h3>
+    <div class="row studio-letters" id="studio-letters"></div>
+    <h3>Vowels (nikkud)</h3>
+    <div class="row" id="studio-nikkud"></div>
+  </div>
+</section>
+
+<section id="spell" class="panel">
+  <div class="spell-board">
+    <div class="word-display">
+      <div class="word-emoji" id="word-emoji">🌳</div>
+      <div class="word-english" id="word-english">tree</div>
+      <div class="word-hebrew" id="word-hebrew" title="Tap to hear">
+        <span class="heb" id="word-hebrew-he"></span>
+        <span class="word-tr" id="word-hebrew-tr"></span>
+      </div>
+      <div class="word-hint">Spell it with Hebrew sounds (right to left ←)</div>
+      <div class="word-counter" id="word-counter"></div>
+    </div>
+    <div class="rtl-hint">← Start tapping on the right</div>
+    <div class="slots" id="slots"></div>
+    <div class="row" id="spell-bank"></div>
+    <div class="spell-controls">
+      <button class="btn" id="hear-hebrew">🔊 Read in Hebrew</button>
+      <button class="btn alt" id="hear-english">🗣️ Say in English</button>
+      <button class="btn ghost" id="random-word">🎲 Random</button>
+      <button class="btn ghost" id="next-word">Next →</button>
+    </div>
+  </div>
+</section>
+
+<section id="story" class="panel">
+  <div class="story">
+    <div class="story-header">
+      <select class="text-picker" id="text-picker"></select>
+      <h2 class="story-title-en" id="story-title-en"></h2>
+      <div class="story-title-he heb" id="story-title-he" title="Tap to hear"></div>
+      <div class="story-attribution" id="story-attribution"></div>
+    </div>
+    <div class="story-nav">
+      <button class="btn ghost small" id="story-prev">← Prev</button>
+      <span id="story-page-num"></span>
+      <button class="btn ghost small" id="story-next">Next →</button>
+    </div>
+    <div class="poem-stanza" id="poem-stanza"></div>
+    <h3>Vocabulary — tap to hear, "Spell" to practice</h3>
+    <div class="vocab-cards" id="vocab-cards"></div>
+
+    <div class="vocab-spell-area" id="vocab-spell-area">
+      <div class="vocab-spell-prompt">
+        <span class="en" id="vsp-en"></span>
+        <span class="tr" id="vsp-tr"></span>
+      </div>
+      <div class="rtl-hint">← Tap tiles in the right order</div>
+      <div class="slots" id="vsp-slots"></div>
+      <div class="row" id="vsp-bank"></div>
+      <div class="row">
+        <button class="btn" id="vsp-hear">🔊 Hear the word</button>
+        <button class="btn ghost" id="vsp-close">Close</button>
+      </div>
+      <div class="vocab-spell-reveal" id="vsp-reveal">
+        <div class="reveal-label">You spelled:</div>
+        <div class="heb" id="vsp-reveal-heb"></div>
+        <div class="reveal-tr" id="vsp-reveal-tr"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA =====
+const letters = [
+  { heb: 'א', name: 'Aleph',  sound: 'ø',    cons: '' },
+  { heb: 'ב', name: 'Bet',    sound: 'B',    cons: 'b' },
+  { heb: 'ג', name: 'Gimel',  sound: 'G',    cons: 'g' },
+  { heb: 'ד', name: 'Dalet',  sound: 'D',    cons: 'd' },
+  { heb: 'ה', name: 'Hey',    sound: 'H',    cons: 'h' },
+  { heb: 'ו', name: 'Vav',    sound: 'V/O',  cons: 'v' },
+  { heb: 'ז', name: 'Zayin',  sound: 'Z',    cons: 'z' },
+  { heb: 'ח', name: 'Chet',   sound: 'KH',   cons: 'kh' },
+  { heb: 'ט', name: 'Tet',    sound: 'T',    cons: 't' },
+  { heb: 'י', name: 'Yod',    sound: 'Y/EE', cons: 'y' },
+  { heb: 'כ', name: 'Kaf',    sound: 'K',    cons: 'k' },
+  { heb: 'ל', name: 'Lamed',  sound: 'L',    cons: 'l' },
+  { heb: 'מ', name: 'Mem',    sound: 'M',    cons: 'm' },
+  { heb: 'נ', name: 'Nun',    sound: 'N',    cons: 'n' },
+  { heb: 'ס', name: 'Samech', sound: 'S',    cons: 's' },
+  { heb: 'ע', name: 'Ayin',   sound: 'ø',    cons: '' },
+  { heb: 'פ', name: 'Pey',    sound: 'P/F',  cons: 'p' },
+  { heb: 'צ', name: 'Tzadi',  sound: 'TS',   cons: 'ts' },
+  { heb: 'ק', name: 'Kuf',    sound: 'K',    cons: 'k' },
+  { heb: 'ר', name: 'Resh',   sound: 'R',    cons: 'r' },
+  { heb: 'ש', name: 'Shin',   sound: 'SH',   cons: 'sh' },
+  { heb: 'ת', name: 'Tav',    sound: 'T',    cons: 't' },
+];
+const sofitMap = { 'ך': 'כ', 'ם': 'מ', 'ן': 'נ', 'ף': 'פ', 'ץ': 'צ' };
+
+const nikkud = [
+  { mark: 'ַ', name: 'Patach', phon: 'ah' },
+  { mark: 'ָ', name: 'Kamatz', phon: 'aa' },
+  { mark: 'ֵ', name: 'Tzere',  phon: 'ay' },
+  { mark: 'ֶ', name: 'Segol',  phon: 'eh' },
+  { mark: 'ִ', name: 'Chirik', phon: 'ee' },
+  { mark: 'ֹ', name: 'Cholam', phon: 'oh' },
+  { mark: 'ֻ', name: 'Kubutz', phon: 'oo' },
+];
+
+const words = [
+  // Animals
+  { english: 'cat',     emoji: '🐱', tiles: ['ק','ַ','ת'],             say: 'cat',     hebrew: 'חָתוּל',     tr: 'khatul' },
+  { english: 'dog',     emoji: '🐕', tiles: ['ד','ֹ','ג'],             say: 'dog',     hebrew: 'כֶּלֶב',     tr: 'kelev' },
+  { english: 'fish',    emoji: '🐟', tiles: ['פ','ִ','ש'],             say: 'fish',    hebrew: 'דָּג',       tr: 'dag' },
+  { english: 'bird',    emoji: '🐦', tiles: ['ב','ֶ','ר','ד'],         say: 'bird',    hebrew: 'צִפּוֹר',    tr: 'tzipor' },
+  { english: 'cow',     emoji: '🐄', tiles: ['ק','ַ','ו'],             say: 'cow',     hebrew: 'פָּרָה',     tr: 'para' },
+  { english: 'pig',     emoji: '🐷', tiles: ['פ','ִ','ג'],             say: 'pig',     hebrew: 'חֲזִיר',     tr: 'khazir' },
+  { english: 'duck',    emoji: '🦆', tiles: ['ד','ַ','ק'],             say: 'duck',    hebrew: 'בַּרְוָז',    tr: 'barvaz' },
+  { english: 'horse',   emoji: '🐴', tiles: ['ה','ֹ','ר','ס'],         say: 'horse',   hebrew: 'סוּס',       tr: 'sus' },
+  { english: 'sheep',   emoji: '🐑', tiles: ['ש','ִ','י','פ'],         say: 'sheep',   hebrew: 'כֶּבֶשׂ',     tr: 'keves' },
+  { english: 'mouse',   emoji: '🐭', tiles: ['מ','ַ','ו','ס'],         say: 'mouse',   hebrew: 'עַכְבָּר',    tr: 'akhbar' },
+  { english: 'bear',    emoji: '🐻', tiles: ['ב','ֵ','ר'],             say: 'bear',    hebrew: 'דֹּב',       tr: 'dov' },
+  { english: 'lion',    emoji: '🦁', tiles: ['ל','ַ','י','ֹ','ן'],     say: 'lion',    hebrew: 'אַרְיֵה',    tr: 'arye' },
+  { english: 'frog',    emoji: '🐸', tiles: ['פ','ר','ֹ','ג'],         say: 'frog',    hebrew: 'צְפַרְדֵּעַ', tr: 'tzfardea' },
+  { english: 'bee',     emoji: '🐝', tiles: ['ב','ִ','י'],             say: 'bee',     hebrew: 'דְּבוֹרָה',   tr: 'dvora' },
+  { english: 'ant',     emoji: '🐜', tiles: ['א','ַ','נ','ת'],         say: 'ant',     hebrew: 'נְמָלָה',     tr: 'nemala' },
+  { english: 'rabbit',  emoji: '🐰', tiles: ['ר','ַ','ב','ִ','ט'],     say: 'rabbit',  hebrew: 'אַרְנָב',    tr: 'arnav' },
+  { english: 'wolf',    emoji: '🐺', tiles: ['ו','ֻ','ל','פ'],         say: 'wolf',    hebrew: 'זְאֵב',      tr: "ze'ev" },
+  { english: 'snake',   emoji: '🐍', tiles: ['ס','נ','ֵ','י','ק'],     say: 'snake',   hebrew: 'נָחָשׁ',     tr: 'nakhash' },
+  { english: 'turtle',  emoji: '🐢', tiles: ['ט','ֻ','ר','ט','ֶ','ל'], say: 'turtle',  hebrew: 'צָב',        tr: 'tzav' },
+  { english: 'monkey',  emoji: '🐵', tiles: ['מ','ַ','נ','ק','ִ','י'], say: 'monkey',  hebrew: 'קוֹף',       tr: 'kof' },
+  { english: 'owl',     emoji: '🦉', tiles: ['א','ַ','ו','ל'],         say: 'owl',     hebrew: 'יַנְשׁוּף',   tr: 'yanshuf' },
+  { english: 'shark',   emoji: '🦈', tiles: ['ש','ָ','ר','ק'],         say: 'shark',   hebrew: 'כָּרִישׁ',   tr: 'karish' },
+
+  // Food
+  { english: 'milk',    emoji: '🥛', tiles: ['מ','ִ','ל','ק'],         say: 'milk',    hebrew: 'חָלָב',      tr: 'khalav' },
+  { english: 'bread',   emoji: '🍞', tiles: ['ב','ר','ֶ','ד'],         say: 'bread',   hebrew: 'לֶחֶם',      tr: 'lekhem' },
+  { english: 'egg',     emoji: '🥚', tiles: ['א','ֶ','ג'],             say: 'egg',     hebrew: 'בֵּיצָה',    tr: 'beitza' },
+  { english: 'apple',   emoji: '🍎', tiles: ['א','ַ','פ','ֶ','ל'],     say: 'apple',   hebrew: 'תַּפּוּחַ',  tr: 'tapuakh' },
+  { english: 'banana',  emoji: '🍌', tiles: ['ב','ַ','נ','ַ','נ','ַ'], say: 'banana',  hebrew: 'בָּנָנָה',   tr: 'banana' },
+  { english: 'grape',   emoji: '🍇', tiles: ['ג','ר','ֵ','י','פ'],     say: 'grape',   hebrew: 'עֵנָב',      tr: 'enav' },
+  { english: 'cake',    emoji: '🍰', tiles: ['ק','ֵ','י','ק'],         say: 'cake',    hebrew: 'עוּגָה',     tr: 'uga' },
+  { english: 'pie',     emoji: '🥧', tiles: ['פ','ַ','י'],             say: 'pie',     hebrew: 'פַּאי',      tr: 'pai' },
+  { english: 'soup',    emoji: '🍲', tiles: ['ס','ו','פ'],             say: 'soup',    hebrew: 'מָרָק',      tr: 'marak' },
+  { english: 'rice',    emoji: '🍚', tiles: ['ר','ַ','י','ס'],         say: 'rice',    hebrew: 'אֹרֶז',      tr: 'orez' },
+  { english: 'honey',   emoji: '🍯', tiles: ['ה','ַ','נ','ִ','י'],     say: 'honey',   hebrew: 'דְּבַשׁ',    tr: 'dvash' },
+  { english: 'cookie',  emoji: '🍪', tiles: ['ק','ֻ','ק','ִ','י'],     say: 'cookie',  hebrew: 'עוּגִיָּה',   tr: 'ugiya' },
+  { english: 'tea',     emoji: '🍵', tiles: ['ט','ִ','י'],             say: 'tea',     hebrew: 'תֵּה',       tr: 'te' },
+  { english: 'ice',     emoji: '🧊', tiles: ['א','ַ','י','ס'],         say: 'ice',     hebrew: 'קֶרַח',      tr: 'kerakh' },
+  { english: 'corn',    emoji: '🌽', tiles: ['ק','ֹ','ר','ן'],         say: 'corn',    hebrew: 'תִּירָס',    tr: 'tiras' },
+  { english: 'lemon',   emoji: '🍋', tiles: ['ל','ֶ','מ','ֹ','ן'],     say: 'lemon',   hebrew: 'לִימוֹן',    tr: 'limon' },
+  { english: 'salt',    emoji: '🧂', tiles: ['ס','ֹ','ל','ט'],         say: 'salt',    hebrew: 'מֶלַח',      tr: 'melakh' },
+  { english: 'pizza',   emoji: '🍕', tiles: ['פ','ִ','י','צ','ַ'],     say: 'pizza',   hebrew: 'פִּיצָה',    tr: 'pitza' },
+  { english: 'nut',     emoji: '🥜', tiles: ['נ','ַ','ט'],             say: 'nut',     hebrew: 'אֱגוֹז',     tr: 'egoz' },
+  { english: 'cherry',  emoji: '🍒', tiles: ['צ','ֶ','ר','ִ','י'],     say: 'cherry',  hebrew: 'דֻּבְדְּבָן', tr: 'duvdevan' },
+
+  // Nature
+  { english: 'tree',    emoji: '🌳', tiles: ['ת','ר','ִ','י'],         say: 'tree',    hebrew: 'עֵץ',        tr: 'etz' },
+  { english: 'sun',     emoji: '☀️', tiles: ['ס','ַ','ן'],             say: 'sun',     hebrew: 'שֶׁמֶשׁ',    tr: 'shemesh' },
+  { english: 'moon',    emoji: '🌙', tiles: ['מ','ו','ן'],             say: 'moon',    hebrew: 'יָרֵחַ',     tr: "yare'akh" },
+  { english: 'star',    emoji: '⭐', tiles: ['ס','ט','ָ','ר'],         say: 'star',    hebrew: 'כּוֹכָב',    tr: 'kokhav' },
+  { english: 'cloud',   emoji: '☁️', tiles: ['ק','ל','ַ','ו','ד'],     say: 'cloud',   hebrew: 'עָנָן',      tr: 'anan' },
+  { english: 'rain',    emoji: '🌧️', tiles: ['ר','ֵ','י','ן'],         say: 'rain',    hebrew: 'גֶּשֶׁם',    tr: 'geshem' },
+  { english: 'snow',    emoji: '❄️', tiles: ['ס','נ','ֹ'],             say: 'snow',    hebrew: 'שֶׁלֶג',     tr: 'sheleg' },
+  { english: 'fire',    emoji: '🔥', tiles: ['פ','ַ','י','ר'],         say: 'fire',    hebrew: 'אֵשׁ',       tr: 'esh' },
+  { english: 'flower',  emoji: '🌸', tiles: ['פ','ל','ַ','ו','ֶ','ר'], say: 'flower',  hebrew: 'פֶּרַח',     tr: 'perakh' },
+  { english: 'leaf',    emoji: '🍃', tiles: ['ל','ִ','י','פ'],         say: 'leaf',    hebrew: 'עָלֶה',      tr: 'aleh' },
+  { english: 'sea',     emoji: '🌊', tiles: ['ס','ִ','י'],             say: 'sea',     hebrew: 'יָם',        tr: 'yam' },
+  { english: 'rock',    emoji: '🪨', tiles: ['ר','ֹ','ק'],             say: 'rock',    hebrew: 'סֶלַע',      tr: 'sela' },
+  { english: 'sand',    emoji: '🏖️', tiles: ['ס','ַ','נ','ד'],         say: 'sand',    hebrew: 'חוֹל',       tr: 'khol' },
+  { english: 'sky',     emoji: '🌌', tiles: ['ס','ק','ַ','י'],         say: 'sky',     hebrew: 'שָׁמַיִם',   tr: 'shamayim' },
+  { english: 'wind',    emoji: '💨', tiles: ['ו','ִ','נ','ד'],         say: 'wind',    hebrew: 'רוּחַ',      tr: 'ruakh' },
+
+  // Home
+  { english: 'house',   emoji: '🏠', tiles: ['ה','ַ','ו','ס'],         say: 'house',   hebrew: 'בַּיִת',     tr: 'bayit' },
+  { english: 'door',    emoji: '🚪', tiles: ['ד','ֹ','ר'],             say: 'door',    hebrew: 'דֶּלֶת',     tr: 'delet' },
+  { english: 'bed',     emoji: '🛏️', tiles: ['ב','ֶ','ד'],             say: 'bed',     hebrew: 'מִטָּה',     tr: 'mita' },
+  { english: 'lamp',    emoji: '💡', tiles: ['ל','ַ','מ','פ'],         say: 'lamp',    hebrew: 'מְנוֹרָה',    tr: 'menora' },
+  { english: 'key',     emoji: '🔑', tiles: ['ק','ִ','י'],             say: 'key',     hebrew: 'מַפְתֵּחַ',  tr: "mafte'akh" },
+  { english: 'book',    emoji: '📖', tiles: ['ב','ֻ','ק'],             say: 'book',    hebrew: 'סֵפֶר',      tr: 'sefer' },
+  { english: 'cup',     emoji: '☕', tiles: ['ק','ַ','פ'],             say: 'cup',     hebrew: 'כּוֹס',      tr: 'kos' },
+  { english: 'clock',   emoji: '🕐', tiles: ['ק','ל','ֹ','ק'],         say: 'clock',   hebrew: 'שָׁעוֹן',    tr: "sha'on" },
+  { english: 'soap',    emoji: '🧼', tiles: ['ס','ֹ','פ'],             say: 'soap',    hebrew: 'סַבּוֹן',    tr: 'sabon' },
+
+  // People
+  { english: 'mom',     emoji: '👩', tiles: ['מ','ֹ','ם'],             say: 'mom',     hebrew: 'אִמָּא',     tr: 'ima' },
+  { english: 'dad',     emoji: '👨', tiles: ['ד','ַ','ד'],             say: 'dad',     hebrew: 'אַבָּא',     tr: 'aba' },
+  { english: 'boy',     emoji: '👦', tiles: ['ב','ֹ','י'],             say: 'boy',     hebrew: 'יֶלֶד',      tr: 'yeled' },
+  { english: 'girl',    emoji: '👧', tiles: ['ג','ֶ','ר','ל'],         say: 'girl',    hebrew: 'יַלְדָּה',   tr: 'yalda' },
+  { english: 'baby',    emoji: '👶', tiles: ['ב','ֵ','י','ב','ִ','י'], say: 'baby',    hebrew: 'תִּינוֹק',   tr: 'tinok' },
+  { english: 'king',    emoji: '🤴', tiles: ['ק','ִ','נ','ג'],         say: 'king',    hebrew: 'מֶלֶךְ',     tr: 'melekh' },
+
+  // Clothing
+  { english: 'hat',     emoji: '🎩', tiles: ['ה','ַ','ט'],             say: 'hat',     hebrew: 'כּוֹבַע',    tr: 'kova' },
+  { english: 'shoe',    emoji: '👟', tiles: ['ש','ו'],                 say: 'shoe',    hebrew: 'נַעַל',      tr: "na'al" },
+  { english: 'shirt',   emoji: '👕', tiles: ['ש','ֶ','ר','ט'],         say: 'shirt',   hebrew: 'חֻלְצָה',    tr: 'khultza' },
+  { english: 'dress',   emoji: '👗', tiles: ['ד','ר','ֶ','ס'],         say: 'dress',   hebrew: 'שִׂמְלָה',   tr: 'simla' },
+  { english: 'sock',    emoji: '🧦', tiles: ['ס','ֹ','ק'],             say: 'sock',    hebrew: 'גֶּרֶב',     tr: 'gerev' },
+  { english: 'ring',    emoji: '💍', tiles: ['ר','ִ','נ','ג'],         say: 'ring',    hebrew: 'טַבַּעַת',   tr: "taba'at" },
+
+  // Body
+  { english: 'eye',     emoji: '👁️', tiles: ['א','ַ','י'],             say: 'eye',     hebrew: 'עַיִן',      tr: 'ayin' },
+  { english: 'nose',    emoji: '👃', tiles: ['נ','ֹ','ז'],             say: 'nose',    hebrew: 'אַף',        tr: 'af' },
+  { english: 'hand',    emoji: '✋', tiles: ['ה','ַ','נ','ד'],         say: 'hand',    hebrew: 'יָד',        tr: 'yad' },
+  { english: 'foot',    emoji: '🦶', tiles: ['פ','ֻ','ט'],             say: 'foot',    hebrew: 'רֶגֶל',      tr: 'regel' },
+  { english: 'hair',    emoji: '💇', tiles: ['ה','ֵ','י','ר'],         say: 'hair',    hebrew: 'שֵׂעָר',     tr: "se'ar" },
+  { english: 'ear',     emoji: '👂', tiles: ['א','ִ','י','ר'],         say: 'ear',     hebrew: 'אֹזֶן',      tr: 'ozen' },
+  { english: 'heart',   emoji: '❤️', tiles: ['ה','ַ','ר','ט'],         say: 'heart',   hebrew: 'לֵב',        tr: 'lev' },
+  { english: 'mouth',   emoji: '👄', tiles: ['מ','ַ','ו','ת'],         say: 'mouth',   hebrew: 'פֶּה',       tr: 'peh' },
+  { english: 'tooth',   emoji: '🦷', tiles: ['ת','ו','ת'],             say: 'tooth',   hebrew: 'שֵׁן',       tr: 'shen' },
+
+  // Colors
+  { english: 'red',     emoji: '🔴', tiles: ['ר','ֶ','ד'],             say: 'red',     hebrew: 'אָדוֹם',     tr: 'adom' },
+  { english: 'blue',    emoji: '🔵', tiles: ['ב','ל','ו'],             say: 'blue',    hebrew: 'כָּחוֹל',    tr: 'kakhol' },
+  { english: 'green',   emoji: '🟢', tiles: ['ג','ר','ִ','י','ן'],     say: 'green',   hebrew: 'יָרֹק',      tr: 'yarok' },
+  { english: 'yellow',  emoji: '🟡', tiles: ['י','ֶ','ל','ֹ'],         say: 'yellow',  hebrew: 'צָהֹב',      tr: 'tzahov' },
+  { english: 'black',   emoji: '⚫', tiles: ['ב','ל','ַ','ק'],         say: 'black',   hebrew: 'שָׁחֹר',     tr: 'shakhor' },
+  { english: 'white',   emoji: '⚪', tiles: ['ו','ַ','י','ט'],         say: 'white',   hebrew: 'לָבָן',      tr: 'lavan' },
+  { english: 'pink',    emoji: '💗', tiles: ['פ','ִ','נ','ק'],         say: 'pink',    hebrew: 'וָרֹד',      tr: 'varod' },
+
+  // Transport
+  { english: 'car',     emoji: '🚗', tiles: ['ק','ָ','ר'],             say: 'car',     hebrew: 'מְכוֹנִית',   tr: 'mekhonit' },
+  { english: 'bus',     emoji: '🚌', tiles: ['ב','ַ','ס'],             say: 'bus',     hebrew: 'אוֹטוֹבּוּס', tr: 'otobus' },
+  { english: 'train',   emoji: '🚆', tiles: ['ט','ר','ֵ','י','ן'],     say: 'train',   hebrew: 'רַכֶּבֶת',    tr: 'rakevet' },
+  { english: 'plane',   emoji: '✈️', tiles: ['פ','ל','ֵ','י','ן'],     say: 'plane',   hebrew: 'מָטוֹס',     tr: 'matos' },
+  { english: 'boat',    emoji: '⛵', tiles: ['ב','ֹ','ט'],             say: 'boat',    hebrew: 'סִירָה',     tr: 'sira' },
+  { english: 'bike',    emoji: '🚲', tiles: ['ב','ַ','י','ק'],         say: 'bike',    hebrew: 'אוֹפַנַּיִם',  tr: 'ofanayim' },
+  { english: 'ship',    emoji: '🚢', tiles: ['ש','ִ','פ'],             say: 'ship',    hebrew: 'אֳנִיָּה',    tr: 'oniya' },
+
+  // Toys & misc
+  { english: 'ball',    emoji: '⚽', tiles: ['ב','ֹ','ל'],             say: 'ball',    hebrew: 'כַּדּוּר',   tr: 'kadur' },
+  { english: 'doll',    emoji: '🪆', tiles: ['ד','ֹ','ל'],             say: 'doll',    hebrew: 'בֻּבָּה',    tr: 'buba' },
+  { english: 'kite',    emoji: '🪁', tiles: ['ק','ַ','י','ט'],         say: 'kite',    hebrew: 'עֲפִיפוֹן',   tr: 'afifon' },
+  { english: 'drum',    emoji: '🥁', tiles: ['ד','ר','ַ','ם'],         say: 'drum',    hebrew: 'תֹּף',       tr: 'tof' },
+  { english: 'gift',    emoji: '🎁', tiles: ['ג','ִ','פ','ט'],         say: 'gift',    hebrew: 'מַתָּנָה',   tr: 'matana' },
+  { english: 'crown',   emoji: '👑', tiles: ['ק','ר','ַ','ו','ן'],     say: 'crown',   hebrew: 'כֶּתֶר',     tr: 'keter' },
+
+  // Numbers
+  { english: 'one',     emoji: '1️⃣', tiles: ['ו','ַ','ן'],             say: 'one',     hebrew: 'אֶחָד',      tr: 'ekhad' },
+  { english: 'two',     emoji: '2️⃣', tiles: ['ט','ו'],                 say: 'two',     hebrew: 'שְׁתַּיִם',  tr: 'shtayim' },
+  { english: 'five',    emoji: '5️⃣', tiles: ['פ','ַ','י','ב'],         say: 'five',    hebrew: 'חָמֵשׁ',     tr: 'khamesh' },
+  { english: 'ten',     emoji: '🔟', tiles: ['ט','ֶ','ן'],             say: 'ten',     hebrew: 'עֶשֶׂר',     tr: 'eser' },
+
+  // Time
+  { english: 'day',     emoji: '🌅', tiles: ['ד','ֵ','י'],             say: 'day',     hebrew: 'יוֹם',       tr: 'yom' },
+  { english: 'night',   emoji: '🌃', tiles: ['נ','ַ','י','ט'],         say: 'night',   hebrew: 'לַיְלָה',    tr: 'layla' },
+];
+
+// Texts catalog. Each entry: { title_en, title_he, attribution, stanzas[] }.
+// Stanzas have parallel Hebrew (word/phrase chunks with literal glosses) and
+// natural English. Chunks sharing a `g` (group) key get the same color across
+// both columns — same color = same meaning. Per-stanza local color assignment.
+const texts = [
+  // === 1. HaTikvah — opening verses. Imber 1878, public domain. ===
+  {
+    title_en: 'HaTikvah — opening verses',
+    title_he: 'הַתִּקְוָה',
+    attribution: 'Naftali Herz Imber, 1878 · public domain',
+    stanzas: [
+      {
+        hebrew: [
+          { w: 'כָּל',       tr: 'kol',      gloss: 'all',           g: 'long-as' },
+          { w: 'עוֹד',       tr: 'od',       gloss: 'still',         g: 'long-as' },
+          { w: 'בַּלֵּבָב', tr: 'ba-levav', gloss: 'in-the-heart',  g: 'heart' },
+          { w: 'פְּנִימָה', tr: 'penima',   gloss: 'within',        g: 'within' },
+        ],
+        english: [
+          { phrase: 'As long as,', g: 'long-as' },
+          { phrase: 'deep within', g: 'within' },
+          { phrase: 'the heart,',  g: 'heart' },
+        ],
+        vocab: [
+          { en: 'heart', he: 'לֵב',  tr: 'lev' },
+          { en: 'all',   he: 'כָּל', tr: 'kol' },
+        ],
+      },
+      {
+        hebrew: [
+          { w: 'נֶפֶשׁ',    tr: 'nefesh', gloss: 'a-soul',  g: 'soul' },
+          { w: 'יְהוּדִי',  tr: 'yehudi', gloss: 'Jewish',  g: 'jewish' },
+          { w: 'הוֹמִיָּה', tr: 'homiya', gloss: 'longing', g: 'yearns' },
+        ],
+        english: [
+          { phrase: 'a Jewish',      g: 'jewish' },
+          { phrase: 'soul',          g: 'soul' },
+          { phrase: 'still yearns,', g: 'yearns' },
+        ],
+        vocab: [
+          { en: 'soul',   he: 'נֶפֶשׁ',   tr: 'nefesh' },
+          { en: 'Jewish', he: 'יְהוּדִי', tr: 'yehudi' },
+        ],
+      },
+      {
+        hebrew: [
+          { w: 'וּלְפַאֲתֵי', tr: "u-lefa'atei", gloss: 'and-toward', g: 'toward' },
+          { w: 'מִזְרָח',      tr: 'mizrach',     gloss: 'east',       g: 'east' },
+          { w: 'קָדִימָה',     tr: 'kadima',      gloss: 'forward',    g: 'forward' },
+        ],
+        english: [
+          { phrase: 'and forward,', g: 'forward' },
+          { phrase: 'toward',       g: 'toward' },
+          { phrase: 'the East,',    g: 'east' },
+        ],
+        vocab: [
+          { en: 'east',    he: 'מִזְרָח',  tr: 'mizrach' },
+          { en: 'forward', he: 'קָדִימָה', tr: 'kadima' },
+        ],
+      },
+      {
+        hebrew: [
+          { w: 'עַיִן',     tr: 'ayin',      gloss: 'an-eye',      g: 'eye' },
+          { w: 'לְצִיּוֹן', tr: 'le-tziyon', gloss: 'toward-Zion', g: 'zion' },
+          { w: 'צוֹפִיָּה', tr: 'tzofiya',   gloss: 'gazing',      g: 'gazes' },
+        ],
+        english: [
+          { phrase: 'an eye',       g: 'eye' },
+          { phrase: 'still gazes',  g: 'gazes' },
+          { phrase: 'toward Zion.', g: 'zion' },
+        ],
+        vocab: [
+          { en: 'eye',  he: 'עַיִן',    tr: 'ayin' },
+          { en: 'Zion', he: 'צִיּוֹן', tr: 'tziyon' },
+        ],
+      },
+      {
+        hebrew: [
+          { w: 'עוֹד',          tr: 'od',         gloss: 'still',    g: 'yet' },
+          { w: 'לֹא',           tr: 'lo',         gloss: 'not',      g: 'not' },
+          { w: 'אָבְדָה',       tr: 'avda',       gloss: 'lost',     g: 'lost' },
+          { w: 'תִּקְוָתֵנוּ',  tr: 'tikvatenu',  gloss: 'our-hope', g: 'hope' },
+        ],
+        english: [
+          { phrase: 'Our hope', g: 'hope' },
+          { phrase: 'is not',   g: 'not' },
+          { phrase: 'yet',      g: 'yet' },
+          { phrase: 'lost,',    g: 'lost' },
+        ],
+        vocab: [
+          { en: 'hope', he: 'תִּקְוָה', tr: 'tikva' },
+          { en: 'not',  he: 'לֹא',     tr: 'lo' },
+        ],
+      },
+    ],
+  },
+
+  // === 2. Goldilocks and the Three Bears — folk tale, simplified retelling. ===
+  {
+    title_en: 'Goldilocks and the Three Bears',
+    title_he: 'זָהֲבָה וּשְׁלוֹשֶׁת הַדֻּבִּים',
+    attribution: 'Traditional folk tale · simplified bilingual retelling',
+    stanzas: [
+      {
+        hebrew: [
+          { w: 'פַּעַם',          tr: "pa'am",       gloss: 'once',          g: 'once' },
+          { w: 'הָיְתָה',         tr: 'hayta',       gloss: 'there-was',     g: 'was' },
+          { w: 'יַלְדָּה קְטַנָּה', tr: 'yalda ktana', gloss: 'a-little-girl', g: 'girl' },
+          { w: 'עִם',             tr: 'im',          gloss: 'with',          g: 'with' },
+          { w: 'שֵׂעָר זָהֹב',     tr: "se'ar zahov", gloss: 'golden-hair',   g: 'hair' },
+        ],
+        english: [
+          { phrase: 'Once upon a time', g: 'once' },
+          { phrase: 'there was',        g: 'was' },
+          { phrase: 'a little girl',    g: 'girl' },
+          { phrase: 'with',             g: 'with' },
+          { phrase: 'golden hair.',     g: 'hair' },
+        ],
+        vocab: [{ en: 'girl', he: 'יַלְדָּה', tr: 'yalda' }],
+      },
+      {
+        hebrew: [
+          { w: 'כֻּלָּם',  tr: 'kulam',  gloss: 'everyone',   g: 'all' },
+          { w: 'קָרְאוּ', tr: "kar'u",  gloss: 'called',     g: 'called' },
+          { w: 'לָהּ',     tr: 'la',     gloss: 'her',        g: 'her' },
+          { w: 'זָהֲבָה',  tr: 'zahava', gloss: 'Goldilocks', g: 'name' },
+        ],
+        english: [
+          { phrase: 'Everyone',    g: 'all' },
+          { phrase: 'called',      g: 'called' },
+          { phrase: 'her',         g: 'her' },
+          { phrase: 'Goldilocks.', g: 'name' },
+        ],
+        vocab: [{ en: 'everyone', he: 'כֻּלָּם', tr: 'kulam' }],
+      },
+      {
+        hebrew: [
+          { w: 'יוֹם אֶחָד', tr: 'yom ekhad',  gloss: 'one-day',       g: 'day' },
+          { w: 'הִיא',       tr: 'hi',          gloss: 'she',           g: 'she' },
+          { w: 'הָלְכָה',    tr: 'halkha',      gloss: 'walked',        g: 'walked' },
+          { w: 'לַיַּעַר',   tr: "la-ya'ar",    gloss: 'to-the-forest', g: 'forest' },
+          { w: 'הֶעָמֹק',    tr: 'he-amok',     gloss: 'the-deep',      g: 'deep' },
+        ],
+        english: [
+          { phrase: 'One day',  g: 'day' },
+          { phrase: 'she',      g: 'she' },
+          { phrase: 'walked',   g: 'walked' },
+          { phrase: 'into',     g: 'forest' },
+          { phrase: 'the deep', g: 'deep' },
+          { phrase: 'forest.',  g: 'forest' },
+        ],
+        vocab: [{ en: 'forest', he: 'יַעַר', tr: "ya'ar" }],
+      },
+      {
+        hebrew: [
+          { w: 'הִיא',    tr: 'hi',       gloss: 'she',     g: 'she' },
+          { w: 'מָצְאָה', tr: "matz'a",   gloss: 'found',   g: 'found' },
+          { w: 'בַּיִת',  tr: 'bayit',    gloss: 'a-house', g: 'house' },
+          { w: 'קָטָן',   tr: 'katan',    gloss: 'small',   g: 'small' },
+          { w: 'מֵעֵץ',   tr: 'me-etz',   gloss: 'of-wood', g: 'wood' },
+        ],
+        english: [
+          { phrase: 'She',     g: 'she' },
+          { phrase: 'found',   g: 'found' },
+          { phrase: 'a small', g: 'small' },
+          { phrase: 'wooden',  g: 'wood' },
+          { phrase: 'house.',  g: 'house' },
+        ],
+        vocab: [{ en: 'house', he: 'בַּיִת', tr: 'bayit' }],
+      },
+      {
+        hebrew: [
+          { w: 'בִּפְנִים',  tr: 'bifnim',   gloss: 'inside',   g: 'inside' },
+          { w: 'הִיא',       tr: 'hi',       gloss: 'she',      g: 'she' },
+          { w: 'רָאֲתָה',    tr: "ra'ata",   gloss: 'saw',      g: 'saw' },
+          { w: 'שָׁלוֹשׁ',    tr: 'shalosh',  gloss: 'three',    g: 'three' },
+          { w: 'קְעָרוֹת',   tr: "ke'arot",  gloss: 'bowls',    g: 'bowls' },
+          { w: 'דַּיְסָה',    tr: 'daysa',    gloss: 'porridge', g: 'porridge' },
+        ],
+        english: [
+          { phrase: 'Inside',       g: 'inside' },
+          { phrase: 'she',          g: 'she' },
+          { phrase: 'saw',          g: 'saw' },
+          { phrase: 'three',        g: 'three' },
+          { phrase: 'bowls',        g: 'bowls' },
+          { phrase: 'of porridge.', g: 'porridge' },
+        ],
+        vocab: [{ en: 'three', he: 'שָׁלוֹשׁ', tr: 'shalosh' }],
+      },
+      {
+        hebrew: [
+          { w: 'אַחַת',       tr: 'akhat',     gloss: 'one',     g: 'one1' },
+          { w: 'חַמָּה',      tr: 'khama',     gloss: 'hot',     g: 'hot' },
+          { w: 'אַחַת',       tr: 'akhat',     gloss: 'one',     g: 'one2' },
+          { w: 'קָרָה',       tr: 'kara',      gloss: 'cold',    g: 'cold' },
+          { w: 'וְאַחַת',     tr: 've-akhat',  gloss: 'and-one', g: 'one3' },
+          { w: 'מֻשְׁלֶמֶת', tr: 'mushlemet', gloss: 'perfect', g: 'just-right' },
+        ],
+        english: [
+          { phrase: 'One was',     g: 'one1' },
+          { phrase: 'hot,',        g: 'hot' },
+          { phrase: 'one was',     g: 'one2' },
+          { phrase: 'cold,',       g: 'cold' },
+          { phrase: 'and one was', g: 'one3' },
+          { phrase: 'just right.', g: 'just-right' },
+        ],
+        vocab: [
+          { en: 'hot',  he: 'חַם', tr: 'kham' },
+          { en: 'cold', he: 'קַר', tr: 'kar' },
+        ],
+      },
+      {
+        hebrew: [
+          { w: 'הִיא',           tr: 'hi',         gloss: 'she',         g: 'she' },
+          { w: 'אָכְלָה',        tr: 'akhla',      gloss: 'ate',         g: 'ate' },
+          { w: 'אֶת הַדַּיְסָה', tr: 'et ha-daysa', gloss: 'the-porridge', g: 'porridge' },
+          { w: 'בַּקְּעָרָה',    tr: "ba-ke'ara",  gloss: 'in-the-bowl', g: 'bowl' },
+          { w: 'הַקְּטַנָּה',    tr: 'ha-ktana',   gloss: 'the-small',   g: 'small' },
+        ],
+        english: [
+          { phrase: 'She',          g: 'she' },
+          { phrase: 'ate',          g: 'ate' },
+          { phrase: 'the porridge', g: 'porridge' },
+          { phrase: 'in the small', g: 'small' },
+          { phrase: 'bowl.',        g: 'bowl' },
+        ],
+        vocab: [{ en: 'ate', he: 'אָכְלָה', tr: 'akhla' }],
+      },
+      {
+        hebrew: [
+          { w: 'הִיא מָצְאָה',  tr: "hi matz'a",  gloss: 'she-found',     g: 'found' },
+          { w: 'שָׁלוֹשׁ',       tr: 'shalosh',    gloss: 'three',         g: 'three' },
+          { w: 'מִטּוֹת',        tr: 'mitot',      gloss: 'beds',          g: 'beds' },
+          { w: 'וְנִרְדְּמָה',   tr: 've-nirdema', gloss: 'and-fell-asleep', g: 'slept' },
+          { w: 'בַּקְּטַנָּה',   tr: 'ba-ktana',   gloss: 'in-smallest',   g: 'smallest' },
+        ],
+        english: [
+          { phrase: 'She found',       g: 'found' },
+          { phrase: 'three',            g: 'three' },
+          { phrase: 'beds',             g: 'beds' },
+          { phrase: 'and fell asleep',  g: 'slept' },
+          { phrase: 'in the smallest.', g: 'smallest' },
+        ],
+        vocab: [{ en: 'bed', he: 'מִטָּה', tr: 'mita' }],
+      },
+      {
+        hebrew: [
+          { w: 'שְׁלוֹשֶׁת הַדֻּבִּים', tr: 'shloshet ha-dubim', gloss: 'the-three-bears', g: 'bears' },
+          { w: 'חָזְרוּ',                 tr: 'khazru',            gloss: 'returned',        g: 'returned' },
+          { w: 'הַבַּיְתָה',              tr: 'ha-bayta',          gloss: 'homeward',        g: 'home' },
+          { w: 'וְרָאוּ אוֹתָהּ',          tr: "ve-ra'u ota",       gloss: 'and-saw-her',     g: 'saw' },
+        ],
+        english: [
+          { phrase: 'The three bears', g: 'bears' },
+          { phrase: 'returned',         g: 'returned' },
+          { phrase: 'home',             g: 'home' },
+          { phrase: 'and saw her.',     g: 'saw' },
+        ],
+        vocab: [{ en: 'bear', he: 'דֹּב', tr: 'dov' }],
+      },
+      {
+        hebrew: [
+          { w: 'זָהֲבָה',          tr: 'zahava',         gloss: 'Goldilocks',     g: 'name' },
+          { w: 'הִתְעוֹרְרָה',     tr: "hit'orera",      gloss: 'woke-up',        g: 'woke' },
+          { w: 'רָצָה הַחוּצָה',   tr: 'ratza ha-khutza', gloss: 'ran-outside',    g: 'ran' },
+          { w: 'וְלֹא חָזְרָה',    tr: 've-lo khazra',   gloss: 'and-did-not-return', g: 'never' },
+        ],
+        english: [
+          { phrase: 'Goldilocks',          g: 'name' },
+          { phrase: 'woke up,',            g: 'woke' },
+          { phrase: 'ran outside,',        g: 'ran' },
+          { phrase: 'and never came back.', g: 'never' },
+        ],
+        vocab: [{ en: 'home', he: 'בַּיִת', tr: 'bayit' }],
+      },
+    ],
+  },
+
+  // === 3. Cinderella — fairy tale, simplified retelling. ===
+  {
+    title_en: 'Cinderella',
+    title_he: 'סִינְדְּרֵלָה',
+    attribution: 'Traditional fairy tale · simplified bilingual retelling',
+    stanzas: [
+      {
+        hebrew: [
+          { w: 'פַּעַם',    tr: "pa'am", gloss: 'once',   g: 'once' },
+          { w: 'הָיְתָה',   tr: 'hayta', gloss: 'was',    g: 'was' },
+          { w: 'יַלְדָּה',  tr: 'yalda', gloss: 'a-girl', g: 'girl' },
+          { w: 'טוֹבָה',    tr: 'tova',  gloss: 'kind',   g: 'kind' },
+        ],
+        english: [
+          { phrase: 'Once upon a time', g: 'once' },
+          { phrase: 'there was',        g: 'was' },
+          { phrase: 'a kind',           g: 'kind' },
+          { phrase: 'girl.',            g: 'girl' },
+        ],
+        vocab: [{ en: 'kind', he: 'טוֹב', tr: 'tov' }],
+      },
+      {
+        hebrew: [
+          { w: 'אָבִיהָ',    tr: 'aviha',     gloss: 'her-father', g: 'father' },
+          { w: 'הִתְחַתֵּן', tr: 'hitkhaten', gloss: 'married',    g: 'married' },
+          { w: 'אִשָּׁה',    tr: 'isha',      gloss: 'a-woman',    g: 'woman' },
+          { w: 'אַכְזָרִית', tr: 'akhzarit',  gloss: 'cruel',      g: 'cruel' },
+        ],
+        english: [
+          { phrase: 'Her father', g: 'father' },
+          { phrase: 'married',    g: 'married' },
+          { phrase: 'a cruel',    g: 'cruel' },
+          { phrase: 'woman.',     g: 'woman' },
+        ],
+        vocab: [{ en: 'father', he: 'אַבָּא', tr: 'aba' }],
+      },
+      {
+        hebrew: [
+          { w: 'לָאִשָּׁה',         tr: 'la-isha',        gloss: 'the-woman',     g: 'woman' },
+          { w: 'הָיוּ',             tr: 'hayu',           gloss: 'had',           g: 'had' },
+          { w: 'שְׁתֵּי בָּנוֹת',   tr: 'shtei banot',    gloss: 'two-daughters', g: 'daughters' },
+          { w: 'גַּאֲוְתָנִיּוֹת', tr: "ga'avtaniyot",   gloss: 'proud',         g: 'proud' },
+        ],
+        english: [
+          { phrase: 'The woman',       g: 'woman' },
+          { phrase: 'had',             g: 'had' },
+          { phrase: 'two daughters,',  g: 'daughters' },
+          { phrase: 'who were proud.', g: 'proud' },
+        ],
+        vocab: [{ en: 'two', he: 'שְׁתַּיִם', tr: 'shtayim' }],
+      },
+      {
+        hebrew: [
+          { w: 'הֵן',           tr: 'hen',          gloss: 'they',         g: 'they' },
+          { w: 'הִכְרִיחוּ',    tr: 'hikhrikhu',    gloss: 'forced',       g: 'made' },
+          { w: 'אֶת הַיַּלְדָּה', tr: 'et ha-yalda',  gloss: 'the-girl',     g: 'girl' },
+          { w: 'לִישׁוֹן',      tr: 'lishon',       gloss: 'to-sleep',     g: 'sleep' },
+          { w: 'לְיַד הָאָח',   tr: 'le-yad ha-akh', gloss: 'by-fireplace', g: 'fireplace' },
+        ],
+        english: [
+          { phrase: 'They',              g: 'they' },
+          { phrase: 'made',              g: 'made' },
+          { phrase: 'the girl',          g: 'girl' },
+          { phrase: 'sleep',             g: 'sleep' },
+          { phrase: 'by the fireplace.', g: 'fireplace' },
+        ],
+        vocab: [{ en: 'sleep', he: 'יָשֵׁן', tr: 'yashen' }],
+      },
+      {
+        hebrew: [
+          { w: 'הֵן קָרְאוּ לָהּ', tr: "hen kar'u la",  gloss: 'they-called-her', g: 'called' },
+          { w: 'סִינְדְּרֵלָה',     tr: 'sinderela',     gloss: 'Cinderella',      g: 'name' },
+          { w: 'כִּי',              tr: 'ki',            gloss: 'because',         g: 'because' },
+          { w: 'הָיְתָה מְכֻסָּה', tr: 'hayta mekhusa', gloss: 'was-covered',     g: 'covered' },
+          { w: 'בְּאֵפֶר',          tr: 'be-efer',       gloss: 'in-ash',          g: 'ash' },
+        ],
+        english: [
+          { phrase: 'They called her', g: 'called' },
+          { phrase: 'Cinderella',      g: 'name' },
+          { phrase: 'because',         g: 'because' },
+          { phrase: 'she was covered', g: 'covered' },
+          { phrase: 'in ash.',         g: 'ash' },
+        ],
+        vocab: [{ en: 'ash', he: 'אֵפֶר', tr: 'efer' }],
+      },
+      {
+        hebrew: [
+          { w: 'יוֹם אֶחָד',  tr: 'yom ekhad',  gloss: 'one-day',    g: 'day' },
+          { w: 'הַנָּסִיךְ',   tr: 'ha-nasikh',  gloss: 'the-prince', g: 'prince' },
+          { w: 'הִזְמִין',     tr: 'hizmin',     gloss: 'invited',    g: 'invited' },
+          { w: 'אֶת כֻּלָּם',  tr: 'et kulam',   gloss: 'everyone',   g: 'all' },
+          { w: 'לְנֶשֶׁף',     tr: 'le-neshef',  gloss: 'to-a-ball',  g: 'ball' },
+        ],
+        english: [
+          { phrase: 'One day',    g: 'day' },
+          { phrase: 'the prince', g: 'prince' },
+          { phrase: 'invited',    g: 'invited' },
+          { phrase: 'everyone',   g: 'all' },
+          { phrase: 'to a ball.', g: 'ball' },
+        ],
+        vocab: [{ en: 'prince', he: 'נָסִיךְ', tr: 'nasikh' }],
+      },
+      {
+        hebrew: [
+          { w: 'הָאֲחָיוֹת הַחוֹרְגוֹת', tr: 'ha-akhayot ha-khorgot', gloss: 'the-stepsisters', g: 'sisters' },
+          { w: 'לָבְשׁוּ',                tr: 'lavshu',                gloss: 'wore',            g: 'wore' },
+          { w: 'שְׂמָלוֹת',               tr: 'smalot',                gloss: 'dresses',         g: 'dresses' },
+          { w: 'יָפוֹת',                  tr: 'yafot',                 gloss: 'beautiful',       g: 'beautiful' },
+          { w: 'וְהָלְכוּ',               tr: 've-halkhu',             gloss: 'and-went',        g: 'went' },
+        ],
+        english: [
+          { phrase: 'The stepsisters', g: 'sisters' },
+          { phrase: 'wore',            g: 'wore' },
+          { phrase: 'beautiful',       g: 'beautiful' },
+          { phrase: 'dresses',         g: 'dresses' },
+          { phrase: 'and went.',       g: 'went' },
+        ],
+        vocab: [{ en: 'dress', he: 'שִׂמְלָה', tr: 'simla' }],
+      },
+      {
+        hebrew: [
+          { w: 'סִינְדְּרֵלָה', tr: 'sinderela', gloss: 'Cinderella', g: 'name' },
+          { w: 'בָּכְתָה',      tr: 'bakhta',    gloss: 'cried',      g: 'cried' },
+          { w: 'לְבַד',         tr: 'levad',     gloss: 'alone',      g: 'alone' },
+          { w: 'בַּמִּטְבָּח',  tr: 'ba-mitbakh', gloss: 'in-kitchen', g: 'kitchen' },
+        ],
+        english: [
+          { phrase: 'Cinderella',     g: 'name' },
+          { phrase: 'cried',          g: 'cried' },
+          { phrase: 'alone',          g: 'alone' },
+          { phrase: 'in the kitchen.', g: 'kitchen' },
+        ],
+        vocab: [{ en: 'kitchen', he: 'מִטְבָּח', tr: 'mitbakh' }],
+      },
+      {
+        hebrew: [
+          { w: 'פִּתְאוֹם',      tr: "pit'om",    gloss: 'suddenly',   g: 'suddenly' },
+          { w: 'נִגְלְתָה',      tr: 'niglta',    gloss: 'appeared',   g: 'appeared' },
+          { w: 'פֵיָה',          tr: 'feya',      gloss: 'a-fairy',    g: 'fairy' },
+          { w: 'עִם',            tr: 'im',        gloss: 'with',       g: 'with' },
+          { w: 'מַטֵּה קֶסֶם',   tr: 'mate kesem', gloss: 'magic-wand', g: 'wand' },
+        ],
+        english: [
+          { phrase: 'Suddenly',      g: 'suddenly' },
+          { phrase: 'a fairy',       g: 'fairy' },
+          { phrase: 'appeared',      g: 'appeared' },
+          { phrase: 'with',          g: 'with' },
+          { phrase: 'a magic wand.', g: 'wand' },
+        ],
+        vocab: [{ en: 'magic', he: 'קֶסֶם', tr: 'kesem' }],
+      },
+      {
+        hebrew: [
+          { w: 'הִיא נָתְנָה',           tr: 'hi natna',             gloss: 'she-gave',           g: 'gave' },
+          { w: 'לְסִינְדְּרֵלָה',        tr: 'le-sinderela',         gloss: 'to-Cinderella',      g: 'name' },
+          { w: 'שִׂמְלָה יָפָה',         tr: 'simla yafa',           gloss: 'beautiful-dress',    g: 'dress' },
+          { w: 'וְנַעֲלֵי זְכוּכִית',    tr: "ve-na'alei zekhukhit", gloss: 'and-glass-slippers', g: 'slippers' },
+        ],
+        english: [
+          { phrase: 'She gave',           g: 'gave' },
+          { phrase: 'Cinderella',         g: 'name' },
+          { phrase: 'a beautiful dress',  g: 'dress' },
+          { phrase: 'and glass slippers.', g: 'slippers' },
+        ],
+        vocab: [{ en: 'glass', he: 'זְכוּכִית', tr: 'zekhukhit' }],
+      },
+      {
+        hebrew: [
+          { w: 'בַּחֲצוֹת',  tr: 'ba-khatzot', gloss: 'at-midnight', g: 'midnight' },
+          { w: 'הִיא רָצָה', tr: 'hi ratza',   gloss: 'she-ran',     g: 'ran' },
+          { w: 'הַבַּיְתָה',  tr: 'ha-bayta',   gloss: 'homeward',    g: 'home' },
+          { w: 'וְאִבְּדָה',  tr: 've-ibda',    gloss: 'and-lost',    g: 'lost' },
+          { w: 'נַעַל',       tr: "na'al",      gloss: 'a-slipper',   g: 'slipper' },
+        ],
+        english: [
+          { phrase: 'At midnight', g: 'midnight' },
+          { phrase: 'she ran',     g: 'ran' },
+          { phrase: 'home',        g: 'home' },
+          { phrase: 'and lost',    g: 'lost' },
+          { phrase: 'a slipper.',  g: 'slipper' },
+        ],
+        vocab: [{ en: 'home', he: 'בַּיִת', tr: 'bayit' }],
+      },
+      {
+        hebrew: [
+          { w: 'הַנָּסִיךְ',     tr: 'ha-nasikh',  gloss: 'the-prince',   g: 'prince' },
+          { w: 'מָצָא אוֹתָהּ',  tr: 'matza ota',  gloss: 'found-her',    g: 'found' },
+          { w: 'וְהֵם',           tr: 've-hem',     gloss: 'and-they',     g: 'they' },
+          { w: 'הִתְחַתְּנוּ',   tr: 'hitkhatnu',  gloss: 'married',      g: 'married' },
+          { w: 'בְּשִׂמְחָה',    tr: 'be-simkha',  gloss: 'happily',      g: 'happily' },
+        ],
+        english: [
+          { phrase: 'The prince', g: 'prince' },
+          { phrase: 'found her,', g: 'found' },
+          { phrase: 'and they',   g: 'they' },
+          { phrase: 'married',    g: 'married' },
+          { phrase: 'happily.',   g: 'happily' },
+        ],
+        vocab: [{ en: 'happy', he: 'שָׂמֵחַ', tr: 'sameakh' }],
+      },
+    ],
+  },
+];
+
+let poem = texts[0]; // active text; the picker swaps this
+
+// ===== HELPERS =====
+function isNikkud(ch) {
+  if (!ch || ch.length !== 1) return false;
+  const c = ch.charCodeAt(0);
+  return c >= 0x05B0 && c <= 0x05BC;
+}
+function isHebrewLetter(ch) {
+  if (!ch || ch.length !== 1) return false;
+  const c = ch.charCodeAt(0);
+  return c >= 0x05D0 && c <= 0x05EA;
+}
+function nikkudFor(mark) { return nikkud.find(n => n.mark === mark); }
+function letterFor(heb) {
+  if (sofitMap[heb]) heb = sofitMap[heb];
+  return letters.find(l => l.heb === heb) || null;
+}
+function stripNikkud(s) { return s.replace(/[֑-ׇ]/g, ''); }
+
+// ===== VOICES =====
+let heVoice = null;
+function refreshVoices() {
+  if (!('speechSynthesis' in window)) return;
+  const voices = window.speechSynthesis.getVoices() || [];
+  const heVoices = voices.filter(v => (v.lang || '').toLowerCase().startsWith('he'));
+  heVoice = heVoices.find(v => /carmit|asaf|hila|google/i.test(v.name)) || heVoices[0] || null;
+  document.getElementById('voice-warning').classList.toggle('show', !heVoice && voices.length > 0);
+}
+if ('speechSynthesis' in window) {
+  refreshVoices();
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+  setTimeout(refreshVoices, 500);
+}
+
+function speakHebrew(hebText, fallbackEn) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  if (heVoice) {
+    const u = new SpeechSynthesisUtterance(hebText);
+    u.voice = heVoice;
+    u.lang = 'he-IL';
+    u.rate = 0.75;
+    u.pitch = 1.0;
+    window.speechSynthesis.speak(u);
+  } else if (fallbackEn) {
+    const u = new SpeechSynthesisUtterance(fallbackEn);
+    u.lang = 'en-US';
+    u.rate = 0.85;
+    u.pitch = 1.1;
+    window.speechSynthesis.speak(u);
+  }
+}
+function speakHebrewQueue(texts, fallbackEn) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  if (heVoice) {
+    texts.forEach(t => {
+      if (!t) return;
+      const u = new SpeechSynthesisUtterance(t);
+      u.voice = heVoice;
+      u.lang = 'he-IL';
+      u.rate = 0.75;
+      u.pitch = 1.0;
+      window.speechSynthesis.speak(u);
+    });
+  } else if (fallbackEn) {
+    const u = new SpeechSynthesisUtterance(fallbackEn);
+    u.lang = 'en-US';
+    u.rate = 0.85;
+    window.speechSynthesis.speak(u);
+  }
+}
+function speakEnglish(text) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.85;
+  u.pitch = 1.05;
+  window.speechSynthesis.speak(u);
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove('show'), 1500);
+}
+
+// ===== TABS =====
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.panel).classList.add('active');
+  });
+});
+
+// ===== ALPHABET =====
+const grid = document.getElementById('letter-grid');
+letters.forEach(L => {
+  const card = document.createElement('div');
+  card.className = 'letter-card';
+  card.innerHTML = `
+    <div class="heb">${L.heb}</div>
+    <div class="latin">${L.sound}</div>
+    <div class="name">${L.name}</div>`;
+  card.addEventListener('click', () => {
+    speakHebrew(L.heb + 'ַ', (L.cons || '') + 'ah');
+  });
+  grid.appendChild(card);
+});
+
+// ===== NIKKUD LAB =====
+const labLetters = document.getElementById('lab-letters');
+const labDisplay = document.getElementById('lab-display');
+const nikkudBank = document.getElementById('nikkud-bank');
+let labLetter = letters[1];
+let labNikkud = null;
+
+function labHeb() { return labLetter.heb + (labNikkud ? labNikkud.mark : ''); }
+function labFallback() {
+  if (!labLetter.cons && !labNikkud) return 'ah';
+  if (!labNikkud) return (labLetter.cons || '') + 'uh';
+  return (labLetter.cons || '') + labNikkud.phon;
+}
+function labRomanized() {
+  if (!labNikkud) return labLetter.sound;
+  return (labLetter.cons || '·') + ' + ' + labNikkud.phon + ' = ' + ((labLetter.cons || '') + labNikkud.phon);
+}
+function renderLab() {
+  labDisplay.innerHTML =
+    `<span class="heb">${labHeb()}</span>` +
+    `<span class="phon">${labRomanized()}</span>`;
+  document.querySelectorAll('#lab-letters .pill').forEach((p, i) => {
+    p.classList.toggle('active', letters[i].heb === labLetter.heb);
+  });
+  document.querySelectorAll('#nikkud-bank .nikkud-chip').forEach((c, i) => {
+    c.classList.toggle('active', labNikkud && nikkud[i].mark === labNikkud.mark);
+  });
+}
+
+letters.forEach(L => {
+  const p = document.createElement('button');
+  p.className = 'pill';
+  p.innerHTML = `<span class="heb">${L.heb}</span>`;
+  p.title = L.name;
+  p.addEventListener('click', () => {
+    labLetter = L;
+    renderLab();
+    speakHebrew(labHeb(), labFallback());
+  });
+  labLetters.appendChild(p);
+});
+nikkud.forEach(N => {
+  const c = document.createElement('div');
+  c.className = 'nikkud-chip';
+  c.draggable = true;
+  c.innerHTML = `<div class="heb">◌${N.mark}</div><div class="latin">${N.phon}</div>`;
+  c.title = N.name;
+  c.addEventListener('click', () => {
+    labNikkud = N;
+    renderLab();
+    speakHebrew(labHeb(), labFallback());
+  });
+  c.addEventListener('dragstart', e => {
+    c.classList.add('dragging');
+    e.dataTransfer.setData('text/plain', 'N:' + N.mark);
+    e.dataTransfer.effectAllowed = 'copy';
+  });
+  c.addEventListener('dragend', () => c.classList.remove('dragging'));
+  nikkudBank.appendChild(c);
+});
+
+labDisplay.addEventListener('dragenter', () => labDisplay.classList.add('drop-target'));
+labDisplay.addEventListener('dragleave', e => {
+  if (e.target === labDisplay) labDisplay.classList.remove('drop-target');
+});
+labDisplay.addEventListener('drop', e => {
+  e.preventDefault();
+  labDisplay.classList.remove('drop-target');
+  const data = e.dataTransfer.getData('text/plain');
+  const mark = data.startsWith('N:') ? data.slice(2) : data;
+  const n = nikkudFor(mark);
+  if (n) {
+    labNikkud = n;
+    renderLab();
+    speakHebrew(labHeb(), labFallback());
+  }
+});
+labDisplay.addEventListener('click', () => speakHebrew(labHeb(), labFallback()));
+
+document.getElementById('lab-clear').addEventListener('click', () => {
+  labNikkud = null;
+  renderLab();
+});
+renderLab();
+
+// ===== SOUND STUDIO =====
+let stage = []; // array of chars (letters or nikkud)
+const stageEl = document.getElementById('stage');
+const stagePhonEl = document.getElementById('stage-phon');
+
+function stageText() { return stage.join(''); }
+
+function stageRomanized() {
+  // Build a rough English transliteration for fun feedback.
+  let out = '';
+  for (const ch of stage) {
+    if (isNikkud(ch)) {
+      const n = nikkudFor(ch); if (n) out += n.phon;
+    } else {
+      const L = letterFor(ch); if (L) out += (L.cons || "'");
+    }
+  }
+  return out;
+}
+
+function renderStage() {
+  if (stage.length === 0) {
+    stageEl.innerHTML = '<span class="placeholder">Drop letters & vowels here</span>';
+    stagePhonEl.textContent = '';
+  } else {
+    stageEl.innerHTML = `<span class="heb">${stageText()}</span>`;
+    stagePhonEl.textContent = '≈ ' + stageRomanized();
+  }
+}
+
+function pushStage(ch) {
+  stage.push(ch);
+  renderStage();
+  speakHebrew(stageText(), stageRomanized());
+}
+
+// Letter bank (compact pills)
+letters.forEach(L => {
+  const p = document.createElement('button');
+  p.className = 'pill';
+  p.draggable = true;
+  p.innerHTML = `<span class="heb">${L.heb}</span>`;
+  p.title = L.name;
+  p.addEventListener('click', () => pushStage(L.heb));
+  p.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', 'L:' + L.heb);
+    e.dataTransfer.effectAllowed = 'copy';
+  });
+  document.getElementById('studio-letters').appendChild(p);
+});
+
+// Nikkud bank
+nikkud.forEach(N => {
+  const c = document.createElement('div');
+  c.className = 'nikkud-chip';
+  c.draggable = true;
+  c.innerHTML = `<div class="heb">◌${N.mark}</div><div class="latin">${N.phon}</div>`;
+  c.title = N.name;
+  c.addEventListener('click', () => pushStage(N.mark));
+  c.addEventListener('dragstart', e => {
+    c.classList.add('dragging');
+    e.dataTransfer.setData('text/plain', 'N:' + N.mark);
+    e.dataTransfer.effectAllowed = 'copy';
+  });
+  c.addEventListener('dragend', () => c.classList.remove('dragging'));
+  document.getElementById('studio-nikkud').appendChild(c);
+});
+
+stageEl.addEventListener('dragenter', () => stageEl.classList.add('drop-target'));
+stageEl.addEventListener('dragleave', e => {
+  if (e.target === stageEl) stageEl.classList.remove('drop-target');
+});
+stageEl.addEventListener('drop', e => {
+  e.preventDefault();
+  stageEl.classList.remove('drop-target');
+  const data = e.dataTransfer.getData('text/plain');
+  if (data.startsWith('L:') || data.startsWith('N:')) pushStage(data.slice(2));
+});
+stageEl.addEventListener('click', () => {
+  if (stage.length) speakHebrew(stageText(), stageRomanized());
+});
+
+document.getElementById('stage-play').addEventListener('click', () => {
+  if (stage.length) speakHebrew(stageText(), stageRomanized());
+});
+document.getElementById('stage-undo').addEventListener('click', () => {
+  stage.pop();
+  renderStage();
+});
+document.getElementById('stage-clear').addEventListener('click', () => {
+  stage = [];
+  renderStage();
+});
+renderStage();
+
+// ===== SHARED SPELL LOGIC =====
+// Group tiles so that nikkud combine under the preceding letter.
+function computeGroups(tiles) {
+  const groups = [];
+  tiles.forEach((tile, idx) => {
+    const last = groups[groups.length - 1];
+    if (isNikkud(tile) && last && last.letterTileIdx != null) {
+      last.nikkudTileIdxs.push(idx);
+    } else {
+      groups.push({
+        letterTileIdx: isNikkud(tile) ? null : idx,
+        nikkudTileIdxs: isNikkud(tile) ? [idx] : [],
+      });
+    }
+  });
+  return groups;
+}
+
+function speakTile(tile) {
+  if (isNikkud(tile)) {
+    const n = nikkudFor(tile);
+    if (n) speakHebrew('א' + tile, n.phon);
+  } else {
+    const L = letterFor(tile);
+    speakHebrew(tile + 'ַ', (L?.cons || '') + 'ah');
+  }
+}
+
+function shuffleSeed(n, seed) {
+  const arr = Array.from({ length: n }, (_, i) => i);
+  let s = (seed + 1) * 9301 + 49297;
+  for (let i = arr.length - 1; i > 0; i--) {
+    s = (s * 9301 + 49297) % 233280;
+    const j = Math.floor((s / 233280) * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ===== SPELL IT! (English word → Hebrew phonetic spelling) =====
+let currentWord = 0;
+let placed = [];
+let bankUsed = new Set();
+
+function loadWord(i) {
+  currentWord = ((i % words.length) + words.length) % words.length;
+  const w = words[currentWord];
+  document.getElementById('word-emoji').textContent = w.emoji;
+  document.getElementById('word-english').textContent = w.english;
+  document.getElementById('word-hebrew-he').textContent = w.hebrew;
+  document.getElementById('word-hebrew-tr').textContent = w.tr;
+  document.getElementById('word-counter').textContent =
+    (currentWord + 1) + ' / ' + words.length;
+  placed = [];
+  bankUsed = new Set();
+  renderSpell();
+}
+
+function renderSpell() {
+  const w = words[currentWord];
+  const groups = computeGroups(w.tiles);
+  const placedSet = new Set(placed);
+
+  const slotsEl = document.getElementById('slots');
+  slotsEl.innerHTML = '';
+  groups.forEach(g => {
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    const lOk = g.letterTileIdx != null && placedSet.has(g.letterTileIdx);
+    const placedNikkud = g.nikkudTileIdxs
+      .filter(i => placedSet.has(i))
+      .sort((a, b) => placed.indexOf(a) - placed.indexOf(b));
+    if (lOk || placedNikkud.length) {
+      slot.classList.add('filled');
+      const letterCh = lOk ? w.tiles[g.letterTileIdx] : '';
+      const nikkudChs = placedNikkud.map(i => w.tiles[i]).join('');
+      slot.innerHTML = `<span class="heb">${letterCh}${nikkudChs}</span>`;
+    }
+    slot.addEventListener('click', () => {
+      const toRemove = [g.letterTileIdx, ...g.nikkudTileIdxs].filter(x => x != null);
+      if (!toRemove.length) return;
+      placed = placed.filter(i => !toRemove.includes(i));
+      toRemove.forEach(i => bankUsed.delete(i));
+      renderSpell();
+    });
+    slotsEl.appendChild(slot);
+  });
+
+  const bankEl = document.getElementById('spell-bank');
+  bankEl.innerHTML = '';
+  const order = shuffleSeed(w.tiles.length, currentWord);
+  order.forEach(i => {
+    const tile = w.tiles[i];
+    const t = document.createElement('div');
+    t.className = 'bank-tile';
+    if (bankUsed.has(i)) t.classList.add('used');
+    const label = isNikkud(tile)
+      ? (nikkudFor(tile)?.phon ?? '')
+      : (letterFor(tile)?.sound ?? '');
+    const display = isNikkud(tile) ? '◌' + tile : tile;
+    t.innerHTML = `<div class="heb">${display}</div><div class="latin">${label}</div>`;
+    t.addEventListener('click', () => {
+      if (bankUsed.has(i)) return;
+      if (placed.length >= w.tiles.length) return;
+      placed.push(i);
+      bankUsed.add(i);
+      speakTile(tile);
+      renderSpell();
+      if (placed.length === w.tiles.length) {
+        setTimeout(checkSpellAnswer, 350);
+      }
+    });
+    bankEl.appendChild(t);
+  });
+}
+
+function checkSpellAnswer() {
+  const w = words[currentWord];
+  const correct = placed.every((p, idx) => p === idx);
+  const slots = document.querySelectorAll('#slots .slot');
+  if (correct) {
+    slots.forEach(s => s.classList.add('correct'));
+    toast('Yes! ' + w.english);
+    speakHebrewQueue([w.tiles.join(''), w.hebrew], w.say);
+  } else {
+    slots.forEach(s => s.classList.add('wrong'));
+    toast('Close — try the order again');
+    setTimeout(() => slots.forEach(s => s.classList.remove('wrong')), 800);
+  }
+}
+
+document.getElementById('hear-hebrew').addEventListener('click', () => {
+  const w = words[currentWord];
+  const ordered = placed.length === w.tiles.length
+    ? w.tiles.join('')
+    : [...placed].sort((a, b) => a - b).map(i => w.tiles[i]).join('') || w.tiles.join('');
+  speakHebrew(ordered, w.say);
+});
+document.getElementById('hear-english').addEventListener('click', () => {
+  speakEnglish(words[currentWord].say);
+});
+document.getElementById('word-hebrew').addEventListener('click', () => {
+  const w = words[currentWord];
+  speakHebrew(w.hebrew, w.tr);
+});
+document.getElementById('next-word').addEventListener('click', () => {
+  loadWord(currentWord + 1);
+});
+document.getElementById('random-word').addEventListener('click', () => {
+  let n;
+  do { n = Math.floor(Math.random() * words.length); } while (n === currentWord && words.length > 1);
+  loadWord(n);
+});
+loadWord(0);
+
+// ===== POEM (lives in the Story tab) =====
+let stanzaIdx = 0;
+
+const VOCAB_COLORS = [
+  '#fbcfe8', // pink
+  '#bef5d9', // mint
+  '#dcd6f7', // lavender
+  '#ffd9b3', // peach
+  '#bee3f8', // sky
+  '#fef3c7', // butter
+  '#fecaca', // rose
+  '#c7d2fe', // periwinkle
+];
+
+function highlightWord(el, ms = 600) {
+  el.classList.add('speaking');
+  setTimeout(() => el.classList.remove('speaking'), ms);
+}
+
+// Per-stanza local color assignment: every unique group key in this stanza
+// (across both columns) gets the next color in the palette. Two columns sharing
+// a group string get the SAME color — that's the visual pairing.
+function assignStanzaColors(stanza) {
+  const map = new Map();
+  let i = 0;
+  const visit = item => {
+    if (item.g && !map.has(item.g)) {
+      map.set(item.g, VOCAB_COLORS[i % VOCAB_COLORS.length]);
+      i++;
+    }
+  };
+  stanza.hebrew.forEach(visit);
+  stanza.english.forEach(visit);
+  return map;
+}
+
+function renderPoemTitle() {
+  document.getElementById('story-title-en').textContent = poem.title_en;
+  document.getElementById('story-title-he').textContent = poem.title_he;
+  document.getElementById('story-attribution').textContent = poem.attribution || '';
+}
+
+function renderPoem() {
+  const stanza = poem.stanzas[stanzaIdx];
+  const colorMap = assignStanzaColors(stanza);
+
+  document.getElementById('story-page-num').textContent =
+    `Stanza ${stanzaIdx + 1} / ${poem.stanzas.length}`;
+
+  const stanzaEl = document.getElementById('poem-stanza');
+  stanzaEl.innerHTML = '';
+
+  // Hebrew column (right side visually since direction:rtl, but we put it as
+  // the first grid column on the LEFT — Hebrew text within reads RTL).
+  const heCol = document.createElement('div');
+  heCol.className = 'hebrew-col';
+  const heLabel = document.createElement('div');
+  heLabel.className = 'poem-col-label';
+  heLabel.textContent = 'Hebrew · word-by-word';
+  // Wrap label + chips in a column container
+  const heWrap = document.createElement('div');
+  heWrap.appendChild(heLabel);
+  heWrap.appendChild(heCol);
+
+  stanza.hebrew.forEach(item => {
+    const chip = document.createElement('div');
+    chip.className = 'word-with-gloss';
+    if (item.g) chip.style.setProperty('--vc', colorMap.get(item.g));
+    chip.innerHTML =
+      `<span class="word-heb">${item.w}</span>` +
+      `<span class="word-gloss">${item.gloss}</span>`;
+    chip.title = item.tr;
+    chip.addEventListener('click', () => {
+      highlightWord(chip);
+      speakHebrew(item.w, item.tr);
+    });
+    heCol.appendChild(chip);
+  });
+
+  // English column
+  const enCol = document.createElement('div');
+  enCol.className = 'english-col';
+  const enLabel = document.createElement('div');
+  enLabel.className = 'poem-col-label';
+  enLabel.textContent = 'English';
+  const enWrap = document.createElement('div');
+  enWrap.appendChild(enLabel);
+  enWrap.appendChild(enCol);
+
+  stanza.english.forEach(item => {
+    const chip = document.createElement('span');
+    chip.className = 'phrase';
+    if (item.g) chip.style.setProperty('--vc', colorMap.get(item.g));
+    chip.textContent = item.phrase;
+    chip.addEventListener('click', () => {
+      highlightWord(chip);
+      speakEnglish(item.phrase.replace(/[.,!?;:]/g, ''));
+    });
+    enCol.appendChild(chip);
+  });
+
+  stanzaEl.appendChild(heWrap);
+  stanzaEl.appendChild(enWrap);
+
+  // Vocab cards (per stanza). Reuse a separate color from the same palette,
+  // offset so they don't collide with the stanza's group colors at a glance.
+  const cardsEl = document.getElementById('vocab-cards');
+  cardsEl.innerHTML = '';
+  (stanza.vocab || []).forEach((v, idx) => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.style.setProperty('--vc', VOCAB_COLORS[(idx + colorMap.size) % VOCAB_COLORS.length]);
+    card.innerHTML = `
+      <div class="vocab-card-en">${v.en}</div>
+      <div class="vocab-card-he heb">${v.he}</div>
+      <div class="vocab-card-tr">${v.tr}</div>
+      <div class="vocab-card-actions">
+        <button class="btn small">🔊 Hear</button>
+        <button class="btn small alt">✏️ Spell</button>
+      </div>`;
+    const [hearBtn, spellBtn] = card.querySelectorAll('button');
+    hearBtn.addEventListener('click', () => speakHebrew(v.he, v.tr));
+    spellBtn.addEventListener('click', () => loadVocabSpell(v));
+    cardsEl.appendChild(card);
+  });
+
+  document.getElementById('vocab-spell-area').classList.remove('show');
+}
+
+document.getElementById('story-prev').addEventListener('click', () => {
+  stanzaIdx = (stanzaIdx - 1 + poem.stanzas.length) % poem.stanzas.length;
+  renderPoem();
+});
+document.getElementById('story-next').addEventListener('click', () => {
+  stanzaIdx = (stanzaIdx + 1) % poem.stanzas.length;
+  renderPoem();
+});
+document.getElementById('story-title-he').addEventListener('click', () => {
+  speakHebrew(poem.title_he, poem.title_en);
+});
+
+// Populate the text picker and wire it up.
+const pickerEl = document.getElementById('text-picker');
+texts.forEach((t, i) => {
+  const opt = document.createElement('option');
+  opt.value = String(i);
+  opt.textContent = t.title_en;
+  pickerEl.appendChild(opt);
+});
+pickerEl.addEventListener('change', e => {
+  poem = texts[parseInt(e.target.value, 10)];
+  stanzaIdx = 0;
+  renderPoemTitle();
+  renderPoem();
+});
+
+renderPoemTitle();
+renderPoem();
+
+// ===== VOCAB SPELL WIDGET =====
+let vsp = { word: null, tiles: [], placed: [], bankUsed: new Set() };
+
+function loadVocabSpell(v) {
+  vsp.word = v;
+  vsp.tiles = Array.from(v.he); // splits letters + combining nikkud as separate chars
+  vsp.placed = [];
+  vsp.bankUsed = new Set();
+  document.getElementById('vsp-en').textContent = v.en;
+  document.getElementById('vsp-tr').textContent = v.tr;
+  document.getElementById('vsp-reveal').classList.remove('show');
+  const area = document.getElementById('vocab-spell-area');
+  area.classList.add('show');
+  renderVocabSpell();
+  setTimeout(() => area.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+}
+
+function renderVocabSpell() {
+  if (!vsp.word) return;
+  const groups = computeGroups(vsp.tiles);
+  const placedSet = new Set(vsp.placed);
+
+  const slotsEl = document.getElementById('vsp-slots');
+  slotsEl.innerHTML = '';
+  groups.forEach(g => {
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    const lOk = g.letterTileIdx != null && placedSet.has(g.letterTileIdx);
+    const placedNikkud = g.nikkudTileIdxs
+      .filter(i => placedSet.has(i))
+      .sort((a, b) => vsp.placed.indexOf(a) - vsp.placed.indexOf(b));
+    if (lOk || placedNikkud.length) {
+      slot.classList.add('filled');
+      const letterCh = lOk ? vsp.tiles[g.letterTileIdx] : '';
+      const nikkudChs = placedNikkud.map(i => vsp.tiles[i]).join('');
+      slot.innerHTML = `<span class="heb">${letterCh}${nikkudChs}</span>`;
+    }
+    slot.addEventListener('click', () => {
+      const toRemove = [g.letterTileIdx, ...g.nikkudTileIdxs].filter(x => x != null);
+      if (!toRemove.length) return;
+      vsp.placed = vsp.placed.filter(i => !toRemove.includes(i));
+      toRemove.forEach(i => vsp.bankUsed.delete(i));
+      renderVocabSpell();
+    });
+    slotsEl.appendChild(slot);
+  });
+
+  const bankEl = document.getElementById('vsp-bank');
+  bankEl.innerHTML = '';
+  const seed = (vsp.word.en || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const order = shuffleSeed(vsp.tiles.length, seed);
+  order.forEach(i => {
+    const tile = vsp.tiles[i];
+    const t = document.createElement('div');
+    t.className = 'bank-tile';
+    if (vsp.bankUsed.has(i)) t.classList.add('used');
+    const label = isNikkud(tile)
+      ? (nikkudFor(tile)?.phon ?? '')
+      : (letterFor(tile)?.sound ?? (isHebrewLetter(tile) ? '' : ''));
+    const display = isNikkud(tile) ? '◌' + tile : tile;
+    t.innerHTML = `<div class="heb">${display}</div><div class="latin">${label}</div>`;
+    t.addEventListener('click', () => {
+      if (vsp.bankUsed.has(i)) return;
+      if (vsp.placed.length >= vsp.tiles.length) return;
+      vsp.placed.push(i);
+      vsp.bankUsed.add(i);
+      speakTile(tile);
+      renderVocabSpell();
+      if (vsp.placed.length === vsp.tiles.length) {
+        setTimeout(checkVocabSpell, 350);
+      }
+    });
+    bankEl.appendChild(t);
+  });
+}
+
+function checkVocabSpell() {
+  const correct = vsp.placed.every((p, idx) => p === idx);
+  const slots = document.querySelectorAll('#vsp-slots .slot');
+  if (correct) {
+    slots.forEach(s => s.classList.add('correct'));
+    setTimeout(() => speakHebrew(vsp.word.he, vsp.word.tr), 200);
+    setTimeout(() => {
+      document.getElementById('vsp-reveal-heb').textContent = vsp.word.he;
+      document.getElementById('vsp-reveal-tr').textContent =
+        vsp.word.tr + ' — ' + vsp.word.en;
+      document.getElementById('vsp-reveal').classList.add('show');
+    }, 800);
+    setTimeout(() => toast('Nice! ' + vsp.word.en + ' = ' + vsp.word.tr), 900);
+  } else {
+    slots.forEach(s => s.classList.add('wrong'));
+    toast('Close — try the order again');
+    setTimeout(() => slots.forEach(s => s.classList.remove('wrong')), 800);
+  }
+}
+
+document.getElementById('vsp-hear').addEventListener('click', () => {
+  if (vsp.word) speakHebrew(vsp.word.he, vsp.word.tr);
+});
+document.getElementById('vsp-close').addEventListener('click', () => {
+  document.getElementById('vocab-spell-area').classList.remove('show');
+});
+</script>
+</body>
+</html>
