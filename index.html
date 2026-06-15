@@ -2,18 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Otiyot — Hebrew Phonics for English Speakers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Otiyot — Hebrew & English</title>
+
+<!-- PWA: makes the app installable + work offline. Manifest declares
+     name/icons/colors; the service worker (sw.js) caches the page so it
+     loads with no internet after first visit. -->
+<meta name="theme-color" content="#fef6e4" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Otiyot" />
+<meta name="mobile-web-app-capable" content="yes" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icon-192.svg" />
+<link rel="icon" type="image/svg+xml" href="icon-192.svg" />
 <style>
   :root {
-    --bg: #fef6e4;
-    --ink: #001858;
-    --accent: #f582ae;
-    --accent2: #8bd3dd;
-    --warm: #f3d2c1;
-    --card: #fffaf0;
-    --good: #84dcc6;
-    --muted: #6b4e16;
+    /* Default = Muted (soft jewel tones: mint, teal, raspberry, gold, cream) */
+    --bg: #fbfaef;
+    --ink: #2c3e50;
+    --accent: #DE5E78;
+    --accent2: #4F94A8;
+    --warm: #F0C065;
+    --card: #fffef5;
+    --good: #67CCA1;
+    --muted: #6b6358;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -21,10 +34,11 @@
     font-family: ui-rounded, "Hiragino Maru Gothic ProN", "Quicksand",
       system-ui, sans-serif;
     background:
-      radial-gradient(ellipse 70% 50% at 15% 0%, rgba(245, 130, 174, 0.22) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 50% at 85% 30%, rgba(139, 211, 221, 0.22) 0%, transparent 60%),
-      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(243, 210, 193, 0.28) 0%, transparent 65%),
-      linear-gradient(180deg, var(--bg) 0%, #fff3df 100%);
+      radial-gradient(ellipse 65% 50% at 12% 5%,  rgba(103, 204, 161, 0.32) 0%, transparent 55%),
+      radial-gradient(ellipse 55% 50% at 90% 22%, rgba(79, 148, 168, 0.28) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 50% at 88% 80%, rgba(240, 192, 101, 0.30) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 50% at 15% 95%, rgba(222, 94, 120, 0.26) 0%, transparent 55%),
+      linear-gradient(160deg, #fbfaef 0%, #fdf5e0 50%, #fef0f0 100%);
     background-attachment: fixed;
     color: var(--ink);
     padding: 1.25rem 1rem 4rem;
@@ -32,11 +46,12 @@
   }
   body[data-theme="vibrant"] {
     background:
-      radial-gradient(ellipse 60% 50% at 10% 5%, rgba(239, 68, 68, 0.18) 0%, transparent 55%),
-      radial-gradient(ellipse 50% 50% at 95% 25%, rgba(250, 204, 21, 0.20) 0%, transparent 55%),
-      radial-gradient(ellipse 60% 50% at 85% 95%, rgba(59, 130, 246, 0.18) 0%, transparent 55%),
-      radial-gradient(ellipse 55% 45% at 15% 90%, rgba(34, 197, 94, 0.18) 0%, transparent 55%),
-      linear-gradient(160deg, #fff8f0 0%, #fefefe 50%, #f0f8ff 100%);
+      radial-gradient(ellipse 60% 50% at 10% 5%,  rgba(233, 109, 106, 0.38) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 50% at 92% 18%, rgba(240, 203, 88,  0.40) 0%, transparent 55%),
+      radial-gradient(ellipse 55% 45% at 95% 75%, rgba(66,  144, 186, 0.36) 0%, transparent 55%),
+      radial-gradient(ellipse 55% 45% at 8%  88%, rgba(153, 206, 91,  0.38) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 45% at 50% 50%, rgba(111, 98,  165, 0.22) 0%, transparent 60%),
+      linear-gradient(135deg, #fff6ee 0%, #ffffff 40%, #f4f8ff 100%);
     background-attachment: fixed;
   }
   body[data-theme="earth"] {
@@ -498,6 +513,95 @@
     font-style: italic;
     margin-top: 0.2rem;
   }
+  .vowel-card .vc-anchor {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0.35rem;
+    direction: rtl;
+  }
+  .vowel-card .vc-anchor-en {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 0.1rem;
+    direction: ltr;
+  }
+
+  /* ---------- Phonics patterns card (multi-pattern vowel reference) ---------- */
+  body[data-direction="en"] #vowel-sheet {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  .phonics-card {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    border-radius: 18px;
+    box-shadow: 3px 3px 0 var(--ink);
+    padding: 0.85rem 0.85rem 1rem;
+    text-align: left;
+  }
+  .pc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .pc-sound {
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  .pc-vowel {
+    font-family: "SBL Hebrew", "David", serif;
+    font-size: 1.4rem;
+    direction: rtl;
+  }
+  .pc-anchor {
+    font-size: 0.85rem;
+    background: rgba(103, 204, 161, 0.22);
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    padding: 0.4rem 0.6rem;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .pc-anchor:hover { background: rgba(103, 204, 161, 0.4); }
+  .pc-anchor .heb { font-family: "SBL Hebrew", "David", serif; font-size: 1.05rem; font-weight: 700; }
+  .pc-anchor-tr { color: var(--muted); font-style: italic; }
+  .pc-patterns-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+  }
+  .pc-patterns { display: flex; flex-direction: column; gap: 0.35rem; }
+  .pc-pattern {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.4rem 0.55rem;
+    background: var(--bg);
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: background 0.15s, border 0.15s;
+  }
+  .pc-pattern:hover { background: var(--warm); border-color: var(--ink); }
+  .pc-pattern:active { transform: translateY(1px); }
+  .pc-pattern-emoji { font-size: 1.4rem; line-height: 1; }
+  .pc-pattern-word { font-weight: 700; font-size: 0.95rem; }
+  .pc-pattern-spell {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.8rem;
+    background: var(--accent);
+    color: white;
+    padding: 0.12rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 700;
+  }
 
   /* Hide Hebrew lab UI when in English mode (cheat sheet replaces it) */
   body[data-direction="en"] #lab-letters,
@@ -520,13 +624,14 @@
 
   /* ---------- Theme overrides ---------- */
   [data-theme="vibrant"] {
-    --bg: #ffffff;
+    /* Bright rainbow: coral red, gold, lime green, sky blue, deep purple */
+    --bg: #fffaf0;
     --ink: #1a1a2e;
-    --accent: #ef4444;
-    --accent2: #3b82f6;
-    --warm: #fde68a;
-    --card: #fafafa;
-    --good: #22c55e;
+    --accent: #E96D6A;
+    --accent2: #4290BA;
+    --warm: #F0CB58;
+    --card: #ffffff;
+    --good: #99CE5B;
     --muted: #475569;
   }
   [data-theme="earth"] {
@@ -1021,11 +1126,11 @@ const nikkud = [
 // voices: real English words where possible (eye, queue, ess, are, you, why)
 // so the voice doesn't conflate the letter with another phoneme.
 const englishLetters = [
-  { letter: 'A', sound: 'a / ay',    heb: 'אֵיי',         name: 'aye' },
+  { letter: 'A', sound: 'a / ay',    heb: 'אֵיי',         name: 'ay' },
   { letter: 'B', sound: 'b',         heb: 'בִּי',         name: 'bee' },
   { letter: 'C', sound: 'k / s',     heb: 'סִי',          name: 'see' },
   { letter: 'D', sound: 'd',         heb: 'דִּי',         name: 'dee' },
-  { letter: 'E', sound: 'e / ee',    heb: 'אִי',          name: 'ee' },
+  { letter: 'E', sound: 'e / ee',    heb: 'אִי',          name: 'EE' },
   { letter: 'F', sound: 'f',         heb: 'אֶף',          name: 'eff' },
   { letter: 'G', sound: 'g / j',     heb: "ג'י",          name: 'gee' },
   { letter: 'H', sound: 'h',         heb: "אֵייץ'",       name: 'aitch' },
@@ -1054,19 +1159,95 @@ const englishConsonants = englishLetters.filter(L =>
   !['A', 'E', 'I', 'O', 'U'].includes(L.letter)
 );
 
-// English vowels with short/long modes, Hebrew phonetic equivalent, and an
-// example word. Each "mode" combines with a consonant to make a syllable.
-const englishVowels = [
-  { letter: 'a', mode: 'short', phon: 'a',   heb: 'אַ',    example: 'cat' },
-  { letter: 'a', mode: 'long',  phon: 'ay',  heb: 'אֵיי',  example: 'cake' },
-  { letter: 'e', mode: 'short', phon: 'eh',  heb: 'אֶ',    example: 'bed' },
-  { letter: 'e', mode: 'long',  phon: 'ee',  heb: 'אִי',   example: 'tree' },
-  { letter: 'i', mode: 'short', phon: 'ih',  heb: 'אִי',   example: 'sit' },
-  { letter: 'i', mode: 'long',  phon: 'ai',  heb: 'אַיי',  example: 'kite' },
-  { letter: 'o', mode: 'short', phon: 'o',   heb: 'אוֹ',   example: 'hot' },
-  { letter: 'o', mode: 'long',  phon: 'oh',  heb: 'אוֹ',   example: 'note' },
-  { letter: 'u', mode: 'short', phon: 'uh',  heb: 'אַ',    example: 'cup' },
-  { letter: 'u', mode: 'long',  phon: 'yoo', heb: 'יוּ',   example: 'cute' },
+// Phonics patterns sheet — each English vowel SOUND with the multiple ways it
+// can be SPELLED. This is what the Vowels Lab teaches: not "long A as a vowel
+// chip to pick" but rather "the long A sound is spelled a_e (cake), ai (rain),
+// or ay (play)". The Hebrew `anchor` is a word the learner already knows that
+// has the same vowel sound — so they can pronounce the English correctly by
+// matching to a familiar Hebrew sound.
+const phonicsSheet = [
+  // ---------- SHORT VOWELS ----------
+  { sound: 'Short A', hebVowel: 'אַ',
+    anchor: { he: 'אַבָּא', tr: 'aba', en: 'dad' },
+    patterns: [
+      { spell: 'a', example: 'cat', emoji: '🐱' },
+      { spell: 'a', example: 'hat', emoji: '🎩' },
+      { spell: 'a', example: 'bag', emoji: '🛍️' },
+    ],
+  },
+  { sound: 'Short E', hebVowel: 'אֶ',
+    anchor: { he: 'פֶּה', tr: 'peh', en: 'mouth' },
+    patterns: [
+      { spell: 'e', example: 'red', emoji: '🔴' },
+      { spell: 'e', example: 'bed', emoji: '🛏️' },
+      { spell: 'e', example: 'leg', emoji: '🦵' },
+    ],
+  },
+  { sound: 'Short I', hebVowel: 'אִי',
+    anchor: { he: 'אִמָּא', tr: 'ima', en: 'mom' },
+    patterns: [
+      { spell: 'i', example: 'fish', emoji: '🐟' },
+      { spell: 'i', example: 'sit', emoji: '🪑' },
+      { spell: 'i', example: 'pig', emoji: '🐷' },
+    ],
+  },
+  { sound: 'Short O', hebVowel: 'אוֹ',
+    anchor: { he: 'פֹּה', tr: 'poh', en: 'here' },
+    patterns: [
+      { spell: 'o', example: 'box', emoji: '📦' },
+      { spell: 'o', example: 'hot', emoji: '🔥' },
+      { spell: 'o', example: 'dog', emoji: '🐕' },
+    ],
+  },
+  { sound: 'Short U', hebVowel: 'אַ',
+    anchor: { he: 'מַה', tr: 'mah', en: 'what' },
+    patterns: [
+      { spell: 'u', example: 'sun', emoji: '☀️' },
+      { spell: 'u', example: 'cup', emoji: '🥤' },
+      { spell: 'u', example: 'bus', emoji: '🚌' },
+    ],
+  },
+  // ---------- LONG VOWELS ----------
+  { sound: 'Long A', hebVowel: 'אֵיי',
+    anchor: { he: 'בֵּיצָה', tr: 'beitza', en: 'egg' },
+    patterns: [
+      { spell: 'a_e', example: 'cake', emoji: '🎂' },
+      { spell: 'ai',  example: 'rain', emoji: '🌧️' },
+      { spell: 'ay',  example: 'play', emoji: '⚽' },
+    ],
+  },
+  { sound: 'Long E', hebVowel: 'אִי',
+    anchor: { he: 'פִּיל', tr: 'pil', en: 'elephant' },
+    patterns: [
+      { spell: 'ee', example: 'tree', emoji: '🌳' },
+      { spell: 'ea', example: 'leaf', emoji: '🍃' },
+      { spell: 'y',  example: 'baby', emoji: '👶' },
+    ],
+  },
+  { sound: 'Long I', hebVowel: 'אַיי',
+    anchor: { he: 'חַי', tr: 'chai', en: 'alive' },
+    patterns: [
+      { spell: 'i_e', example: 'kite',  emoji: '🪁' },
+      { spell: 'igh', example: 'light', emoji: '💡' },
+      { spell: 'y',   example: 'fly',   emoji: '🪰' },
+    ],
+  },
+  { sound: 'Long O', hebVowel: 'אוֹ',
+    anchor: { he: 'שָׁלוֹם', tr: 'shalom', en: 'peace' },
+    patterns: [
+      { spell: 'o_e', example: 'rope', emoji: '🪢' },
+      { spell: 'oa',  example: 'coat', emoji: '🧥' },
+      { spell: 'ow',  example: 'snow', emoji: '❄️' },
+    ],
+  },
+  { sound: 'Long U', hebVowel: 'יוּ',
+    anchor: { he: 'יוּלִי', tr: 'yuli', en: 'July' },
+    patterns: [
+      { spell: 'u_e', example: 'cube',  emoji: '🧊' },
+      { spell: 'oo',  example: 'moon',  emoji: '🌙' },
+      { spell: 'ew',  example: 'screw', emoji: '🔩' },
+    ],
+  },
 ];
 
 // Localized UI strings. Each language key maps to all the visible labels.
@@ -2555,9 +2736,12 @@ function renderAlphabet() {
     englishLetters.forEach(L => {
       const card = document.createElement('div');
       card.className = 'letter-card en-card';
+      // Letter cards teach the NAME of each letter, not the sounds it makes.
+      // (Vowel sound work — short vs. long a, e, i, o, u — lives in the
+      // Vowels Cheat Sheet on the Nikkud Lab tab.)
       card.innerHTML =
         '<div class="eng-letter">' + L.letter + '</div>' +
-        '<div class="latin">' + L.sound + '</div>' +
+        '<div class="latin">' + L.name + '</div>' +
         '<div class="heb heb-sub">' + L.heb + '</div>';
       card.addEventListener('click', () => {
         speakEnglish(L.name);
@@ -2668,28 +2852,48 @@ function buildLabUI() {
   renderLab();
 }
 
-// Emoji per example word — purely visual, helps young learners anchor sounds.
-const VOWEL_EMOJI = {
-  'cat':  '🐱', 'cake': '🎂', 'bed':  '🛏️', 'tree': '🌳',
-  'sit':  '🪑', 'kite': '🪁', 'hot':  '🔥', 'note': '🎵',
-  'cup':  '🥤', 'cute': '🧸',
-};
-
+// Build the phonics patterns sheet. Each card shows a vowel SOUND plus the
+// various ways English spells it. Tapping the Hebrew anchor plays it via
+// Hebrew TTS (familiar). Tapping a pattern row plays the example English
+// word — so the learner hears the same vowel produced from a different
+// spelling, internalizing the rules.
 function buildVowelSheet() {
   const sheet = document.getElementById('vowel-sheet');
   if (!sheet) return;
   sheet.innerHTML = '';
-  englishVowels.forEach(V => {
+  phonicsSheet.forEach(P => {
     const card = document.createElement('div');
-    card.className = 'vowel-card';
-    const emoji = VOWEL_EMOJI[V.example] || '📚';
+    card.className = 'phonics-card';
+
+    let patternsHtml = '';
+    P.patterns.forEach(pat => {
+      patternsHtml +=
+        '<div class="pc-pattern" data-word="' + pat.example + '">' +
+        '<span class="pc-pattern-emoji">' + pat.emoji + '</span>' +
+        '<span class="pc-pattern-word">' + pat.example + '</span>' +
+        '<span class="pc-pattern-spell">' + pat.spell + '</span>' +
+        '</div>';
+    });
+
     card.innerHTML =
-      '<div class="vc-emoji">' + emoji + '</div>' +
-      '<div class="vc-letter">' + V.letter.toUpperCase() + '</div>' +
-      '<div class="vc-mode">' + V.mode + ' · ' + V.phon + '</div>' +
-      '<div class="vc-heb heb">' + V.heb + '</div>' +
-      '<div class="vc-example">"' + V.example + '"</div>';
-    card.addEventListener('click', () => speakEnglish(V.example));
+      '<div class="pc-header">' +
+        '<div class="pc-sound">' + P.sound + '</div>' +
+        '<div class="pc-vowel heb">' + P.hebVowel + '</div>' +
+      '</div>' +
+      '<div class="pc-anchor" title="Tap to hear in Hebrew">' +
+        '🔊 <span class="heb">' + P.anchor.he + '</span> · ' +
+        '<span class="pc-anchor-tr">' + P.anchor.tr + ' "' + P.anchor.en + '"</span>' +
+      '</div>' +
+      '<div class="pc-patterns-label">Spelled in English:</div>' +
+      '<div class="pc-patterns">' + patternsHtml + '</div>';
+
+    card.querySelector('.pc-anchor').addEventListener('click', () =>
+      speakHebrew(P.anchor.he, P.anchor.tr)
+    );
+    card.querySelectorAll('.pc-pattern').forEach(el => {
+      el.addEventListener('click', () => speakEnglish(el.dataset.word));
+    });
+
     sheet.appendChild(card);
   });
 }
@@ -2841,7 +3045,11 @@ function buildStudioBank() {
       banksEl.appendChild(c);
     });
   } else {
-    englishConsonants.forEach(L => {
+    // All 26 English letters together, alphabetical, in one section.
+    // (English vowels ARE letters — separating them like Hebrew nikkud
+    // makes no pedagogical sense.) The "Vowels" heading + banksEl get
+    // hidden in English mode via CSS so this single row is the only bank.
+    englishLetters.forEach(L => {
       const p = document.createElement('button');
       p.className = 'pill';
       p.draggable = true;
@@ -2854,23 +3062,6 @@ function buildStudioBank() {
         e.dataTransfer.effectAllowed = 'copy';
       });
       lettersEl.appendChild(p);
-    });
-    englishVowels.forEach(V => {
-      const c = document.createElement('div');
-      c.className = 'nikkud-chip';
-      c.draggable = true;
-      c.innerHTML =
-        '<div class="vowel-mode">' + V.letter + ' · ' + V.mode + '</div>' +
-        '<div class="latin">' + V.phon + ' · ' + V.example + '</div>';
-      c.title = V.letter + ' (' + V.mode + ') — as in "' + V.example + '"';
-      c.addEventListener('click', () => pushStage(V.phon));
-      c.addEventListener('dragstart', e => {
-        c.classList.add('dragging');
-        e.dataTransfer.setData('text/plain', 'N:' + V.phon);
-        e.dataTransfer.effectAllowed = 'copy';
-      });
-      c.addEventListener('dragend', () => c.classList.remove('dragging'));
-      banksEl.appendChild(c);
     });
   }
 }
@@ -3143,8 +3334,11 @@ loadWord(0);
 let stanzaIdx = 0;
 
 const VOCAB_COLORS_PRESETS = {
-  muted: ['#fbcfe8', '#bef5d9', '#dcd6f7', '#ffd9b3', '#bee3f8', '#fef3c7', '#fecaca', '#c7d2fe'],
-  vibrant: ['#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#a855f7', '#ec4899', '#06b6d4'],
+  // Muted: soft jewel tones — mint, teal, raspberry, gold + light variants
+  muted:   ['#67CCA1', '#4F94A8', '#DE5E78', '#F0C065', '#A8D5B5', '#7FB5C2', '#E8A8B3', '#F0DDB0'],
+  // Vibrant: bright rainbow — coral, gold, lime, sky, purple + complements
+  vibrant: ['#E96D6A', '#F0CB58', '#99CE5B', '#4290BA', '#6F62A5', '#F2A35E', '#5BC6A8', '#D87BB0'],
+  // Earth: unchanged — user likes this one
   earth:   ['#2e4858', '#6fb6a8', '#d9c66e', '#e5a95d', '#c46e4a', '#a8c4a2', '#8b7355', '#b8a89b'],
 };
 let VOCAB_COLORS = VOCAB_COLORS_PRESETS.muted;
@@ -3663,6 +3857,18 @@ document.querySelectorAll('[data-theme]').forEach(b => {
 document.querySelectorAll('[data-direction]').forEach(b => {
   b.addEventListener('click', () => applyDirection(b.dataset.direction));
 });
+</script>
+
+<script>
+// Register the service worker so the app works offline after first visit.
+// Failure is silent — works fine without it (just no offline cache).
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(e => {
+      console.warn('Service worker registration failed:', e);
+    });
+  });
+}
 </script>
 </body>
 </html>
