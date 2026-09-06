@@ -1051,6 +1051,13 @@
   }
   .app-footer a { color: var(--accent2); }
 
+  .translate-note {
+    max-width: 620px; margin: 1rem auto 0; padding: 0.7rem 0.9rem;
+    background: var(--bg); border-left: 6px solid var(--accent2); border-radius: 8px;
+    font-size: 0.85rem; line-height: 1.5; color: var(--ink); text-align: left;
+  }
+  .translate-note b { color: var(--accent2); }
+
   /* First-load welcome tip, anchored above the bottom-right dock */
   .intro-pop {
     position: fixed; right: 1rem; bottom: 4rem; z-index: 70;
@@ -1556,7 +1563,7 @@
 
 <section id="translate" class="panel">
   <div class="translate-panel">
-    <div class="translate-heading" data-i18n="translateH1">Type anything in English. See it in Hebrew, word by word.</div>
+    <div class="translate-heading" data-i18n="translateH1">Type anything in English. See it in Hebrew.</div>
     <div class="translate-input-row">
       <input type="text" id="translate-input" data-i18n-placeholder="translatePlaceholder" placeholder="e.g. I have a small cat" autocomplete="off" />
       <button class="btn" id="translate-go" data-i18n="translateBtn">Translate</button>
@@ -2377,10 +2384,11 @@ const STRINGS = {
     btnSpell:          '✏️ Spell',
     poemColHebrew:     'Hebrew · word-by-word',
     poemColEnglish:    'English',
-    translateH1:       'Type anything in English. See it in Hebrew, word by word.',
+    translateH1:       'Type anything in English. See it in Hebrew.',
     translateBtn:      'Translate',
     translatePlaceholder: 'e.g. I have a small cat',
     translateHint:     'Tap any chip to hear it. Or hit Play All for the whole sentence.',
+    translateNote:     'The two sides won’t line up word-for-word — Hebrew is more compact. It has no word for <b>“is / are”</b> in the present tense, and <b>“the”</b> attaches to the front of a word (הַ־) instead of standing alone.',
     playAll:           '🔊 Play all',
     transColHe_target: 'Hebrew · translation',
     transColHe_source: 'Hebrew · your text',
@@ -2484,10 +2492,11 @@ const STRINGS = {
     btnSpell:          '✏️ אַיֵּת',
     poemColHebrew:     'עברית',
     poemColEnglish:    'אנגלית · מילה במילה',
-    translateH1:       'הקלד כל דבר בעברית. ראה אותו באנגלית, מילה במילה.',
+    translateH1:       'הקלד כל דבר בעברית. ראה אותו באנגלית.',
     translateBtn:      'תרגם',
     translatePlaceholder: 'לדוגמה: יש לי חתול קטן',
     translateHint:     'הקש על כל מילה כדי לשמוע אותה. או הקש "נגן הכל" למשפט שלם.',
+    translateNote:     'שני הצדדים לא יתאימו מילה-במילה — האנגלית ארוכה יותר. בעברית אין מילה נפרדת ל־<b>“הוא/היא/הם”</b> בזמן הווה, ו<b>ה׳ הידיעה</b> מתחברת לתחילת המילה.',
     playAll:           '🔊 נגן הכל',
     transColHe_target: 'עברית · המקור',
     transColHe_source: 'עברית · הטקסט שלך',
@@ -5065,7 +5074,6 @@ function renderTranslation() {
       highlightWord(chip);
       speakHebrew(word, word);
     });
-    attachPairHighlight(chip, i);
     heCol.appendChild(chip);
   });
 
@@ -5088,12 +5096,20 @@ function renderTranslation() {
       highlightWord(chip);
       speakEnglish(word.replace(/[.,!?;:]/g, ''));
     });
-    attachPairHighlight(chip, i);
     enCol.appendChild(chip);
   });
 
   resultEl.appendChild(heWrap);
   resultEl.appendChild(enWrap);
+
+  // When the two sides have a different number of words, explain WHY instead of
+  // leaving the learner to wonder what "went missing" — it's a teaching moment.
+  if (heWords.length !== enWords.length) {
+    const note = document.createElement('div');
+    note.className = 'translate-note';
+    note.innerHTML = t('translateNote');
+    resultEl.appendChild(note);
+  }
 }
 
 function playAllTranslation() {
