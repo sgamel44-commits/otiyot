@@ -178,6 +178,15 @@
     background: rgba(255,255,255,0.14); color: #fbf8ee;
     border-color: rgba(255,255,255,0.5); box-shadow: none;
   }
+  /* Sefaria tab: fixed Sefaria-blue pill with a Samech mark, theme-independent */
+  .tab[data-panel="library"] {
+    align-self: center; height: auto; border-radius: 999px;
+    padding: 0.34rem 0.8rem; color: #fff; background: #1c4f80;
+    font-weight: 700;
+  }
+  .tab[data-panel="library"]:hover { color: #fff; background: #276298; }
+  .tab[data-panel="library"].active { color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.6) inset; }
+  .tab[data-panel="library"]::after { display: none; }  /* the blue pill is the highlight */
 
   .panel { display: none; max-width: 900px; margin: 0 auto; }
   .panel.active { display: block; }
@@ -773,11 +782,29 @@
     h1 { font-size: 1.45rem; }
     .tagline { font-size: 0.82rem; }
     .voice-warning { font-size: 0.78rem; padding: 0.4rem 0.6rem; }
-    .navbar { margin: -0.75rem -0.6rem 1rem; padding: 0 0.6rem; height: 52px; gap: 0.5rem; }
-    .nav-brand { font-size: 1.02rem; }
-    .nav-learn-label { display: none; }
-    .tab { padding: 0 0.55rem; font-size: 0.85rem; }
-    .nav-menu .tab { flex: 0 0 auto; }
+    /* Mobile nav: brand + language on the top row, then ALL pathways wrap onto
+       their own rows below so nothing hides off-screen. Not sticky, so it
+       scrolls away and gives the content room. */
+    .navbar {
+      position: static; height: auto; flex-wrap: wrap; align-items: center;
+      margin: -0.75rem -0.6rem 1rem; padding: 0.5rem 0.6rem 0.6rem; gap: 0.4rem 0.6rem;
+    }
+    .nav-brand { font-size: 1.05rem; order: 1; }
+    .nav-right { order: 2; margin-left: auto; }
+    .nav-learn-label { display: inline; }
+    .nav-menu {
+      order: 3; flex: 1 0 100%; overflow: visible; height: auto;
+      flex-wrap: wrap; justify-content: center; gap: 0.25rem 0.35rem;
+      margin-top: 0.35rem; padding-top: 0.5rem;
+      border-top: 1px solid rgba(255,255,255,0.18);
+    }
+    .nav-menu .tab {
+      flex: 0 0 auto; height: auto; padding: 0.32rem 0.6rem; font-size: 0.85rem;
+      border-radius: 8px; background: rgba(255,255,255,0.08);
+    }
+    .nav-menu .tab.active { background: rgba(255,255,255,0.16); }
+    .nav-menu .tab.active::after { display: none; }
+    .tab[data-panel="library"] { background: #1c4f80; }
     .letter-grid {
       gap: 0.45rem;
       grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
@@ -1211,6 +1238,24 @@
   .lesson-q .lq-feedback { margin-top: 0.45rem; font-weight: 700; min-height: 1.2em; }
 
   /* ===== Library (Sefaria) ===== */
+  /* "Which links work?" helper. On wide screens it tucks into the left margin
+     and stays put; on narrower screens it drops into normal flow so it never
+     overlaps or gets clipped (holds up across zoom levels too). */
+  .lib-urlhelp {
+    max-width: 620px; margin: 0 auto 1rem; padding: 0.7rem 0.9rem;
+    background: var(--card); border: 2px solid var(--accent2); border-radius: 12px;
+    text-align: left; box-shadow: 2px 2px 0 rgba(0,0,0,0.08);
+  }
+  .lib-urlhelp-title { font-weight: 800; font-size: 0.85rem; color: var(--accent2); margin-bottom: 0.2rem; }
+  .lib-urlhelp-body { font-size: 0.8rem; line-height: 1.5; color: var(--ink); }
+  .lib-urlhelp-body b { color: var(--accent2); }
+  @media (min-width: 1400px) {
+    .lib-urlhelp {
+      position: fixed; left: 1rem; top: 50%; transform: translateY(-50%);
+      width: 175px; max-width: 175px; margin: 0; z-index: 40;
+    }
+  }
+
   .lib-picker { max-width: 720px; margin: 0 auto 0.75rem; }
   .lib-controls {
     display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
@@ -1262,10 +1307,23 @@
   .lib-title .lt-he { font-size: 1.5rem; direction: rtl;
     font-family: var(--heb); font-weight: 700; }
   .lib-title .lt-en { color: var(--muted); font-size: 0.9rem; }
+  .lib-title .lt-open {
+    display: inline-block; margin-top: 0.35rem; font-size: 0.82rem; font-weight: 700;
+    color: #fff; background: #1c4f80; padding: 0.25rem 0.7rem; border-radius: 999px;
+    text-decoration: none;
+  }
+  .lib-title .lt-open:hover { background: #276298; }
   .lib-verse {
+    position: relative;
     background: var(--card); border: 3px solid var(--ink); border-radius: 14px;
     box-shadow: 3px 3px 0 var(--ink); padding: 0.85rem 1rem; margin-bottom: 0.7rem;
   }
+  .lv-open {
+    position: absolute; top: 0.4rem; left: 0.5rem; z-index: 2;
+    font-size: 0.9rem; text-decoration: none; color: #1c4f80; opacity: 0.55;
+    line-height: 1;
+  }
+  .lv-open:hover { opacity: 1; }
   .lib-verse .lv-num {
     display: inline-block; min-width: 1.5rem; font-size: 0.7rem; font-weight: 700;
     color: #fff; background: var(--accent2); border-radius: 6px; padding: 1px 6px;
@@ -1296,6 +1354,10 @@
     padding: 1rem; text-align: center;
   }
   .lib-study-empty { color: var(--muted); font-size: 0.9rem; padding: 1.5rem 0.5rem; }
+  .lib-built {
+    margin-top: 0.9rem; padding-top: 0.7rem; border-top: 1.5px dashed var(--muted);
+    font-size: 0.72rem; color: var(--muted); text-align: center; line-height: 1.4;
+  }
   .lib-study .ls-he { font-size: 3rem; direction: rtl; font-family: var(--heb);
     line-height: 1.3; }
   .lib-study .ls-tr { font-style: italic; color: var(--accent2); font-weight: 700;
@@ -1327,6 +1389,24 @@
     border: 2px solid var(--ink); border-radius: 999px; background: var(--card);
     color: var(--ink); box-shadow: 2px 2px 0 var(--ink); cursor: pointer;
     max-width: 190px;
+  }
+
+  /* Feedback button, fixed bottom-left */
+  .feedback-fab {
+    position: fixed; left: 1rem; bottom: 1rem; z-index: 60;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--accent); color: #fff; text-decoration: none;
+    font-family: inherit; font-weight: 700; font-size: 0.85rem;
+    padding: 0.5rem 0.9rem; border: 2px solid var(--ink); border-radius: 999px;
+    box-shadow: 3px 3px 0 var(--ink); cursor: pointer;
+    transition: transform 0.08s, box-shadow 0.08s;
+  }
+  .feedback-fab:hover { filter: brightness(1.05); }
+  .feedback-fab:active { transform: translate(1px,2px); box-shadow: 1px 1px 0 var(--ink); }
+  .feedback-fab .fb-icon { font-size: 1rem; }
+  @media (max-width: 560px) {
+    .feedback-fab { bottom: 0.5rem; left: 0.5rem; padding: 0.45rem 0.6rem; font-size: 0.78rem; }
+    .feedback-fab .fb-text { display: none; }  /* icon-only on small screens */
   }
 
   /* Theme picker docked in the bottom-right corner — subtle segmented control */
@@ -1391,6 +1471,7 @@
   <button class="toggle-btn" data-theme="vibrant" data-i18n="themeVibrant">Vibrant</button>
   <button class="toggle-btn" data-theme="earth" data-i18n="themeEarth">Earth</button>
   <span class="dock-sep"></span>
+  <span class="control-label" data-i18n="writeStyleLabel">Writing style:</span>
   <button class="toggle-btn active" data-script="print" title="Print" aria-label="Print">Aa</button>
   <button class="toggle-btn" data-script="hand" title="Handwriting" aria-label="Handwriting">✍️</button>
 </div>
@@ -1401,6 +1482,14 @@
   <p class="intro-body" data-i18n="introBody">Down here you can pick a color theme, and switch Hebrew between printed and ✍️ handwritten letters — anytime.</p>
   <button class="btn small" id="intro-ok" data-i18n="introBtn">Got it</button>
 </div>
+
+<!-- Feedback: fixed bottom-left, opens a Google Form. Replace the href with your form URL. -->
+<a class="feedback-fab" id="feedback-fab"
+   href="https://docs.google.com/forms/d/e/1FAIpQLSfl1RU_pDwM1vOn2udisSqA9sv5rgOoaoguIIsOpfXxRjwkiQ/viewform"
+   target="_blank" rel="noopener"
+   data-i18n-title="feedbackLabel" title="Send feedback">
+  <span class="fb-icon">💬</span><span class="fb-text" data-i18n="feedbackLabel">Feedback</span>
+</a>
 
 <section id="alphabet" class="panel active">
   <div class="speller" id="speller">
@@ -1532,6 +1621,10 @@
 
 <section id="library" class="panel">
   <p class="section-intro" data-i18n="libIntro">Read real Hebrew from the Sefaria library — Torah, Psalms, blessings — with full vowels and translation. Tap a verse to hear it.</p>
+  <aside class="lib-urlhelp">
+    <div class="lib-urlhelp-title" data-i18n="libUrlHelpTitle">Which links work?</div>
+    <div class="lib-urlhelp-body" data-i18n-html="libUrlHelp">Paste a link to an actual text.</div>
+  </aside>
   <div class="lib-picker">
     <div class="deck-tabs" id="lib-chips"></div>
     <div class="lib-controls">
@@ -1554,8 +1647,11 @@
   </div>
   <div class="lib-layout">
     <div class="lib-reading" id="lib-result"></div>
-    <aside class="lib-study" id="lib-study">
-      <div class="lib-study-empty" data-i18n="libStudyHint">Tap any word to study it here.</div>
+    <aside class="lib-study">
+      <div class="lib-study-body" id="lib-study">
+        <div class="lib-study-empty" data-i18n="libStudyHint">Tap any word to study it here.</div>
+      </div>
+      <div class="lib-built" data-i18n="libBuiltWith">Built using Sefaria’s library and API integration.</div>
     </aside>
   </div>
   <div class="lib-attribution" id="lib-attribution"></div>
@@ -2305,6 +2401,7 @@ const STRINGS = {
     themeVibrant:      'Vibrant',
     themeEarth:        'Earth',
     voiceLabel:        'Voice:',
+    writeStyleLabel:   'Writing style:',
     tabAlphabet:       'Aleph-Bet',
     tabNikkud:         'Nikkud Lab',
     tabStudio:         'Sound Studio',
@@ -2312,7 +2409,11 @@ const STRINGS = {
     tabVocab:          'Vocabulary',
     tabGrammar:        'Grammar',
     tabStories:        'Stories',
-    tabLibrary:        'Library',
+    tabLibrary:        'ס Sefaria',
+    libBuiltWith:      'Built using Sefaria’s library and API integration.',
+    libUrlHelpTitle:   'Which links work?',
+    libUrlHelp:        'Paste a link to an actual text — a book, chapter, or verse, like <b>sefaria.org/Genesis.28</b> or <b>Psalms 23</b>. Topic pages, search results, and community “sheets” won’t open here. When in doubt, just search by name above.',
+    feedbackLabel:     'Feedback',
     tabTranslate:      'Translate',
     libIntro:          'Read real Hebrew from the Sefaria library. Tap any word to hear it and study it — letters, transliteration, and dictionary — in the side panel.',
     libRefPlaceholder: 'Paste a Sefaria link, or type a chapter — e.g. Genesis 28, Psalms 121',
@@ -2413,6 +2514,7 @@ const STRINGS = {
     themeVibrant:      'תוסס',
     themeEarth:        'אדמה',
     voiceLabel:        'קול:',
+    writeStyleLabel:   'סגנון כתב:',
     tabAlphabet:       'אלף־בית',
     tabNikkud:         'תנועות',
     tabStudio:         'סטודיו צלילים',
@@ -2420,7 +2522,11 @@ const STRINGS = {
     tabVocab:          'אוֹצָר מִילִים',
     tabGrammar:        'דִּקְדּוּק',
     tabStories:        'סיפורים',
-    tabLibrary:        'סִפְרִיָּה',
+    tabLibrary:        'ס ספריא',
+    libBuiltWith:      'נבנה באמצעות הספרייה וה־API של ספריא.',
+    libUrlHelpTitle:   'אילו קישורים עובדים?',
+    libUrlHelp:        'הדבק קישור לטקסט ממשי — ספר, פרק או פסוק, כמו <b>sefaria.org/Genesis.28</b> או <b>Psalms 23</b>. דפי נושא, תוצאות חיפוש ו״דפי מקורות״ לא ייפתחו כאן. בספק — פשוט חפש לפי שם למעלה.',
+    feedbackLabel:     'משוב',
     tabTranslate:      'תרגום',
     libIntro:          'קרא עברית אמיתית מספריית ספריא. הקש על כל מילה כדי לשמוע וללמוד אותה — אותיות, תעתיק ומילון — בפאנל הצדדי.',
     libRefPlaceholder: 'הדבק קישור מספריא, או הקלד פרק — למשל בראשית כ״ח, תהילים קכ״א',
@@ -5068,7 +5174,7 @@ function renderTranslation() {
   heWords.forEach((word, i) => {
     const chip = document.createElement('div');
     chip.className = 'word-with-gloss';
-    setChipColor(chip, chipColorForIdx(i));
+    setChipColor(chip, '#e9e6da');
     chip.innerHTML = '<span class="word-heb">' + word + '</span>';
     chip.addEventListener('click', () => {
       highlightWord(chip);
@@ -5090,7 +5196,7 @@ function renderTranslation() {
   enWords.forEach((word, i) => {
     const chip = document.createElement('span');
     chip.className = 'phrase';
-    setChipColor(chip, chipColorForIdx(i));
+    setChipColor(chip, '#e9e6da');
     chip.textContent = word;
     chip.addEventListener('click', () => {
       highlightWord(chip);
@@ -5573,15 +5679,25 @@ function renderLibResult() {
   const host = document.getElementById('lib-result');
   const startVerse = (libData.sections && libData.sections.length)
     ? parseInt(libData.sections[libData.sections.length - 1], 10) : 1;
+  // Sefaria links: whole passage, and each verse — so learners can jump over to
+  // Sefaria for audio Torah readings, commentary, and everything else there.
+  const sefariaUrl = ref => 'https://www.sefaria.org/' + encodeURIComponent(ref.replace(/\s/g, '_'));
+  const baseRef = (libData.ref || '').split(':')[0].trim();  // "Genesis 28" / "Genesis 1"
+  const passageUrl = sefariaUrl(libData.ref || baseRef);
+
   let html = '<div class="lib-title">' +
     '<div class="lt-he">' + (libData.heRef || '') + '</div>' +
-    '<div class="lt-en">' + (libData.ref || '') + '</div></div>';
+    '<div class="lt-en">' + (libData.ref || '') + '</div>' +
+    '<a class="lt-open" href="' + passageUrl + '" target="_blank" rel="noopener">' +
+      t('libOpenSefaria') + '</a>' +
+    '</div>';
   libData.heVerses.forEach((raw, i) => {
     const clean = stripTrope(cleanText(raw));           // for tokens/audio/translit
     const display = keepTrope ? cleanText(raw) : clean; // what we show
     const words = display.split(/\s+/).filter(Boolean);
     const enTxt = cleanText(libData.enVerses[i] || '');
     const num = (isNaN(startVerse) ? (i + 1) : startVerse + i);
+    const verseUrl = sefariaUrl(baseRef + ':' + num);
     const tokens = words.map(w => {
       const bare = stripTrope(w);
       const tr = showTr ? translitWord(bare) : '';
@@ -5591,6 +5707,8 @@ function renderLibResult() {
       '</span>';
     }).join('');
     html += '<div class="lib-verse">' +
+      '<a class="lv-open" href="' + verseUrl + '" target="_blank" rel="noopener" ' +
+        'title="' + t('libOpenSefaria') + '">↗</a>' +
       (libData.heVerses.length > 1 ? '<div class="lv-num">' + num + '</div>' : '') +
       '<div class="lv-words">' + tokens + '</div>' +
       (showEn && enTxt ? '<div class="lv-en">' + enTxt + '</div>' : '') +
@@ -5787,6 +5905,15 @@ function applyStrings() {
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const v = t(el.dataset.i18nPlaceholder);
     if (v !== undefined) el.placeholder = v;
+  });
+  // Strings that intentionally contain markup (e.g. <b>…</b>) use data-i18n-html.
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const v = t(el.dataset.i18nHtml);
+    if (v !== undefined) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const v = t(el.dataset.i18nTitle);
+    if (v !== undefined) el.title = v;
   });
 }
 
