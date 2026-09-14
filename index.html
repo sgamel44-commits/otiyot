@@ -332,6 +332,13 @@
   .stage .placeholder { color: #bbb; font-size: 1rem; direction: ltr; }
   .stage-phon { color: var(--muted); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 0.5rem; font-style: italic; min-height: 1.2em; }
   .studio-letters .pill .heb { font-size: 1.4rem; }
+  .studio-type {
+    display: block; width: 100%; max-width: 420px; margin: 0 auto 0.5rem;
+    padding: 0.55rem 0.9rem; font-family: var(--heb); font-size: 1.4rem;
+    text-align: center; border: 3px solid var(--ink); border-radius: 14px;
+    background: var(--card); color: var(--ink); box-shadow: 2px 2px 0 var(--ink);
+  }
+  .studio-type::placeholder { font-family: "Nunito", sans-serif; font-size: 0.85rem; }
 
   /* ---------- Spell It ---------- */
   .spell-board { text-align: center; }
@@ -1441,6 +1448,53 @@
     .theme-dock .control-label { display: none; }
     .theme-dock .toggle-btn { padding: 0.24rem 0.55rem; font-size: 0.68rem; }
   }
+
+  /* ===== Games ===== */
+  .game-deck-row { display: flex; align-items: center; justify-content: center;
+    gap: 0.4rem 0.6rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+  .game-deck-row .control-label { color: var(--muted); font-weight: 700; font-size: 0.8rem; }
+  .ws-wrap { display: flex; flex-wrap: wrap; gap: 1.25rem; justify-content: center; align-items: flex-start; }
+  .ws-grid { display: grid; gap: 3px;
+    background: var(--ink); border: 3px solid var(--ink); border-radius: 12px; padding: 3px;
+    box-shadow: 4px 4px 0 var(--ink); }
+  .ws-cell {
+    width: 2.1rem; height: 2.1rem; display: flex; align-items: center; justify-content: center;
+    background: var(--card); font-family: var(--heb); font-size: 1.35rem; cursor: pointer;
+    user-select: none; border-radius: 4px; color: var(--ink); transition: background 0.1s;
+  }
+  .ws-cell:hover { background: var(--warm); }
+  .ws-cell.sel { background: var(--accent2); color: #fff; }
+  .ws-cell.found { background: var(--good); color: #fff; }
+  .ws-list { text-align: left; min-width: 150px; }
+  .ws-list h3 { text-align: left; margin: 0 0 0.4rem; }
+  .ws-word { display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0;
+    font-size: 1rem; }
+  .ws-word .wsw-he { font-family: var(--heb); font-size: 1.3rem; direction: rtl; min-width: 3.5rem; }
+  .ws-word.done { opacity: 0.45; text-decoration: line-through; }
+  @media (max-width: 560px) { .ws-cell { width: 1.7rem; height: 1.7rem; font-size: 1.1rem; } }
+
+  /* Crossword */
+  .cw-wrap { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; align-items: flex-start; }
+  .cw-grid { display: grid; gap: 2px; }
+  .cw-cell {
+    width: 2.3rem; height: 2.3rem; position: relative; background: var(--card);
+    border: 2px solid var(--ink); display: flex; align-items: center; justify-content: center;
+    font-family: var(--heb); font-size: 1.4rem; color: var(--ink);
+  }
+  .cw-cell.block { background: var(--ink); border-color: var(--ink); }
+  .cw-cell input {
+    width: 100%; height: 100%; border: none; background: transparent; text-align: center;
+    font-family: var(--heb); font-size: 1.4rem; color: var(--ink); padding: 0;
+  }
+  .cw-cell input:focus { outline: none; background: var(--warm); }
+  .cw-cell.ok input { background: var(--good); color: #fff; }
+  .cw-num { position: absolute; top: 1px; right: 2px; font-size: 0.55rem; color: var(--muted);
+    font-family: "Nunito", sans-serif; }
+  .cw-clues { min-width: 200px; text-align: right; direction: rtl; }
+  .cw-clues h3 { text-align: right; }
+  .cw-clue { font-size: 0.95rem; padding: 0.2rem 0; display: flex; gap: 0.4rem; direction: rtl; }
+  .cw-clue .cc-n { font-weight: 800; color: var(--accent2); }
+  .game-status { text-align: center; font-weight: 700; min-height: 1.4em; margin: 0.6rem 0; }
 </style>
 </head>
 <body>
@@ -1456,6 +1510,7 @@
     <button class="tab" data-panel="story" data-i18n="tabStories">Stories</button>
     <button class="tab" data-panel="library" data-i18n="tabLibrary">Library</button>
     <button class="tab" data-panel="translate" data-i18n="tabTranslate">Translate</button>
+    <button class="tab" data-panel="games" data-i18n="tabGames">Games</button>
   </div>
   <div class="nav-right">
     <span id="voice-group" style="display:none">
@@ -1531,7 +1586,11 @@
 
 <section id="studio" class="panel">
   <div class="studio">
-    <h2 data-i18n="studioH1">Tap letters & vowels to build sounds</h2>
+    <h2 data-i18n="studioH1">Tap the tiles below — or type — to build sounds</h2>
+    <input type="text" id="studio-type" class="studio-type" autocomplete="off"
+           spellcheck="false" dir="auto"
+           data-i18n-placeholder="studioTypePlaceholder"
+           placeholder="…or type letters here, then press Enter to hear" />
     <div class="stage" id="stage" ondragover="event.preventDefault()"></div>
     <div class="stage-phon" id="stage-phon"></div>
     <div class="row">
@@ -1681,6 +1740,15 @@
       <button class="btn" id="translate-play-all" data-i18n="playAll">🔊 Play all</button>
     </div>
   </div>
+</section>
+
+<section id="games" class="panel">
+  <p class="section-intro" data-i18n="gamesIntro">Play and learn — find hidden words, or fill in the crossword.</p>
+  <div class="deck-tabs" id="game-tabs">
+    <button class="deck-chip active" data-game="wordsearch" data-i18n="gameWordSearch">🔍 Word Search</button>
+    <button class="deck-chip" data-game="crossword" data-i18n="gameCrossword">✏️ Crossword</button>
+  </div>
+  <div id="game-area"></div>
 </section>
 
 <footer class="app-footer">
@@ -2229,12 +2297,12 @@ const GRAMMAR = [
 // so these lessons teach what English actually does, with a Hebrew helper line.
 // `examples`/quiz `options` are ENGLISH (the target); tap examples to hear them.
 const GRAMMAR_EN = [
-  { id: 'no-gender', title: 'No Gender in English', emoji: '🚫',
-    rule: 'Great news: English nouns have NO gender. A table, a girl, a rock — all just "the". You never change adjectives or verbs to match a gender. Forget everything Hebrew taught you here.',
+  { id: 'no-gender', title: 'אין מין דקדוקי באנגלית', emoji: '🚫',
+    rule: 'בשורה טובה: לשמות עצם באנגלית אין מין דקדוקי. שולחן, ילדה, אבן — כולם פשוט "the". אף פעם לא משנים שם תואר או פועל כדי להתאים למין. שִכחו כאן את כל מה שהעברית לימדה אתכם.',
     points: [
-      'There is one word "the" for everything — no masculine/feminine.',
-      'Adjectives never change: "big" is big for a man, a woman, or a chair.',
-      'English uses "it" for objects and animals — Hebrew has no "it", English leans on it constantly.',
+      'יש מילה אחת — "the" — לכל דבר. אין זכר או נקבה.',
+      'שמות תואר לא משתנים: "big" נשאר "big" לגבר, לאישה או לכיסא.',
+      'באנגלית יש "it" לחפצים ולבעלי חיים; בעברית אין "it", ובאנגלית משתמשים בו כל הזמן.',
     ],
     examples: [
       { en: 'the man',   he: 'הָאִישׁ' },
@@ -2243,14 +2311,14 @@ const GRAMMAR_EN = [
       { en: 'it is big', he: 'זֶה גָּדוֹל' },
     ],
     quiz: [
-      { q: 'How many genders do English nouns have?', options: ['Two (m/f)', 'None'], answer: 1 },
+      { q: 'כמה מינים דקדוקיים יש לשמות עצם באנגלית?', options: ['שניים (זכר/נקבה)', 'אף אחד'], answer: 1 },
     ]},
-  { id: 'a-an', title: 'A or An?', emoji: '1️⃣',
-    rule: 'English uses "a" or "an" for "one / some". Use "an" before a vowel SOUND (a, e, i, o, u), and "a" before everything else. It is about sound, not spelling.',
+  { id: 'a-an', title: 'A או An?', emoji: '1️⃣',
+    rule: 'באנגלית "a" או "an" פירושם "אחד / כלשהו". משתמשים ב-"an" לפני צליל תנועה (a, e, i, o, u), וב-"a" לפני כל השאר. זה תלוי בצליל, לא באיות.',
     points: [
-      '"a" before a consonant sound: a dog, a car, a house.',
-      '"an" before a vowel sound: an apple, an egg, an hour (silent h!).',
-      'Hebrew has no word for "a/an" — in English you must add it.',
+      '"a" לפני צליל עיצור: a dog, a car, a house.',
+      '"an" לפני צליל תנועה: an apple, an egg, an hour (ה־h שותקת!).',
+      'בעברית אין מילה ל-"a/an" — באנגלית חובה להוסיף אותה.',
     ],
     examples: [
       { en: 'a dog',    he: 'כֶּלֶב' },
@@ -2259,15 +2327,15 @@ const GRAMMAR_EN = [
       { en: 'an egg',   he: 'בֵּיצָה' },
     ],
     quiz: [
-      { q: 'Pick the correct one:', options: ['a apple', 'an apple'], answer: 1 },
-      { q: 'Pick the correct one:', options: ['a car', 'an car'], answer: 0 },
+      { q: 'בחרו את הצורה הנכונה:', options: ['a apple', 'an apple'], answer: 1 },
+      { q: 'בחרו את הצורה הנכונה:', options: ['a car', 'an car'], answer: 0 },
     ]},
-  { id: 'plurals-en', title: 'Making Plurals', emoji: '➕',
-    rule: 'Most English nouns just add -s. Add -es after s, x, ch, sh sounds. A few are irregular and must be memorized.',
+  { id: 'plurals-en', title: 'צורת הרבים', emoji: '➕',
+    rule: 'רוב שמות העצם באנגלית פשוט מוסיפים -s. מוסיפים -es אחרי הצלילים s, x, ch, sh. יש כמה יוצאי דופן שצריך לזכור בעל פה.',
     points: [
       'cat → cats, book → books.',
       'box → boxes, dish → dishes.',
-      'Irregulars: man → men, child → children, foot → feet.',
+      'יוצאי דופן: man → men, child → children, foot → feet.',
     ],
     examples: [
       { en: 'one cat, two cats',   he: 'חָתוּל, חֲתוּלִים' },
@@ -2276,15 +2344,15 @@ const GRAMMAR_EN = [
       { en: 'one child, two children', he: 'יֶלֶד, יְלָדִים' },
     ],
     quiz: [
-      { q: 'Plural of "box"?', options: ['boxs', 'boxes'], answer: 1 },
-      { q: 'Plural of "child"?', options: ['childs', 'children'], answer: 1 },
+      { q: 'מהי צורת הרבים של "box"?', options: ['boxs', 'boxes'], answer: 1 },
+      { q: 'מהי צורת הרבים של "child"?', options: ['childs', 'children'], answer: 1 },
     ]},
-  { id: 'pronouns-en', title: 'I, You, He, She, It', emoji: '🧑',
-    rule: 'English pronouns are simpler than Hebrew in one way: "you" is the SAME whether you talk to a man, a woman, or a crowd. But English adds "it" for things.',
+  { id: 'pronouns-en', title: 'כינויי הגוף', emoji: '🧑',
+    rule: 'כינויי הגוף באנגלית פשוטים מהעברית בדבר אחד: "you" זהה בין אם מדברים לגבר, לאישה או לקהל. אבל באנגלית מוסיפים "it" לחפצים.',
     points: [
-      'One "you" for everyone — no masculine/feminine, no singular/plural change.',
-      '"he" for a man, "she" for a woman, "it" for a thing or animal.',
-      '"they" works for a group of anyone.',
+      '"you" אחד לכולם — בלי זכר/נקבה, בלי יחיד/רבים.',
+      '"he" לגבר, "she" לאישה, "it" לחפץ או לבעל חיים.',
+      '"they" מתאים לכל קבוצה.',
     ],
     examples: [
       { en: 'I',    he: 'אֲנִי' },
@@ -2296,14 +2364,14 @@ const GRAMMAR_EN = [
       { en: 'they', he: 'הֵם / הֵן' },
     ],
     quiz: [
-      { q: 'You speak to your sister. "You" is…', options: ['you', 'she-you (a special form)'], answer: 0 },
-      { q: 'The dog is hungry. ___ is hungry.', options: ['He or she only', 'It'], answer: 1 },
+      { q: 'מדברים עם אישה. איך אומרים "you"?', options: ['you — אותו הדבר לכולם', 'צורה מיוחדת לנקבה'], answer: 0 },
+      { q: 'הכלב רעב. ___ is hungry.', options: ['רק he או she', 'It'], answer: 1 },
     ]},
   { id: 'to-be', title: 'Am, Is, Are', emoji: '🔗',
-    rule: 'English has a verb "to be" that Hebrew usually skips in the present. You cannot drop it in English — every sentence needs am / is / are.',
+    rule: 'לאנגלית יש פועל "to be" שהעברית בדרך כלל מדלגת עליו בהווה. באנגלית אי אפשר להשמיט אותו — כל משפט צריך am / is / are.',
     points: [
       'I → am. He/she/it → is. You/we/they → are.',
-      'Hebrew: "אֲנִי תַלְמִיד" (I student). English MUST add "am": "I am a student".',
+      'בעברית: "אֲנִי תַלְמִיד". באנגלית חובה להוסיף "am": "I am a student".',
     ],
     examples: [
       { en: 'I am a student',  he: 'אֲנִי תַּלְמִיד' },
@@ -2312,15 +2380,15 @@ const GRAMMAR_EN = [
       { en: 'they are here',   he: 'הֵם כָּאן' },
     ],
     quiz: [
-      { q: 'Pick the correct one:', options: ['I is happy', 'I am happy'], answer: 1 },
-      { q: 'Pick the correct one:', options: ['She are tall', 'She is tall'], answer: 1 },
+      { q: 'בחרו את הצורה הנכונה:', options: ['I is happy', 'I am happy'], answer: 1 },
+      { q: 'בחרו את הצורה הנכונה:', options: ['She are tall', 'She is tall'], answer: 1 },
     ]},
-  { id: 'present-en', title: 'Present Simple Verbs', emoji: '🏃',
-    rule: 'Use the base verb for everyone — EXCEPT he/she/it, which adds -s. That little -s is the #1 thing English learners forget.',
+  { id: 'present-en', title: 'פעלים בהווה פשוט', emoji: '🏃',
+    rule: 'משתמשים בצורת הבסיס של הפועל לכולם — חוץ מ-he/she/it, שמוסיפים להם -s. ה-s הקטן הזה הוא הדבר שלומדי אנגלית הכי שוכחים.',
     points: [
       'I eat, you eat, we eat, they eat.',
-      'BUT: he eats, she eats, it eats.',
-      'To make a question or "not", English uses do/does: "Do you eat?", "She does not eat".',
+      'אבל: he eats, she eats, it eats.',
+      'לשאלה או לשלילה משתמשים ב-do/does: "Do you eat?", "She does not eat".',
     ],
     examples: [
       { en: 'I eat bread',   he: 'אֲנִי אוֹכֵל לֶחֶם' },
@@ -2329,14 +2397,14 @@ const GRAMMAR_EN = [
       { en: 'do you speak English?', he: 'אַתָּה מְדַבֵּר אַנְגְלִית?' },
     ],
     quiz: [
-      { q: 'Pick the correct one:', options: ['He eat rice', 'He eats rice'], answer: 1 },
-      { q: 'Pick the correct one:', options: ['I eats rice', 'I eat rice'], answer: 1 },
+      { q: 'בחרו את הצורה הנכונה:', options: ['He eat rice', 'He eats rice'], answer: 1 },
+      { q: 'בחרו את הצורה הנכונה:', options: ['I eats rice', 'I eat rice'], answer: 1 },
     ]},
-  { id: 'adjectives-en', title: 'Adjectives Come First', emoji: '📏',
-    rule: 'English adjectives go BEFORE the noun (opposite of Hebrew), and they NEVER change — no gender, no plural.',
+  { id: 'adjectives-en', title: 'שם התואר בא לפני שם העצם', emoji: '📏',
+    rule: 'באנגלית שם התואר בא לפני שם העצם (הפוך מעברית), והוא אף פעם לא משתנה — בלי מין, בלי רבים.',
     points: [
-      'Hebrew: "כֶּלֶב גָּדוֹל" (dog big). English: "a big dog".',
-      '"big" stays "big": a big dog, big dogs, a big house.',
+      'עברית: "כֶּלֶב גָּדוֹל". אנגלית: "a big dog".',
+      '"big" נשאר "big": a big dog, big dogs, a big house.',
     ],
     examples: [
       { en: 'a big dog',      he: 'כֶּלֶב גָּדוֹל' },
@@ -2345,14 +2413,14 @@ const GRAMMAR_EN = [
       { en: 'good children',  he: 'יְלָדִים טוֹבִים' },
     ],
     quiz: [
-      { q: 'Pick the natural English order:', options: ['a dog big', 'a big dog'], answer: 1 },
+      { q: 'בחרו את הסדר הטבעי באנגלית:', options: ['a dog big', 'a big dog'], answer: 1 },
     ]},
-  { id: 'questions-en', title: 'Asking Questions', emoji: '❓',
-    rule: 'Most English questions need a helper word: do / does (present) or a question word (what, where, why). This is very different from Hebrew.',
+  { id: 'questions-en', title: 'שאלות', emoji: '❓',
+    rule: 'רוב השאלות באנגלית צריכות מילת עזר: do / does (בהווה) או מילת שאלה (what, where, why). זה שונה מאוד מעברית.',
     points: [
-      'Yes/no question: "Do you like coffee?" — start with Do/Does.',
-      'he/she/it uses "does": "Does she work here?"',
-      'Wh-questions: What, Where, When, Why, Who, How.',
+      'שאלת כן/לא: "Do you like coffee?" — מתחילים ב-Do/Does.',
+      'עבור he/she/it משתמשים ב-"does": "Does she work here?"',
+      'שאלות Wh: What, Where, When, Why, Who, How.',
     ],
     examples: [
       { en: 'do you like coffee?', he: 'אַתָּה אוֹהֵב קָפֶה?' },
@@ -2361,8 +2429,8 @@ const GRAMMAR_EN = [
       { en: 'what is your name?',    he: 'מָה שִׁמְךָ?' },
     ],
     quiz: [
-      { q: 'Pick the correct question:', options: ['You like coffee?', 'Do you like coffee?'], answer: 1 },
-      { q: 'Pick the correct one:', options: ['Does she work?', 'Do she work?'], answer: 0 },
+      { q: 'בחרו את השאלה הנכונה:', options: ['You like coffee?', 'Do you like coffee?'], answer: 1 },
+      { q: 'בחרו את הצורה הנכונה:', options: ['Does she work?', 'Do she work?'], answer: 0 },
     ]},
 ];
 
@@ -2425,6 +2493,21 @@ const STRINGS = {
     libUrlHelp:        'Paste a link to an actual text — a book, chapter, or verse, like <b>sefaria.org/Genesis.28</b> or <b>Psalms 23</b>. Topic pages, search results, and community “sheets” won’t open here. When in doubt, just search by name above.',
     feedbackLabel:     'Feedback',
     tabTranslate:      'Translate',
+    tabGames:          'Games',
+    gamesIntro:        'Play and learn — find hidden words, or fill in the crossword.',
+    gameWordSearch:    '🔍 Word Search',
+    gameCrossword:     '✏️ Crossword',
+    gameDeckLabel:     'Words from:',
+    gameFind:          'Find these words:',
+    gameNewPuzzle:     '🎲 New puzzle',
+    gameFoundAll:      '🎉 You found them all!',
+    gameCheck:         '✓ Check',
+    gameReveal:        'Reveal',
+    gameClear:         'Clear',
+    gameClueAcross:    'Across →',
+    gameClueDown:      'Down ↓',
+    gameCwWin:         '🎉 Solved!',
+    gameCwWrong:       'Not quite — keep trying.',
     libIntro:          'Read real Hebrew from the Sefaria library. Tap any word to hear it and study it — letters, transliteration, and dictionary — in the side panel.',
     libRefPlaceholder: 'Paste a Sefaria link, or type a chapter — e.g. Genesis 28, Psalms 121',
     libGo:             'Read',
@@ -2477,7 +2560,8 @@ const STRINGS = {
     nikkudH1:          '1. Pick a letter',
     nikkudH2:          '2. Tap a vowel to add it to the letter',
     clearVowel:        'Clear vowel',
-    studioH1:          'Tap letters & vowels to build sounds',
+    studioH1:          'Tap the tiles below — or type — to build sounds',
+    studioTypePlaceholder: '…or type letters here, then press Enter to hear',
     studioPlay:        '🔊 Play',
     studioUndo:        '↶ Undo',
     studioClear:       'Clear',
@@ -2539,6 +2623,21 @@ const STRINGS = {
     libUrlHelp:        'הדבק קישור לטקסט ממשי — ספר, פרק או פסוק, כמו <b>sefaria.org/Genesis.28</b> או <b>Psalms 23</b>. דפי נושא, תוצאות חיפוש ו״דפי מקורות״ לא ייפתחו כאן. בספק — פשוט חפש לפי שם למעלה.',
     feedbackLabel:     'משוב',
     tabTranslate:      'תרגום',
+    tabGames:          'משחקים',
+    gamesIntro:        'לשחק וללמוד — מצאו מילים חבויות, או פתרו את התשבץ.',
+    gameWordSearch:    '🔍 תפזורת',
+    gameCrossword:     '✏️ תשבץ',
+    gameDeckLabel:     'מילים מתוך:',
+    gameFind:          'מצאו את המילים:',
+    gameNewPuzzle:     '🎲 חידה חדשה',
+    gameFoundAll:      '🎉 מצאתם את כולן!',
+    gameCheck:         '✓ בדיקה',
+    gameReveal:        'גלה',
+    gameClear:         'נקה',
+    gameClueAcross:    'מאוזן →',
+    gameClueDown:      'מאונך ↓',
+    gameCwWin:         '🎉 נפתר!',
+    gameCwWrong:       'לא בדיוק — נסו עוד.',
     libIntro:          'קרא עברית אמיתית מספריית ספריא. הקש על כל מילה כדי לשמוע וללמוד אותה — אותיות, תעתיק ומילון — בפאנל הצדדי.',
     libRefPlaceholder: 'הדבק קישור מספריא, או הקלד פרק — למשל בראשית כ״ח, תהילים קכ״א',
     libGo:             'קרא',
@@ -2568,7 +2667,7 @@ const STRINGS = {
     quizAgain:         '↻ שוב',
     quizPrompt:        'איזו מילה זו?',
     quizDone:          'סיימת את החבילה!',
-    grammarIntro:      'שיעורים קצרים על מבנה העברית. הקש על הדוגמאות כדי לשמוע.',
+    grammarIntro:      'שיעורים קצרים על מבנה האנגלית. הקישו על הדוגמאות כדי לשמוע אותן.',
     grammarRule:       'הכלל',
     grammarExamples:   'דוגמאות',
     grammarCheck:      'בדוק את עצמך',
@@ -2591,7 +2690,8 @@ const STRINGS = {
     nikkudH1:          '1. בחר עיצור',
     nikkudH2:          '2. בחר תנועה (קצרה/ארוכה)',
     clearVowel:        'נקה תנועה',
-    studioH1:          'הקש על אותיות ותנועות כדי לבנות צלילים',
+    studioH1:          'הקישו על האריחים — או הקלידו — כדי לבנות צלילים',
+    studioTypePlaceholder: '…או הקלידו אותיות כאן, ואז Enter כדי לשמוע',
     studioPlay:        '🔊 נגן',
     studioUndo:        '↶ בטל',
     studioClear:       'נקה',
@@ -4544,8 +4644,27 @@ document.getElementById('stage-undo').addEventListener('click', () => {
 });
 document.getElementById('stage-clear').addEventListener('click', () => {
   stage = [];
+  const ti = document.getElementById('studio-type');
+  if (ti) ti.value = '';
   renderStage();
 });
+
+// Type-to-build: typing sets the stage to whatever's in the box (an alternative
+// to tapping the tiles). Enter plays it. Tapping tiles still works and appends.
+(function () {
+  const typeEl = document.getElementById('studio-type');
+  if (!typeEl) return;
+  typeEl.addEventListener('input', () => {
+    stage = [...typeEl.value];
+    renderStage();
+  });
+  typeEl.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' || !stage.length) return;
+    if (currentDirection === 'he') speakHebrew(stageText(), stageRomanized());
+    else speakEnglish(stageText());
+  });
+})();
+
 renderStage();
 
 // ===== SHARED SPELL LOGIC =====
@@ -4627,50 +4746,66 @@ function renderSpell() {
   bankEl.innerHTML = '';
 
   if (currentDirection === 'he') {
-    // Positional slots (RTL): each tile lands in the NEXT slot in the order you
-    // tap it — so you can genuinely put things in the wrong order and see it.
-    // First tap = rightmost slot (Hebrew reads right-to-left).
+    // One slot per LETTER (RTL). A vowel (nikkud) doesn't take its own slot — it
+    // attaches to the letter it modifies, so learners see how the vowel changes
+    // that letter's sound. Letters still fill slots in TAP order, so a wrong
+    // order is visible (find-out). First tap = rightmost slot.
     slotsEl.style.direction = 'rtl';
     const n = w.tiles.length;
-    for (let slotIdx = 0; slotIdx < n; slotIdx++) {
+    const letterCount = w.tiles.filter(ch => !isNikkud(ch)).length;
+    // Group the placed tiles: each letter starts a unit; each vowel joins the
+    // most recent letter's unit.
+    const groups = [];
+    placed.forEach(idx => {
+      if (isNikkud(w.tiles[idx])) {
+        if (groups.length) groups[groups.length - 1].nik.push(idx);
+      } else {
+        groups.push({ letter: idx, nik: [] });
+      }
+    });
+    for (let s = 0; s < letterCount; s++) {
       const slot = document.createElement('div');
       slot.className = 'slot';
-      const placedTileIdx = placed[slotIdx];
-      if (placedTileIdx != null) {
+      const g = groups[s];
+      if (g) {
         slot.classList.add('filled');
-        const ch = w.tiles[placedTileIdx];
-        const display = isNikkud(ch) ? '◌' + ch : ch;
-        slot.innerHTML = '<span class="heb">' + display + '</span>';
+        const combined = w.tiles[g.letter] + g.nik.map(i => w.tiles[i]).join('');
+        slot.innerHTML = '<span class="heb">' + combined + '</span>';
+        slot.addEventListener('click', () => {
+          const remove = [g.letter, ...g.nik];
+          placed = placed.filter(i => !remove.includes(i));
+          remove.forEach(i => bankUsed.delete(i));
+          renderSpell();
+        });
       }
-      slot.addEventListener('click', () => {
-        if (placedTileIdx == null) return;
-        bankUsed.delete(placedTileIdx);
-        placed.splice(slotIdx, 1);   // remove & shift, so you can re-order
-        renderSpell();
-      });
       slotsEl.appendChild(slot);
     }
     const order = shuffleSeed(n, currentWord);
     order.forEach(i => {
       const tile = w.tiles[i];
+      const isN = isNikkud(tile);
       const t = document.createElement('div');
       t.className = 'bank-tile';
       if (bankUsed.has(i)) t.classList.add('used');
-      const label = isNikkud(tile)
-        ? (nikkudFor(tile)?.phon ?? '')
-        : (letterFor(tile)?.sound ?? '');
-      const display = isNikkud(tile) ? '◌' + tile : tile;
+      const label = isN ? (nikkudFor(tile)?.phon ?? '') : (letterFor(tile)?.sound ?? '');
+      const display = isN ? '◌' + tile : tile;
       t.innerHTML = '<div class="heb">' + display + '</div><div class="latin">' + label + '</div>';
       t.addEventListener('click', () => {
         if (bankUsed.has(i)) return;
-        if (placed.length >= n) return;
+        if (isN) {
+          // A vowel needs a letter to sit on.
+          if (!placed.some(p => !isNikkud(w.tiles[p]))) {
+            toast('Add a letter first — the vowel attaches to it');
+            return;
+          }
+        } else if (groups.length >= letterCount) {
+          return;   // all letter slots are full
+        }
         placed.push(i);
         bankUsed.add(i);
         speakTile(tile);
         renderSpell();
-        if (placed.length === n) {
-          setTimeout(checkSpellAnswer, 350);
-        }
+        if (placed.length === n) setTimeout(checkSpellAnswer, 350);
       });
       bankEl.appendChild(t);
     });
@@ -5898,6 +6033,188 @@ function setupLibraryTab() {
   });
 }
 
+// ===== GAMES TAB =====
+let currentGame = 'wordsearch';
+let wsDeckIndex = 4; // Animals — nice short words
+const HEB_FILL = 'אבגדהוזחטיכלמנסעפצקרשת'.split('');
+function stripNik(s) { return s.replace(/[֑-ׇ]/g, ''); }
+
+// --- Word Search -------------------------------------------------------
+function wsWordsFromDeck(deck) {
+  return deck.words
+    .map(w => ({ he: stripNik(w.he), en: w.en, e: w.e }))
+    .filter(w => !/\s/.test(w.he) && w.he.length >= 2 && w.he.length <= 6)
+    .slice(0, 8);
+}
+function buildWSGrid(words, size) {
+  const grid = Array.from({ length: size }, () => Array(size).fill(''));
+  const dirs = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+  const placements = [];
+  const fits = (ls, r, c, dr, dc) => {
+    for (let k = 0; k < ls.length; k++) {
+      const rr = r + dr * k, cc = c + dc * k;
+      if (rr < 0 || cc < 0 || rr >= size || cc >= size) return false;
+      if (grid[rr][cc] && grid[rr][cc] !== ls[k]) return false;
+    }
+    return true;
+  };
+  words.forEach(entry => {
+    const ls = [...entry.he];
+    for (let att = 0; att < 250; att++) {
+      const [dr, dc] = dirs[Math.floor(Math.random() * 4)];
+      const r = Math.floor(Math.random() * size), c = Math.floor(Math.random() * size);
+      if (!fits(ls, r, c, dr, dc)) continue;
+      const cells = [];
+      for (let k = 0; k < ls.length; k++) {
+        const rr = r + dr * k, cc = c + dc * k;
+        grid[rr][cc] = ls[k]; cells.push(rr * size + cc);
+      }
+      placements.push({ ...entry, cells });
+      break;
+    }
+  });
+  for (let r = 0; r < size; r++) for (let c = 0; c < size; c++)
+    if (!grid[r][c]) grid[r][c] = HEB_FILL[Math.floor(Math.random() * HEB_FILL.length)];
+  return { grid, placements };
+}
+let wsState = null;
+function renderWordSearch() {
+  const area = document.getElementById('game-area');
+  const deck = VOCAB[wsDeckIndex];
+  const words = wsWordsFromDeck(deck);
+  const size = 10;
+  const { grid, placements } = buildWSGrid(words, size);
+  wsState = { size, placements, foundWords: new Set(), foundCells: new Set(), sel: null };
+
+  // deck picker + grid + list
+  let deckChips = VOCAB.map((d, i) =>
+    '<button class="deck-chip' + (i === wsDeckIndex ? ' active' : '') + '" data-wsdeck="' + i + '">' +
+    d.emoji + ' ' + d.name + '</button>').join('');
+  const listHtml = placements.map(p =>
+    '<div class="ws-word" data-w="' + p.he + '"><span class="wsw-he">' + p.he + '</span>' +
+    '<span>' + p.e + ' ' + p.en + '</span></div>').join('');
+  const cells = [];
+  for (let r = 0; r < size; r++) for (let c = 0; c < size; c++)
+    cells.push('<div class="ws-cell" data-idx="' + (r * size + c) + '">' + grid[r][c] + '</div>');
+  area.innerHTML =
+    '<div class="game-deck-row"><span class="control-label">' + t('gameDeckLabel') + '</span>' +
+      '<div class="deck-tabs" style="margin:0">' + deckChips + '</div></div>' +
+    '<div class="game-status" id="ws-status"></div>' +
+    '<div class="ws-wrap">' +
+      '<div class="ws-grid" style="grid-template-columns:repeat(' + size + ',auto)">' + cells.join('') + '</div>' +
+      '<div class="ws-list"><h3>' + t('gameFind') + '</h3>' + listHtml +
+        '<button class="btn small" id="ws-new" style="margin-top:0.7rem">' + t('gameNewPuzzle') + '</button>' +
+      '</div>' +
+    '</div>';
+
+  area.querySelectorAll('[data-wsdeck]').forEach(b =>
+    b.addEventListener('click', () => { wsDeckIndex = +b.dataset.wsdeck; renderWordSearch(); }));
+  document.getElementById('ws-new').addEventListener('click', renderWordSearch);
+  area.querySelectorAll('.ws-cell').forEach(cell =>
+    cell.addEventListener('click', () => wsCellClick(+cell.dataset.idx)));
+}
+function wsLineCells(a, b, size) {
+  const ra = Math.floor(a / size), ca = a % size, rb = Math.floor(b / size), cb = b % size;
+  const dr = Math.sign(rb - ra), dc = Math.sign(cb - ca);
+  // must be straight: horizontal, vertical, or the two are equal
+  if (ra !== rb && ca !== cb) return null;
+  const out = []; let r = ra, c = ca;
+  while (true) { out.push(r * size + c); if (r === rb && c === cb) break; r += dr; c += dc; }
+  return out;
+}
+function wsCellClick(idx) {
+  const st = wsState;
+  const cellEl = i => document.querySelector('.ws-cell[data-idx="' + i + '"]');
+  if (st.sel == null) {
+    st.sel = idx; cellEl(idx).classList.add('sel'); return;
+  }
+  const line = wsLineCells(st.sel, idx, st.size);
+  document.querySelectorAll('.ws-cell.sel').forEach(e => e.classList.remove('sel'));
+  const start = st.sel; st.sel = null;
+  if (!line) { if (idx !== start) wsCellClick(idx); return; }  // not straight → restart from new cell
+  const letters = line.map(i => document.querySelector('.ws-cell[data-idx="' + i + '"]').textContent).join('');
+  const rev = [...letters].reverse().join('');
+  const hit = st.placements.find(p => !st.foundWords.has(p.he) && (p.he === letters || p.he === rev));
+  if (hit) {
+    st.foundWords.add(hit.he);
+    hit.cells.forEach(i => { st.foundCells.add(i); cellEl(i).classList.add('found'); });
+    document.querySelector('.ws-word[data-w="' + hit.he + '"]').classList.add('done');
+    if (st.foundWords.size === st.placements.length)
+      document.getElementById('ws-status').textContent = t('gameFoundAll');
+  }
+}
+
+// --- Crossword (curated mini puzzle) -----------------------------------
+const CROSSWORD = {
+  rows: 4, cols: 3,
+  answers: { '1,0': 'ב', '1,1': 'ל', '1,2': 'כ', '2,1': 'ח', '3,1': 'ם', '3,2': 'ש' },
+  numbers: { '1,2': 1, '1,1': 2, '3,2': 3 },
+  clues: [
+    { n: 1, dir: 'across', clue: '🐕 dog' },
+    { n: 2, dir: 'down',   clue: '🍞 bread' },
+    { n: 3, dir: 'across', clue: '🏷️ name' },
+  ],
+};
+function renderCrossword() {
+  const area = document.getElementById('game-area');
+  const cw = CROSSWORD;
+  let cells = '';
+  for (let r = 0; r < cw.rows; r++) for (let c = 0; c < cw.cols; c++) {
+    const key = r + ',' + c;
+    if (cw.answers[key]) {
+      const num = cw.numbers[key] ? '<span class="cw-num">' + cw.numbers[key] + '</span>' : '';
+      cells += '<div class="cw-cell">' + num +
+        '<input maxlength="1" data-key="' + key + '" autocomplete="off" /></div>';
+    } else {
+      cells += '<div class="cw-cell block"></div>';
+    }
+  }
+  const clueRow = dir => cw.clues.filter(c => c.dir === dir).map(c =>
+    '<div class="cw-clue"><span class="cc-n">' + c.n + '.</span><span>' + c.clue + '</span></div>').join('');
+  area.innerHTML =
+    '<div class="game-status" id="cw-status"></div>' +
+    '<div class="cw-wrap">' +
+      '<div class="cw-grid" style="grid-template-columns:repeat(' + cw.cols + ',auto)">' + cells + '</div>' +
+      '<div class="cw-clues">' +
+        '<h3>' + t('gameClueAcross') + '</h3>' + clueRow('across') +
+        '<h3>' + t('gameClueDown') + '</h3>' + clueRow('down') +
+        '<div class="row" style="justify-content:flex-start;margin-top:0.8rem">' +
+          '<button class="btn small" id="cw-check">' + t('gameCheck') + '</button>' +
+          '<button class="btn small ghost" id="cw-reveal">' + t('gameReveal') + '</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  document.getElementById('cw-check').addEventListener('click', () => checkCrossword(false));
+  document.getElementById('cw-reveal').addEventListener('click', () => checkCrossword(true));
+}
+function checkCrossword(reveal) {
+  const cw = CROSSWORD;
+  let allOk = true;
+  document.querySelectorAll('.cw-cell input').forEach(inp => {
+    const want = cw.answers[inp.dataset.key];
+    if (reveal) inp.value = want;
+    const ok = stripNik(inp.value.trim()) === want;
+    inp.parentElement.classList.toggle('ok', ok);
+    if (!ok) allOk = false;
+  });
+  document.getElementById('cw-status').textContent =
+    allOk ? t('gameCwWin') : (reveal ? '' : t('gameCwWrong'));
+}
+
+function renderGame() {
+  if (currentGame === 'crossword') renderCrossword(); else renderWordSearch();
+}
+function setupGamesTab() {
+  document.querySelectorAll('#game-tabs [data-game]').forEach(btn =>
+    btn.addEventListener('click', () => {
+      currentGame = btn.dataset.game;
+      document.querySelectorAll('#game-tabs [data-game]').forEach(b =>
+        b.classList.toggle('active', b === btn));
+      renderGame();
+    }));
+  renderGame();
+}
+
 function applyTheme(name) {
   if (!VOCAB_COLORS_PRESETS[name]) return;
   currentTheme = name;
@@ -5968,6 +6285,7 @@ function applyDirection(dir) {
     if (vocabMode === 'quiz') { if (quizState) renderQuizCard(); } else renderVocabDeck();
   }
   if (typeof renderLessonTabs === 'function') { renderLessonTabs(); renderLesson(); }
+  if (typeof renderGame === 'function') renderGame();
 }
 
 // Apply strings + seed the vowel cheat sheet + set body direction once at load.
@@ -5978,6 +6296,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (typeof setupVocabTab === 'function') setupVocabTab();
   if (typeof setupGrammarTab === 'function') setupGrammarTab();
   if (typeof setupLibraryTab === 'function') setupLibraryTab();
+  if (typeof setupGamesTab === 'function') setupGamesTab();
 });
 
 document.querySelectorAll('[data-theme]').forEach(b => {
