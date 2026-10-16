@@ -1166,6 +1166,13 @@
   .deck-chip:active, .lesson-chip:active { transform: translate(1px,1px); }
   .deck-chip.active, .lesson-chip.active { background: var(--accent); color: #fff; }
   .deck-toolbar { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.5rem; }
+  .deck-select-row { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.5rem; }
+  .vocab-blur-row { display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; justify-content: center; margin-bottom: 0.5rem; }
+  /* Study mode: blur transliteration / meaning until you tap the card to reveal. */
+  .vocab-card.blur-tr .vocab-card-tr,
+  .vocab-card.blur-en .vocab-card-en { filter: blur(5px); user-select: none; transition: filter 0.15s; }
+  .vocab-card.revealed .vocab-card-tr,
+  .vocab-card.revealed .vocab-card-en { filter: none; user-select: auto; }
   .mode-btn.active { outline: 3px solid var(--ink); outline-offset: 2px; }
   .vocab-card .em { font-size: 2rem; line-height: 1; }
   .vocab-card { cursor: pointer; transition: transform 0.08s; }
@@ -1499,6 +1506,27 @@
   .cw-clue .cc-n { font-weight: 800; color: var(--accent2); }
   .game-status { text-align: center; font-weight: 700; min-height: 1.4em; margin: 0.6rem 0; }
 
+  /* Sound Shooter */
+  .ss-wrap { max-width: 480px; margin: 0 auto; text-align: center; }
+  .ss-hud { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
+    margin-bottom: 0.4rem; font-weight: 800; font-size: 0.9rem; }
+  .ss-prompt { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .ss-canvas { width: 100%; max-width: 480px; height: auto; display: block; margin: 0 auto;
+    border: 3px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink);
+    background: #0b1026; touch-action: manipulation; cursor: crosshair; }
+  .ss-start { max-width: 440px; margin: 1rem auto; background: var(--card); border: 3px solid var(--ink);
+    border-radius: 18px; box-shadow: 5px 5px 0 var(--ink); padding: 1.4rem; text-align: center; }
+  .ss-start .ss-how { font-size: 0.9rem; color: var(--muted); line-height: 1.5; margin: 0.6rem 0 1rem; }
+  .ss-best { font-weight: 800; color: var(--accent2); margin: 0.2rem 0 0.4rem; }
+  .ss-best .g-newbest { color: var(--accent); }
+  .lr-target { text-align: center; margin: 0.3rem 0 0.5rem; font-size: 0.95rem; }
+  .lr-target .lr-tlabel { font-weight: 800; color: var(--accent2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .lr-target .lr-word { font-family: var(--heb); font-size: 1.6rem; }
+  .lr-target .lr-l { padding: 0 1px; opacity: 0.45; }
+  .lr-target .lr-l.got { color: var(--good); opacity: 1; }
+  .lr-target .lr-l.next { color: var(--accent); opacity: 1; border-bottom: 3px solid var(--accent); }
+  .lr-target .lr-ten { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+
   /* ===== Immerse (watch + break down) ===== */
   #immerse { max-width: 760px; }
   .imm-video-row { display: flex; gap: 0.5rem; max-width: 620px; margin: 0 auto 0.5rem; }
@@ -1543,6 +1571,10 @@
   .imm-word.active .iw-he, .imm-word.active .iw-tr { color: #fff; }
   .imm-word .iw-he { font-size: 1.7rem; font-family: var(--heb); line-height: 1.5; }
   .imm-word .iw-tr { font-size: 0.72rem; color: var(--muted); font-style: italic; direction: ltr; margin-top: -0.15rem; }
+  .imm-word .iw-en { font-size: 0.72rem; color: var(--ink); direction: ltr; text-align: center; opacity: 0.82; margin-top: 0.05rem; min-height: 0.9em; }
+  .imm-words.no-tr .iw-tr { display: none; }
+  .imm-words.no-en .iw-en { display: none; }
+  .imm-toggles { display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; justify-content: center; margin: 0.5rem 0 0; }
   .imm-grammar { font-size: 0.92rem; line-height: 1.5; }
   .imm-grammar .ig-guess { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-bottom: 0.4rem; }
   .imm-grammar ul { list-style: none; padding: 0; margin: 0 0 0.6rem; display: flex; flex-direction: column; gap: 0.3rem; }
@@ -1589,7 +1621,11 @@
   .imm-addcard input { padding: 0.45rem 0.7rem; border: 2px solid var(--ink); border-radius: 10px;
     background: var(--card); color: var(--ink); font-family: inherit; font-size: 0.95rem; }
   .imm-addcard #imm-add-he { font-family: var(--heb); font-size: 1.3rem; width: 150px; }
-  .imm-card-actions { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.6rem; }
+  .imm-card-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 0.6rem; }
+  .imm-card-src { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.6rem; }
+  .imm-level-label { text-align: center; font-size: 0.72rem; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem; }
+  #sp-input { display: block; width: 90%; max-width: 280px; margin: 0.4rem auto; }
+  #sp-kb { margin-top: 0.3rem; }
   .imm-cardstudy:not(:empty) {
     max-width: 440px; margin: 0 auto 1rem; background: var(--card); border: 3px solid var(--ink);
     border-radius: 18px; box-shadow: 5px 5px 0 var(--ink); padding: 1.25rem; text-align: center;
@@ -1609,6 +1645,49 @@
   .q-mean { font-size: 1.1rem; margin: 0.5rem 0; }
   .q-status { display: flex; justify-content: space-between; align-items: center; margin-top: 0.8rem; font-size: 0.85rem; }
   .imm-card-detail-add { margin-top: 0.6rem; }
+
+  /* ===== Progress / Levels / Fluency ===== */
+  #progress { max-width: 820px; }
+  .prog-top { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 760px; margin: 0 auto 1rem; }
+  @media (max-width: 620px) { .prog-top { grid-template-columns: 1fr; } }
+  .prog-card { background: var(--card); border: 3px solid var(--ink); border-radius: 18px;
+    box-shadow: 5px 5px 0 var(--ink); padding: 1rem 1.1rem; }
+  .prog-level-card { display: flex; align-items: center; gap: 0.9rem; }
+  .pl-badge { flex: 0 0 auto; width: 3.4rem; height: 3.4rem; border-radius: 50%;
+    background: var(--accent); color: #fff; border: 3px solid var(--ink);
+    display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; }
+  .pl-info { flex: 1; min-width: 0; }
+  .pl-title { font-weight: 800; font-size: 1.15rem; }
+  .pl-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .prog-bar { height: 12px; background: var(--bg); border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; }
+  .prog-bar > i { display: block; height: 100%; width: 0; background: var(--warm); transition: width 0.4s; }
+  .pl-xp { font-size: 0.72rem; color: var(--muted); margin-top: 0.25rem; }
+  .prog-fluency-card { text-align: center; }
+  .pf-label { font-weight: 800; color: var(--accent2); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .pf-band { font-weight: 800; font-size: 1.25rem; margin: 0.2rem 0 0.5rem; }
+  .pf-gauge { display: flex; gap: 4px; justify-content: center; }
+  .pf-seg { flex: 1; max-width: 42px; height: 12px; border-radius: 4px; background: var(--bg); border: 2px solid var(--ink); }
+  .pf-seg.on { background: var(--good); }
+  .pf-sub { font-size: 0.75rem; color: var(--muted); margin-top: 0.4rem; }
+  .prog-stats { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; max-width: 760px; margin: 0 auto 1rem; }
+  .pstat { flex: 1 1 110px; max-width: 140px; background: var(--card); border: 2px solid var(--ink);
+    border-radius: 14px; box-shadow: 2px 2px 0 var(--ink); padding: 0.6rem 0.4rem; text-align: center; }
+  .ps-em { font-size: 1.4rem; line-height: 1; }
+  .ps-n { font-weight: 800; font-size: 1.05rem; margin: 0.15rem 0; }
+  .ps-l { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .prog-actions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .prog-quiz:not(:empty) { margin: 1rem auto 1.25rem; }
+  .prog-decks { max-width: 620px; margin: 0.5rem auto 0; display: flex; flex-direction: column; gap: 0.45rem; }
+  .pd-row { display: flex; align-items: center; gap: 0.6rem; }
+  .pd-name { flex: 0 0 42%; font-size: 0.85rem; font-weight: 600; }
+  .pd-bar { position: relative; flex: 1; height: 14px; background: var(--bg);
+    border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; }
+  .pd-bar > i { position: absolute; left: 0; top: 0; height: 100%; }
+  .pd-bar .pd-known { background: var(--warm); width: 0; }
+  .pd-bar .pd-mast { background: var(--good); width: 0; }
+  .pd-count { flex: 0 0 auto; font-size: 0.72rem; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3rem; text-align: right; }
+  .prog-reset-row { text-align: center; margin-top: 1.5rem; }
+  .pq-band { font-size: 1.1rem; margin: 0.5rem 0; }
 </style>
 </head>
 <body>
@@ -1626,6 +1705,7 @@
     <button class="tab" data-panel="translate" data-i18n="tabTranslate">Translate</button>
     <button class="tab" data-panel="games" data-i18n="tabGames">Games</button>
     <button class="tab" data-panel="immerse" data-i18n="tabImmerse">Immerse</button>
+    <button class="tab" data-panel="progress" data-i18n="tabProgress">Progress</button>
   </div>
   <div class="nav-right">
     <span id="voice-group" style="display:none">
@@ -1754,11 +1834,19 @@
 </section>
 
 <section id="vocab" class="panel">
-  <p class="section-intro" data-i18n="vocabIntro">Tap any card to hear it. Pick a deck, then hit Quiz to test yourself.</p>
+  <p class="section-intro" data-i18n="vocabIntro">Tap cards to hear them. Pick one or more decks (or Select all), then Browse or Quiz. Turn on blur to self-test — tap a card to reveal.</p>
+  <div class="deck-select-row">
+    <button class="btn small" id="vocab-all" data-i18n="vocabAll">✓ Select all</button>
+    <button class="btn small ghost" id="vocab-clear" data-i18n="vocabClear">✕ Clear</button>
+  </div>
   <div class="deck-tabs" id="deck-tabs"></div>
   <div class="deck-toolbar">
     <button class="btn small mode-btn active" id="vocab-mode-browse" data-i18n="vocabBrowse">📖 Browse</button>
     <button class="btn small alt mode-btn" id="vocab-mode-quiz" data-i18n="vocabQuiz">🎯 Quiz me</button>
+  </div>
+  <div class="vocab-blur-row">
+    <label class="lib-toggle"><input type="checkbox" id="vocab-blur-tr" /> <span data-i18n="vocabBlurTr">Blur transliteration</span></label>
+    <label class="lib-toggle"><input type="checkbox" id="vocab-blur-en" /> <span data-i18n="vocabBlurEn">Blur meaning</span></label>
   </div>
   <div class="vocab-cards" id="vocab-deck"></div>
   <div class="quiz-area" id="quiz-area" style="display:none"></div>
@@ -1871,6 +1959,8 @@
   <div class="deck-tabs" id="game-tabs">
     <button class="deck-chip active" data-game="wordsearch" data-i18n="gameWordSearch">🔍 Word Search</button>
     <button class="deck-chip" data-game="crossword" data-i18n="gameCrossword">✏️ Crossword</button>
+    <button class="deck-chip" data-game="shooter" data-i18n="gameShooter">🚀 Sound Shooter</button>
+    <button class="deck-chip" data-game="runner" data-i18n="gameRunner">🏃 Letter Runner</button>
   </div>
   <div id="game-area"></div>
 </section>
@@ -1912,6 +2002,10 @@
       <button class="btn ghost small" id="imm-play" style="display:none" data-i18n="immPlay">🔊 Play line</button>
       <button class="btn ghost small" id="imm-save" style="display:none" data-i18n="immSave">⭐ Save</button>
     </div>
+    <div class="imm-toggles" id="imm-toggles">
+      <label class="lib-toggle"><input type="checkbox" id="imm-t-translit" checked /> <span data-i18n="immTogTranslit">Transliteration</span></label>
+      <label class="lib-toggle"><input type="checkbox" id="imm-t-meaning" checked /> <span data-i18n="immTogMeaning">Meaning under words</span></label>
+    </div>
     <div class="imm-status" id="imm-status"></div>
     <div class="imm-result" id="imm-result"></div>
     <div class="imm-detail" id="imm-detail"></div>
@@ -1919,17 +2013,56 @@
 
   <div class="imm-cards-wrap">
     <h3 data-i18n="immMyCards">⭐ My cards</h3>
+    <div class="imm-card-src" id="imm-card-src">
+      <button class="deck-chip active" data-src="mine" data-i18n="immSrcMine">⭐ My cards</button>
+      <button class="deck-chip" data-src="vocab" data-i18n="immSrcVocab">📚 All vocabulary</button>
+    </div>
     <div class="imm-addcard">
       <input type="text" id="imm-add-he" dir="rtl" autocomplete="off" data-i18n-placeholder="immAddHe" placeholder="Hebrew word" />
       <input type="text" id="imm-add-mean" autocomplete="off" data-i18n-placeholder="immAddMean" placeholder="what it means" />
       <button class="btn small" id="imm-add-btn" data-i18n="immAddBtn">➕ Add</button>
     </div>
+    <div class="imm-level-label" data-i18n="immLevels">Study levels — easy → hard:</div>
     <div class="imm-card-actions" id="imm-card-actions" style="display:none">
-      <button class="btn small" id="imm-flash" data-i18n="immFlashcards">🗂️ Flashcards</button>
-      <button class="btn small alt" id="imm-quiz" data-i18n="immQuizMe">🎯 Quiz me</button>
+      <button class="btn small" id="imm-flash" data-i18n="immFlashcards">🔄 Flashcards</button>
+      <button class="btn small" id="imm-choose" data-i18n="immChoose">🔤 Choose</button>
+      <button class="btn small alt" id="imm-quiz" data-i18n="immQuizMe">🗣️ Say it</button>
+      <button class="btn small alt" id="imm-spell" data-i18n="immSpell">⌨️ Spell it</button>
     </div>
     <div class="imm-cardstudy" id="imm-cardstudy"></div>
     <div class="imm-saved" id="imm-saved"></div>
+  </div>
+</section>
+
+<section id="progress" class="panel">
+  <p class="section-intro" data-i18n="progIntro">Track what you’ve learned, level up, and test your fluency. Everything you do in Vocabulary, Immerse, and Grammar counts here.</p>
+  <div class="prog-top">
+    <div class="prog-card prog-level-card">
+      <div class="pl-badge" id="prog-badge">1</div>
+      <div class="pl-info">
+        <div class="pl-title" id="prog-level-title">Level 1</div>
+        <div class="pl-sub" id="prog-level-sub"></div>
+        <div class="prog-bar"><i id="prog-xp-fill"></i></div>
+        <div class="pl-xp" id="prog-xp-text"></div>
+      </div>
+    </div>
+    <div class="prog-card prog-fluency-card">
+      <div class="pf-label" data-i18n="progFluency">Fluency</div>
+      <div class="pf-band" id="prog-band">—</div>
+      <div class="pf-gauge" id="prog-gauge"></div>
+      <div class="pf-sub" id="prog-band-sub"></div>
+    </div>
+  </div>
+  <div class="prog-stats" id="prog-stats"></div>
+  <div class="prog-actions">
+    <button class="btn" id="prog-fluency-btn" data-i18n="progFluencyBtn">🎯 Fluency check</button>
+    <button class="btn alt" id="prog-review-btn" data-i18n="progReviewBtn">🔁 Review due words</button>
+  </div>
+  <div class="prog-quiz" id="prog-quiz"></div>
+  <h3 data-i18n="progDecks">Progress by topic</h3>
+  <div class="prog-decks" id="prog-decks"></div>
+  <div class="prog-reset-row">
+    <button class="btn ghost small" id="prog-reset" data-i18n="progReset">Reset progress</button>
   </div>
 </section>
 
@@ -2141,6 +2274,776 @@ const phonicsSheet = [
 // each deck has a built-in flashcard quiz. `g` = grammatical gender (m/f) so
 // the learner builds the noun→gender habit early.
 const VOCAB = [
+  // ⭐ CORE — the highest-frequency words, roughly in order of how often they're
+  // used. These "little words" (pronouns, particles, connectors) and everyday
+  // verbs do the heavy lifting in real conversation, so they come first.
+  { id: 'core-pronouns', name: '⭐ Core — Pronouns', emoji: '🧑‍🤝‍🧑', words: [
+    { e: '🙋', he: 'אֲנִי',      tr: 'ani',     en: 'I' },
+    { e: '👉', he: 'אַתָּה',     tr: 'ata',     en: 'you (m.)' },
+    { e: '👉', he: 'אַתְּ',      tr: 'at',      en: 'you (f.)' },
+    { e: '👨', he: 'הוּא',       tr: 'hu',      en: 'he / it' },
+    { e: '👩', he: 'הִיא',       tr: 'hi',      en: 'she / it' },
+    { e: '👥', he: 'אֲנַחְנוּ',  tr: 'anachnu', en: 'we' },
+    { e: '👫', he: 'אַתֶּם',     tr: 'atem',    en: 'you (pl. m.)' },
+    { e: '👭', he: 'אַתֶּן',     tr: 'aten',    en: 'you (pl. f.)' },
+    { e: '👬', he: 'הֵם',        tr: 'hem',     en: 'they (m.)' },
+    { e: '👭', he: 'הֵן',        tr: 'hen',     en: 'they (f.)' },
+    { e: '☝️', he: 'זֶה',        tr: 'ze',      en: 'this / it (m.)' },
+    { e: '☝️', he: 'זֹאת',       tr: 'zot',     en: 'this (f.)' },
+    { e: '✌️', he: 'אֵלֶּה',     tr: 'ele',     en: 'these' },
+  ]},
+  { id: 'core-little', name: '⭐ Core — Little words', emoji: '🔗', words: [
+    { e: '🔗', he: 'שֶׁל',       tr: 'shel',    en: 'of / belonging to' },
+    { e: '🎯', he: 'אֶת',        tr: 'et',      en: '(marks the object)' },
+    { e: '🌐', he: 'כָּל',       tr: 'kol',     en: 'all / every' },
+    { e: '✔️', he: 'יֵשׁ',       tr: 'yesh',    en: 'there is / have' },
+    { e: '🚫', he: 'אֵין',       tr: 'ein',     en: 'there isn’t' },
+    { e: '➕', he: 'גַּם',       tr: 'gam',     en: 'also / too' },
+    { e: '🔂', he: 'רַק',        tr: 'rak',     en: 'only' },
+    { e: '➰', he: 'עוֹד',       tr: 'od',      en: 'more / still' },
+    { e: '⏩', he: 'כְּבָר',     tr: 'kvar',    en: 'already' },
+    { e: '🔥', he: 'מְאֹד',      tr: 'me’od',   en: 'very' },
+    { e: '🤷', he: 'אוּלַי',     tr: 'ulai',    en: 'maybe' },
+    { e: '🪞', he: 'כְּמוֹ',     tr: 'kmo',     en: 'like / as' },
+    { e: '🤝', he: 'עִם',        tr: 'im',      en: 'with' },
+    { e: '🚷', he: 'בְּלִי',     tr: 'bli',     en: 'without' },
+    { e: '🎁', he: 'בִּשְׁבִיל', tr: 'bishvil', en: 'for (someone)' },
+  ]},
+  { id: 'core-connect', name: '⭐ Core — Connectors', emoji: '🪢', words: [
+    { e: '↔️', he: 'אֲבָל',      tr: 'aval',     en: 'but' },
+    { e: '➡️', he: 'כִּי',       tr: 'ki',       en: 'because' },
+    { e: '❔', he: 'אִם',        tr: 'im',       en: 'if' },
+    { e: '🔀', he: 'אוֹ',        tr: 'o',        en: 'or' },
+    { e: '➡️', he: 'אָז',        tr: 'az',       en: 'so / then' },
+    { e: '🔚', he: 'לָכֵן',      tr: 'lachen',   en: 'therefore' },
+    { e: '🔙', he: 'בִּגְלַל',   tr: 'biglal',   en: 'because of' },
+    { e: '⏭️', he: 'אַחַר כָּךְ', tr: 'achar kach', en: 'afterwards' },
+    { e: '⏮️', he: 'קֹדֶם',      tr: 'kodem',    en: 'before / first' },
+    { e: '♾️', he: 'תָּמִיד',    tr: 'tamid',    en: 'always' },
+    { e: '🚫', he: 'אַף פַּעַם', tr: 'af pa’am', en: 'never' },
+    { e: '🔁', he: 'לִפְעָמִים', tr: 'lif’amim', en: 'sometimes' },
+    { e: '📍', he: 'כָּאן',      tr: 'kan',      en: 'here' },
+    { e: '📌', he: 'שָׁם',       tr: 'sham',     en: 'there' },
+    { e: '🏃', he: 'מַהֵר',      tr: 'maher',    en: 'quickly' },
+    { e: '🐌', he: 'לְאַט',      tr: 'le’at',    en: 'slowly' },
+  ]},
+  { id: 'core-verbs', name: '⭐ Core — Everyday verbs', emoji: '🏃', words: [
+    { e: '🆚', he: 'לִהְיוֹת',   tr: 'lihyot',   en: 'to be' },
+    { e: '🛠️', he: 'לַעֲשׂוֹת',  tr: 'la’asot',  en: 'to do / make' },
+    { e: '🚶', he: 'לָבוֹא',     tr: 'lavo',     en: 'to come' },
+    { e: '🎁', he: 'לָתֵת',      tr: 'latet',    en: 'to give' },
+    { e: '✋', he: 'לָקַחַת',    tr: 'lakachat', en: 'to take' },
+    { e: '🔍', he: 'לִמְצֹא',    tr: 'limtzo',   en: 'to find' },
+    { e: '💭', he: 'לַחְשֹׁב',   tr: 'lachshov', en: 'to think' },
+    { e: '💡', he: 'לְהָבִין',   tr: 'lehavin',  en: 'to understand' },
+    { e: '💼', he: 'לַעֲבֹד',    tr: 'la’avod',  en: 'to work' },
+    { e: '📚', he: 'לִלְמֹד',    tr: 'lilmod',   en: 'to learn / study' },
+    { e: '🧑‍🏫', he: 'לְלַמֵּד',  tr: 'lelamed',  en: 'to teach' },
+    { e: '🙋', he: 'לִשְׁאֹל',   tr: 'lish’ol',  en: 'to ask' },
+    { e: '💬', he: 'לַעֲנוֹת',   tr: 'la’anot',  en: 'to answer' },
+    { e: '🚪', he: 'לִפְתֹּחַ',  tr: 'liftoach', en: 'to open' },
+    { e: '🔒', he: 'לִסְגֹּר',   tr: 'lisgor',   en: 'to close' },
+    { e: '🪑', he: 'לָשֶׁבֶת',   tr: 'lashevet', en: 'to sit' },
+    { e: '🧍', he: 'לָקוּם',     tr: 'lakum',    en: 'to get up' },
+    { e: '↩️', he: 'לַחֲזֹר',    tr: 'lachazor', en: 'to return' },
+    { e: '🏠', he: 'לָגוּר',     tr: 'lagur',    en: 'to live (reside)' },
+    { e: '✈️', he: 'לִנְסֹעַ',   tr: 'linsoa',   en: 'to travel' },
+    { e: '⏳', he: 'לְחַכּוֹת',  tr: 'lechakot', en: 'to wait' },
+    { e: '🆘', he: 'לַעֲזֹר',    tr: 'la’azor',  en: 'to help' },
+    { e: '🛒', he: 'לִקְנוֹת',   tr: 'liknot',   en: 'to buy' },
+    { e: '💰', he: 'לְשַׁלֵּם',  tr: 'leshalem', en: 'to pay' },
+  ]},
+  { id: 'core-adj', name: '⭐ Core — More adjectives', emoji: '🎚️', words: [
+    { e: '🪶', he: 'קַל',        tr: 'kal',      en: 'easy / light' },
+    { e: '🧱', he: 'קָשֶׁה',     tr: 'kashe',    en: 'hard / difficult' },
+    { e: '📏', he: 'אָרֹךְ',     tr: 'aroch',    en: 'long' },
+    { e: '📐', he: 'קָצָר',      tr: 'katzar',   en: 'short' },
+    { e: '⬆️', he: 'גָּבוֹהַּ',  tr: 'gavoha',   en: 'tall / high' },
+    { e: '⬇️', he: 'נָמוּךְ',    tr: 'namuch',   en: 'low / short' },
+    { e: '🫗', he: 'מָלֵא',      tr: 'male',     en: 'full' },
+    { e: '🪹', he: 'רֵיק',       tr: 'reik',     en: 'empty' },
+    { e: '✅', he: 'נָכוֹן',     tr: 'nachon',   en: 'correct / true' },
+    { e: '❗', he: 'חָשׁוּב',    tr: 'chashuv',  en: 'important' },
+    { e: '💎', he: 'יָקָר',      tr: 'yakar',    en: 'expensive / dear' },
+    { e: '🪙', he: 'זוֹל',       tr: 'zol',      en: 'cheap' },
+    { e: '💪', he: 'חָזָק',      tr: 'chazak',   en: 'strong' },
+    { e: '🫧', he: 'חַלָּשׁ',    tr: 'chalash',  en: 'weak' },
+    { e: '😢', he: 'עָצוּב',     tr: 'atzuv',    en: 'sad' },
+    { e: '😴', he: 'עָיֵף',      tr: 'ayef',     en: 'tired' },
+    { e: '🍽️', he: 'רָעֵב',      tr: 'ra’ev',    en: 'hungry' },
+    { e: '🥤', he: 'צָמֵא',      tr: 'tzame',    en: 'thirsty' },
+    { e: '😊', he: 'נָעִים',     tr: 'na’im',    en: 'pleasant' },
+    { e: '🤩', he: 'מְעַנְיֵן',  tr: 'me’anyen', en: 'interesting' },
+  ]},
+  { id: 'core-nouns', name: '⭐ Core — Everyday nouns', emoji: '📦', words: [
+    { e: '📦', he: 'דָּבָר',     tr: 'davar',    en: 'thing',            g: 'm' },
+    { e: '🧑', he: 'אִישׁ',      tr: 'ish',      en: 'man / person',     g: 'm' },
+    { e: '👥', he: 'אֲנָשִׁים',  tr: 'anashim',  en: 'people',           g: 'm' },
+    { e: '🧒', he: 'יֶלֶד',      tr: 'yeled',    en: 'child / boy',      g: 'm' },
+    { e: '🛣️', he: 'דֶּרֶךְ',    tr: 'derech',   en: 'way / road',       g: 'f' },
+    { e: '📍', he: 'מָקוֹם',     tr: 'makom',    en: 'place',            g: 'm' },
+    { e: '⏰', he: 'זְמַן',      tr: 'zman',     en: 'time',             g: 'm' },
+    { e: '💼', he: 'עֲבוֹדָה',   tr: 'avoda',    en: 'work',             g: 'f' },
+    { e: '💵', he: 'כֶּסֶף',     tr: 'kesef',    en: 'money',            g: 'm' },
+    { e: '🏷️', he: 'שֵׁם',       tr: 'shem',     en: 'name',             g: 'm' },
+    { e: '🔤', he: 'מִלָּה',     tr: 'mila',     en: 'word',             g: 'f' },
+    { e: '❓', he: 'שְׁאֵלָה',   tr: 'she’ela',  en: 'question',         g: 'f' },
+    { e: '💬', he: 'תְּשׁוּבָה', tr: 'tshuva',   en: 'answer',           g: 'f' },
+    { e: '⚠️', he: 'בְּעָיָה',   tr: 'be’aya',   en: 'problem',          g: 'f' },
+    { e: '💡', he: 'רַעְיוֹן',   tr: 'ra’ayon',  en: 'idea',             g: 'm' },
+    { e: '🌍', he: 'עוֹלָם',     tr: 'olam',     en: 'world',            g: 'm' },
+    { e: '❤️', he: 'חַיִּים',    tr: 'chaim',    en: 'life',             g: 'm' },
+    { e: '🚪', he: 'חֶדֶר',      tr: 'cheder',   en: 'room',             g: 'm' },
+    { e: '🛒', he: 'שׁוּק',      tr: 'shuk',     en: 'market',           g: 'm' },
+    { e: '🏫', he: 'כִּתָּה',    tr: 'kita',     en: 'class(room)',      g: 'f' },
+    { e: '🧑‍🏫', he: 'מוֹרֶה',    tr: 'more',     en: 'teacher',          g: 'm' },
+    { e: '🎓', he: 'תַּלְמִיד',  tr: 'talmid',   en: 'student',          g: 'm' },
+    { e: '🧑‍🤝‍🧑', he: 'חָבֵר',  tr: 'chaver',   en: 'friend (m.)',      g: 'm' },
+    { e: '👭', he: 'חֲבֵרָה',    tr: 'chavera',  en: 'friend (f.)',      g: 'f' },
+  ]},
+  { id: 'core-days', name: '⭐ Core — Days & times', emoji: '📅', words: [
+    { e: '1️⃣', he: 'יוֹם רִאשׁוֹן',  tr: 'yom rishon',  en: 'Sunday' },
+    { e: '2️⃣', he: 'יוֹם שֵׁנִי',    tr: 'yom sheni',   en: 'Monday' },
+    { e: '3️⃣', he: 'יוֹם שְׁלִישִׁי', tr: 'yom shlishi', en: 'Tuesday' },
+    { e: '4️⃣', he: 'יוֹם רְבִיעִי',  tr: 'yom revi’i',  en: 'Wednesday' },
+    { e: '5️⃣', he: 'יוֹם חֲמִישִׁי', tr: 'yom chamishi', en: 'Thursday' },
+    { e: '6️⃣', he: 'יוֹם שִׁשִּׁי',  tr: 'yom shishi',  en: 'Friday' },
+    { e: '🌴', he: 'סוֹף שָׁבוּעַ',  tr: 'sof shavua',  en: 'weekend',  g: 'm' },
+    { e: '🌅', he: 'בֹּקֶר',         tr: 'boker',       en: 'morning',  g: 'm' },
+    { e: '🌞', he: 'צָהֳרַיִם',      tr: 'tzohorayim',  en: 'noon',     g: 'm' },
+    { e: '🌆', he: 'עֶרֶב',          tr: 'erev',        en: 'evening',  g: 'm' },
+    { e: '⏱️', he: 'דַּקָּה',        tr: 'daka',        en: 'minute',   g: 'f' },
+    { e: '⚡', he: 'רֶגַע',          tr: 'rega',        en: 'moment',   g: 'm' },
+  ]},
+  { id: 'core-numbers', name: '⭐ Core — Numbers 11+', emoji: '🔢', words: [
+    { e: '1️⃣1️⃣', he: 'אַחַת עֶשְׂרֵה',   tr: 'achat esre',  en: 'eleven' },
+    { e: '1️⃣2️⃣', he: 'שְׁתֵּים עֶשְׂרֵה', tr: 'shtem esre',  en: 'twelve' },
+    { e: '2️⃣0️⃣', he: 'עֶשְׂרִים',        tr: 'esrim',       en: 'twenty' },
+    { e: '3️⃣0️⃣', he: 'שְׁלוֹשִׁים',      tr: 'shloshim',    en: 'thirty' },
+    { e: '4️⃣0️⃣', he: 'אַרְבָּעִים',      tr: 'arba’im',     en: 'forty' },
+    { e: '5️⃣0️⃣', he: 'חֲמִשִּׁים',       tr: 'chamishim',   en: 'fifty' },
+    { e: '6️⃣0️⃣', he: 'שִׁשִּׁים',        tr: 'shishim',     en: 'sixty' },
+    { e: '7️⃣0️⃣', he: 'שִׁבְעִים',        tr: 'shiv’im',     en: 'seventy' },
+    { e: '8️⃣0️⃣', he: 'שְׁמוֹנִים',       tr: 'shmonim',     en: 'eighty' },
+    { e: '9️⃣0️⃣', he: 'תִּשְׁעִים',       tr: 'tish’im',     en: 'ninety' },
+    { e: '💯', he: 'מֵאָה',               tr: 'me’a',        en: 'a hundred',  g: 'f' },
+    { e: '🔢', he: 'אֶלֶף',               tr: 'elef',        en: 'a thousand', g: 'm' },
+    { e: '➗', he: 'חֲצִי',               tr: 'chatzi',      en: 'half',       g: 'm' },
+    { e: '#️⃣', he: 'מִסְפָּר',            tr: 'mispar',      en: 'number',     g: 'm' },
+  ]},
+  { id: 'core-feelings', name: '⭐ Core — Feelings & states', emoji: '🙂', words: [
+    { e: '😠', he: 'כּוֹעֵס',    tr: 'ko’es',    en: 'angry' },
+    { e: '😨', he: 'מְפַחֵד',    tr: 'mefached', en: 'afraid / scared' },
+    { e: '😌', he: 'רָגוּעַ',    tr: 'ragua',    en: 'calm / relaxed' },
+    { e: '😣', he: 'לָחוּץ',     tr: 'lachutz',  en: 'stressed' },
+    { e: '😮', he: 'מֻפְתָּע',   tr: 'mufta',    en: 'surprised' },
+    { e: '😕', he: 'מְבֻלְבָּל', tr: 'mevulbal', en: 'confused' },
+    { e: '😊', he: 'מְאֻשָּׁר',  tr: 'me’ushar', en: 'happy / glad' },
+    { e: '😔', he: 'בּוֹדֵד',    tr: 'boded',    en: 'lonely' },
+    { e: '😎', he: 'גֵּאֶה',     tr: 'ge’e',     en: 'proud' },
+    { e: '💪', he: 'בָּרִיא',    tr: 'bari',     en: 'healthy' },
+    { e: '🤒', he: 'חוֹלֶה',     tr: 'chole',    en: 'sick' },
+  ]},
+  { id: 'core-food', name: '⭐ Core — Food & meals', emoji: '🍽️', words: [
+    { e: '🍽️', he: 'אֹכֶל',     tr: 'ochel',   en: 'food',      g: 'm' },
+    { e: '🥣', he: 'אֲרוּחָה',   tr: 'arucha',  en: 'meal',      g: 'f' },
+    { e: '🍳', he: 'אֲרוּחַת בֹּקֶר', tr: 'aruchat boker', en: 'breakfast', g: 'f' },
+    { e: '🥩', he: 'בָּשָׂר',    tr: 'basar',   en: 'meat',      g: 'm' },
+    { e: '🍗', he: 'עוֹף',       tr: 'of',      en: 'chicken',   g: 'm' },
+    { e: '🥦', he: 'יְרָקוֹת',   tr: 'yerakot', en: 'vegetables', g: 'm' },
+    { e: '🍎', he: 'פֵּרוֹת',    tr: 'perot',   en: 'fruit',     g: 'm' },
+    { e: '🧂', he: 'מֶלַח',      tr: 'melach',  en: 'salt',      g: 'm' },
+    { e: '🍬', he: 'סֻכָּר',     tr: 'sukar',   en: 'sugar',     g: 'm' },
+    { e: '🧈', he: 'חֶמְאָה',    tr: 'chem’a',  en: 'butter',    g: 'f' },
+    { e: '🧃', he: 'מִיץ',       tr: 'mitz',    en: 'juice',     g: 'm' },
+    { e: '🍵', he: 'תֵּה',       tr: 'te',      en: 'tea',       g: 'm' },
+    { e: '🍰', he: 'עוּגָה',     tr: 'uga',     en: 'cake',      g: 'f' },
+    { e: '🍦', he: 'גְּלִידָה',  tr: 'glida',   en: 'ice cream', g: 'f' },
+    { e: '🍽️', he: 'צַלַּחַת',   tr: 'tzalachat', en: 'plate',   g: 'f' },
+    { e: '🥄', he: 'כַּף',       tr: 'kaf',     en: 'spoon',     g: 'f' },
+    { e: '🍴', he: 'מַזְלֵג',    tr: 'mazleg',  en: 'fork',      g: 'm' },
+    { e: '🔪', he: 'סַכִּין',    tr: 'sakin',   en: 'knife',     g: 'f' },
+  ]},
+  { id: 'core-directions', name: '⭐ Core — Getting around', emoji: '🧭', words: [
+    { e: '➡️', he: 'יָמִין',     tr: 'yamin',   en: 'right',      g: 'm' },
+    { e: '⬅️', he: 'שְׂמֹאל',    tr: 'smol',    en: 'left',       g: 'm' },
+    { e: '⬆️', he: 'יָשָׁר',     tr: 'yashar',  en: 'straight' },
+    { e: '🔼', he: 'לְמַעְלָה',  tr: 'lema’la', en: 'up' },
+    { e: '🔽', he: 'לְמַטָּה',   tr: 'lemata',  en: 'down' },
+    { e: '📍', he: 'קָרוֹב',     tr: 'karov',   en: 'near' },
+    { e: '🏔️', he: 'רָחוֹק',     tr: 'rachok',  en: 'far' },
+    { e: '🎯', he: 'אֶמְצַע',    tr: 'emtza',   en: 'middle',     g: 'm' },
+    { e: '📐', he: 'פִּנָּה',    tr: 'pina',    en: 'corner',     g: 'f' },
+    { e: '🚉', he: 'תַּחֲנָה',   tr: 'tachana', en: 'station',    g: 'f' },
+    { e: '✉️', he: 'כְּתֹבֶת',   tr: 'ktovet',  en: 'address',    g: 'f' },
+    { e: '🗺️', he: 'מַפָּה',     tr: 'mapa',    en: 'map',        g: 'f' },
+    { e: '🚪', he: 'כְּנִיסָה',  tr: 'knisa',   en: 'entrance',   g: 'f' },
+    { e: '🚶', he: 'יְצִיאָה',   tr: 'yetzi’a', en: 'exit',       g: 'f' },
+  ]},
+  { id: 'core-home', name: '⭐ Core — Home & clothing', emoji: '🧺', words: [
+    { e: '🍳', he: 'מִטְבָּח',     tr: 'mitbach',    en: 'kitchen',    g: 'm' },
+    { e: '🚽', he: 'שֵׁרוּתִים',   tr: 'sherutim',   en: 'toilet / restroom', g: 'm' },
+    { e: '🚿', he: 'מִקְלַחַת',    tr: 'miklachat',  en: 'shower',     g: 'f' },
+    { e: '🧊', he: 'מְקָרֵר',      tr: 'mekarer',    en: 'fridge',     g: 'm' },
+    { e: '🔥', he: 'תַּנּוּר',     tr: 'tanur',      en: 'oven',       g: 'm' },
+    { e: '📺', he: 'טֶלֶוִיזְיָה', tr: 'televizya',  en: 'TV',         g: 'f' },
+    { e: '💻', he: 'מַחְשֵׁב',     tr: 'machshev',   en: 'computer',   g: 'm' },
+    { e: '👕', he: 'חֻלְצָה',      tr: 'chultza',    en: 'shirt',      g: 'f' },
+    { e: '👖', he: 'מִכְנָסַיִם',  tr: 'michnasayim', en: 'pants',     g: 'm' },
+    { e: '🧥', he: 'מְעִיל',       tr: 'me’il',      en: 'coat',       g: 'm' },
+    { e: '🧢', he: 'כּוֹבַע',      tr: 'kova',       en: 'hat',        g: 'm' },
+    { e: '👟', he: 'נַעַל',        tr: 'na’al',      en: 'shoe',       g: 'f' },
+    { e: '👗', he: 'בֶּגֶד',       tr: 'beged',      en: 'garment',    g: 'm' },
+  ]},
+  { id: 'core-people', name: '⭐ Core — People & work', emoji: '🧑‍💼', words: [
+    { e: '🏘️', he: 'שָׁכֵן',      tr: 'shachen',   en: 'neighbor',   g: 'm' },
+    { e: '👨‍⚕️', he: 'רוֹפֵא',    tr: 'rofe',      en: 'doctor',     g: 'm' },
+    { e: '👮', he: 'שׁוֹטֵר',     tr: 'shoter',    en: 'police officer', g: 'm' },
+    { e: '🚗', he: 'נַהָג',       tr: 'nahag',     en: 'driver',     g: 'm' },
+    { e: '🍽️', he: 'מֶלְצַר',     tr: 'meltzar',   en: 'waiter',     g: 'm' },
+    { e: '👔', he: 'מְנַהֵל',     tr: 'menahel',   en: 'manager',    g: 'm' },
+    { e: '🧑‍🏭', he: 'עוֹבֵד',    tr: 'oved',      en: 'worker',     g: 'm' },
+    { e: '🛍️', he: 'לָקוֹחַ',     tr: 'lako’ach',  en: 'customer',   g: 'm' },
+    { e: '🏢', he: 'חֶבְרָה',     tr: 'chevra',    en: 'company',    g: 'f' },
+    { e: '🏬', he: 'מִשְׂרָד',    tr: 'misrad',    en: 'office',     g: 'm' },
+    { e: '🤝', he: 'פְּגִישָׁה',  tr: 'pgisha',    en: 'meeting',    g: 'f' },
+    { e: '💰', he: 'מַשְׂכֹּרֶת', tr: 'maskoret',  en: 'salary',     g: 'f' },
+  ]},
+  { id: 'core-body2', name: '⭐ Core — The body', emoji: '🧍', words: [
+    { e: '🫵', he: 'אֶצְבַּע',  tr: 'etzba',   en: 'finger',   g: 'f' },
+    { e: '💪', he: 'זְרוֹעַ',   tr: 'zroa',    en: 'arm',      g: 'f' },
+    { e: '🤷', he: 'כָּתֵף',    tr: 'katef',   en: 'shoulder', g: 'f' },
+    { e: '🔙', he: 'גַּב',      tr: 'gav',     en: 'back',     g: 'm' },
+    { e: '🤰', he: 'בֶּטֶן',    tr: 'beten',   en: 'stomach / belly', g: 'f' },
+    { e: '🦵', he: 'בֶּרֶךְ',   tr: 'berech',  en: 'knee',     g: 'f' },
+    { e: '🧑', he: 'עוֹר',      tr: 'or',      en: 'skin',     g: 'm' },
+    { e: '🩸', he: 'דָּם',      tr: 'dam',     en: 'blood',    g: 'm' },
+    { e: '🦴', he: 'עֶצֶם',     tr: 'etzem',   en: 'bone',     g: 'f' },
+    { e: '🧣', he: 'צַוָּאר',   tr: 'tzavar',  en: 'neck',     g: 'm' },
+    { e: '😣', he: 'כְּאֵב',    tr: 'ke’ev',   en: 'pain',     g: 'm' },
+    { e: '💊', he: 'תְּרוּפָה', tr: 'trufa',   en: 'medicine', g: 'f' },
+    { e: '😀', he: 'פָּנִים',   tr: 'panim',   en: 'face',     g: 'm' },
+    { e: '👅', he: 'לָשׁוֹן',   tr: 'lashon',  en: 'tongue',   g: 'f' },
+  ]},
+  { id: 'core-weather', name: '⭐ Core — Weather & nature', emoji: '🌦️', words: [
+    { e: '☁️', he: 'עָנָן',     tr: 'anan',    en: 'cloud',    g: 'm' },
+    { e: '🌌', he: 'שָׁמַיִם',  tr: 'shamayim', en: 'sky',     g: 'm' },
+    { e: '💨', he: 'רוּחַ',     tr: 'ruach',   en: 'wind',     g: 'f' },
+    { e: '⛈️', he: 'סוּפָה',    tr: 'sufa',    en: 'storm',    g: 'f' },
+    { e: '🥵', he: 'חֹם',       tr: 'chom',    en: 'heat',     g: 'm' },
+    { e: '🥶', he: 'קֹר',       tr: 'kor',     en: 'cold',     g: 'm' },
+    { e: '🏞️', he: 'נָהָר',     tr: 'nahar',   en: 'river',    g: 'm' },
+    { e: '🌾', he: 'שָׂדֶה',    tr: 'sade',    en: 'field',    g: 'm' },
+    { e: '🌲', he: 'יַעַר',     tr: 'ya’ar',   en: 'forest',   g: 'm' },
+    { e: '🟫', he: 'אֲדָמָה',   tr: 'adama',   en: 'ground / earth', g: 'f' },
+    { e: '🌬️', he: 'אֲוִיר',    tr: 'avir',    en: 'air',      g: 'm' },
+    { e: '🍃', he: 'עָלֶה',     tr: 'aleh',    en: 'leaf',     g: 'm' },
+    { e: '🪨', he: 'אֶבֶן',     tr: 'even',    en: 'stone',    g: 'f' },
+    { e: '🏖️', he: 'חוֹל',      tr: 'chol',    en: 'sand',     g: 'm' },
+  ]},
+  { id: 'core-school', name: '⭐ Core — School & words', emoji: '📚', words: [
+    { e: '🔡', he: 'אוֹת',      tr: 'ot',      en: 'letter (of the alphabet)', g: 'f' },
+    { e: '🖊️', he: 'עֵט',       tr: 'et',      en: 'pen',      g: 'm' },
+    { e: '✏️', he: 'עִפָּרוֹן',  tr: 'iparon',  en: 'pencil',   g: 'm' },
+    { e: '📓', he: 'מַחְבֶּרֶת', tr: 'machberet', en: 'notebook', g: 'f' },
+    { e: '📄', he: 'נְיָר',     tr: 'niyar',   en: 'paper',    g: 'm' },
+    { e: '📃', he: 'דַּף',      tr: 'daf',     en: 'page',     g: 'm' },
+    { e: '🧑‍🏫', he: 'שִׁעוּר',  tr: 'shiur',   en: 'lesson',   g: 'm' },
+    { e: '📝', he: 'מִבְחָן',   tr: 'mivchan', en: 'test / exam', g: 'm' },
+    { e: '🏠', he: 'שִׁעוּרֵי בַּיִת', tr: 'shiurei bayit', en: 'homework' },
+    { e: '🗣️', he: 'שָׂפָה',    tr: 'safa',    en: 'language', g: 'f' },
+    { e: '🇬🇧', he: 'אַנְגְּלִית', tr: 'anglit', en: 'English', g: 'f' },
+    { e: '🇮🇱', he: 'עִבְרִית',  tr: 'ivrit',   en: 'Hebrew',   g: 'f' },
+    { e: '🎓', he: 'לִמּוּדִים', tr: 'limudim', en: 'studies',  g: 'm' },
+  ]},
+  { id: 'core-verbs2', name: '⭐ Core — Verbs (more)', emoji: '🔧', words: [
+    { e: '📥', he: 'לָשִׂים',      tr: 'lasim',        en: 'to put' },
+    { e: '🎁', he: 'לְהָבִיא',     tr: 'lehavi',       en: 'to bring' },
+    { e: '🚪', he: 'לַעֲזֹב',      tr: 'la’azov',      en: 'to leave' },
+    { e: '➡️', he: 'לְהִכָּנֵס',   tr: 'lehikanes',    en: 'to enter' },
+    { e: '📞', he: 'לְהִתְקַשֵּׁר', tr: 'lehitkasher',  en: 'to call (phone)' },
+    { e: '🤝', he: 'לִפְגֹּשׁ',    tr: 'lifgosh',      en: 'to meet' },
+    { e: '🏁', he: 'לְהַתְחִיל',   tr: 'lehatchil',    en: 'to begin' },
+    { e: '🏆', he: 'לִגְמֹר',      tr: 'ligmor',       en: 'to finish' },
+    { e: '🔁', he: 'לְהִשְׁתַּמֵּשׁ', tr: 'lehishtamesh', en: 'to use' },
+    { e: '🧪', he: 'לְנַסּוֹת',    tr: 'lenasot',      en: 'to try' },
+    { e: '🛑', he: 'לַעֲצֹר',      tr: 'la’atzor',     en: 'to stop' },
+    { e: '🧠', he: 'לִזְכֹּר',     tr: 'lizkor',       en: 'to remember' },
+    { e: '🌫️', he: 'לִשְׁכֹּחַ',   tr: 'lishkoach',    en: 'to forget' },
+    { e: '❤️', he: 'לְהַרְגִּישׁ', tr: 'lehargish',    en: 'to feel' },
+    { e: '👀', he: 'לְהִסְתַּכֵּל', tr: 'lehistakel',   en: 'to look / watch' },
+    { e: '🏃', he: 'לָרוּץ',       tr: 'laruts',       en: 'to run' },
+  ]},
+  { id: 'core-money', name: '⭐ Core — Shopping & money', emoji: '🛍️', words: [
+    { e: '🏷️', he: 'לַעֲלוֹת',   tr: 'la’alot',  en: 'to cost' },
+    { e: '💲', he: 'מְחִיר',     tr: 'mechir',   en: 'price',    g: 'm' },
+    { e: '💳', he: 'כַּרְטִיס',  tr: 'kartis',   en: 'card / ticket', g: 'm' },
+    { e: '💵', he: 'מְזֻמָּן',   tr: 'mezuman',  en: 'cash',     g: 'm' },
+    { e: '🧾', he: 'חֶשְׁבּוֹן', tr: 'cheshbon', en: 'bill / account', g: 'm' },
+    { e: '🏷️', he: 'הַנָּחָה',   tr: 'hanacha',  en: 'discount', g: 'f' },
+    { e: '🧾', he: 'קַבָּלָה',   tr: 'kabala',   en: 'receipt',  g: 'f' },
+    { e: '🏧', he: 'כַּסְפּוֹמָט', tr: 'kaspomat', en: 'ATM',     g: 'm' },
+    { e: '📦', he: 'חֲבִילָה',   tr: 'chavila',  en: 'package',  g: 'f' },
+    { e: '🎁', he: 'מַתָּנָה',   tr: 'matana',   en: 'gift',     g: 'f' },
+    { e: '⚖️', he: 'מִשְׁקָל',   tr: 'mishkal',  en: 'weight',   g: 'm' },
+    { e: '📏', he: 'גֹּדֶל',     tr: 'godel',    en: 'size',     g: 'm' },
+  ]},
+  { id: 'core-town', name: '⭐ Core — Around town', emoji: '🏙️', words: [
+    { e: '🛣️', he: 'כְּבִישׁ',   tr: 'kvish',    en: 'road / highway', g: 'm' },
+    { e: '🚶', he: 'מִדְרָכָה',  tr: 'midracha', en: 'sidewalk', g: 'f' },
+    { e: '🚦', he: 'רַמְזוֹר',   tr: 'ramzor',   en: 'traffic light', g: 'm' },
+    { e: '🌉', he: 'גֶּשֶׁר',    tr: 'gesher',   en: 'bridge',   g: 'm' },
+    { e: '🌳', he: 'גַּן',       tr: 'gan',      en: 'park / garden', g: 'm' },
+    { e: '☕', he: 'בֵּית קָפֶה', tr: 'beit kafe', en: 'cafe',    g: 'm' },
+    { e: '🏦', he: 'בַּנְק',     tr: 'bank',     en: 'bank',     g: 'm' },
+    { e: '📮', he: 'דֹּאַר',     tr: 'doar',     en: 'post / mail', g: 'm' },
+    { e: '🏨', he: 'מָלוֹן',     tr: 'malon',    en: 'hotel',    g: 'm' },
+    { e: '📚', he: 'סִפְרִיָּה', tr: 'sifriya',  en: 'library',  g: 'f' },
+    { e: '🏛️', he: 'מוּזֵאוֹן',  tr: 'muzeon',   en: 'museum',   g: 'm' },
+    { e: '⛲', he: 'כִּכָּר',    tr: 'kikar',    en: 'square / plaza', g: 'f' },
+    { e: '🏘️', he: 'שְׁכוּנָה',  tr: 'shchuna',  en: 'neighborhood', g: 'f' },
+  ]},
+  { id: 'core-transport', name: '⭐ Core — Transportation', emoji: '🚆', words: [
+    { e: '🚆', he: 'רַכֶּבֶת',   tr: 'rakevet',  en: 'train',    g: 'f' },
+    { e: '🚇', he: 'רַכֶּבֶת תַּחְתִּית', tr: 'rakevet tachtit', en: 'subway', g: 'f' },
+    { e: '🚲', he: 'אוֹפַנַּיִם', tr: 'ofanayim', en: 'bicycle',  g: 'm' },
+    { e: '🚕', he: 'מוֹנִית',    tr: 'monit',    en: 'taxi',     g: 'f' },
+    { e: '⛵', he: 'סִירָה',     tr: 'sira',     en: 'boat',     g: 'f' },
+    { e: '🚢', he: 'אוֹנִיָּה',   tr: 'oniya',    en: 'ship',     g: 'f' },
+    { e: '🛫', he: 'טִיסָה',     tr: 'tisa',     en: 'flight',   g: 'f' },
+    { e: '🧳', he: 'נְסִיעָה',   tr: 'nesia',    en: 'trip / ride', g: 'f' },
+    { e: '⚓', he: 'נָמֵל',      tr: 'namel',    en: 'port',     g: 'm' },
+    { e: '🛬', he: 'שְׂדֵה תְּעוּפָה', tr: 'sde teufa', en: 'airport' },
+    { e: '🅿️', he: 'חֲנָיָה',    tr: 'chanaya',  en: 'parking',  g: 'f' },
+    { e: '⛽', he: 'דֶּלֶק',     tr: 'delek',    en: 'fuel',     g: 'm' },
+  ]},
+  { id: 'core-personality', name: '⭐ Core — Describing people', emoji: '🧠', words: [
+    { e: '😊', he: 'נֶחְמָד',    tr: 'nechmad',  en: 'nice / kind' },
+    { e: '🎁', he: 'נָדִיב',     tr: 'nadiv',    en: 'generous' },
+    { e: '🧠', he: 'חָכָם',      tr: 'chacham',  en: 'smart / wise' },
+    { e: '🤪', he: 'טִפֵּשׁ',    tr: 'tipesh',   en: 'foolish' },
+    { e: '🦸', he: 'אַמִּיץ',    tr: 'amitz',    en: 'brave' },
+    { e: '🙈', he: 'בַּיְשָׁן',  tr: 'bayshan',  en: 'shy' },
+    { e: '😴', he: 'עַצְלָן',    tr: 'atzlan',   en: 'lazy' },
+    { e: '💪', he: 'חָרוּץ',     tr: 'charutz',  en: 'hardworking' },
+    { e: '😂', he: 'מַצְחִיק',   tr: 'matzchik', en: 'funny' },
+    { e: '🧐', he: 'רְצִינִי',   tr: 'retzini',  en: 'serious' },
+    { e: '🤫', he: 'שָׁקֵט',     tr: 'shaket',   en: 'quiet / calm' },
+    { e: '📢', he: 'רוֹעֵשׁ',    tr: 'ro’esh',   en: 'noisy' },
+    { e: '🧒', he: 'צָעִיר',     tr: 'tza’ir',   en: 'young' },
+    { e: '👴', he: 'זָקֵן',      tr: 'zaken',    en: 'old (person)' },
+  ]},
+  { id: 'core-cooking', name: '⭐ Core — Cooking & tastes', emoji: '🍳', words: [
+    { e: '🍳', he: 'לְבַשֵּׁל',  tr: 'levashel', en: 'to cook' },
+    { e: '🥖', he: 'לֶאֱפוֹת',   tr: 'le’efot',  en: 'to bake' },
+    { e: '🔪', he: 'לַחְתֹּךְ',  tr: 'lachtoch', en: 'to cut' },
+    { e: '🚰', he: 'לִשְׁטֹף',   tr: 'lishtof',  en: 'to wash / rinse' },
+    { e: '🧽', he: 'לְנַקּוֹת',  tr: 'lenakot',  en: 'to clean' },
+    { e: '🥄', he: 'לְעַרְבֵּב', tr: 'le’arbev', en: 'to mix / stir' },
+    { e: '♨️', he: 'לְחַמֵּם',   tr: 'lechamem', en: 'to heat up' },
+    { e: '❄️', he: 'לְקָרֵר',    tr: 'lekarer',  en: 'to cool' },
+    { e: '🥬', he: 'טָרִי',      tr: 'tari',     en: 'fresh' },
+    { e: '🍲', he: 'מְבֻשָּׁל',  tr: 'mevushal', en: 'cooked' },
+    { e: '🥩', he: 'חַי',        tr: 'chai',     en: 'raw' },
+    { e: '🍭', he: 'מָתוֹק',     tr: 'matok',    en: 'sweet' },
+    { e: '🍋', he: 'חָמוּץ',     tr: 'chamutz',  en: 'sour' },
+    { e: '☕', he: 'מַר',        tr: 'mar',      en: 'bitter' },
+    { e: '🧂', he: 'מָלוּחַ',    tr: 'maluach',  en: 'salty' },
+    { e: '🌶️', he: 'חָרִיף',     tr: 'charif',   en: 'spicy' },
+  ]},
+  { id: 'core-phrases', name: '⭐ Core — Useful phrases', emoji: '💬', words: [
+    { e: '🙋', he: 'אֵיךְ קוֹרְאִים לְךָ?', tr: 'eich kor’im lecha', en: 'what’s your name? (to m.)' },
+    { e: '🏷️', he: 'קוֹרְאִים לִי…', tr: 'kor’im li', en: 'my name is…' },
+    { e: '🤷', he: 'אֲנִי לֹא יוֹדֵעַ', tr: 'ani lo yodea', en: 'I don’t know (m.)' },
+    { e: '❓', he: 'אֲנִי לֹא מֵבִין', tr: 'ani lo mevin', en: 'I don’t understand (m.)' },
+    { e: '🙏', he: 'אֶפְשָׁר?',   tr: 'efshar',   en: 'may I? / is it possible?' },
+    { e: '👍', he: 'אֵין בְּעָיָה', tr: 'ein be’aya', en: 'no problem' },
+    { e: '⏱️', he: 'רֶגַע אֶחָד', tr: 'rega echad', en: 'one moment' },
+    { e: '💲', he: 'כַּמָּה זֶה עוֹלֶה?', tr: 'kama ze oleh', en: 'how much does it cost?' },
+    { e: '🚻', he: 'אֵיפֹה הַשֵּׁרוּתִים?', tr: 'eifo hasherutim', en: 'where’s the bathroom?' },
+    { e: '🙋', he: 'אֲנִי רוֹצֶה', tr: 'ani rotze', en: 'I want (m.)' },
+    { e: '🐢', he: 'דַּבֵּר לְאַט', tr: 'daber le’at', en: 'speak slowly (to m.)' },
+    { e: '🙏', he: 'תּוֹדָה רַבָּה', tr: 'toda raba', en: 'thank you very much' },
+    { e: '🥂', he: 'לְחַיִּים',  tr: 'lechaim',  en: 'cheers (to life)' },
+  ]},
+  { id: 'core-leisure', name: '⭐ Core — Sports & free time', emoji: '⚽', words: [
+    { e: '⚽', he: 'כַּדּוּרֶגֶל', tr: 'kaduregel', en: 'soccer', g: 'm' },
+    { e: '🏀', he: 'כַּדּוּרְסַל', tr: 'kadursal', en: 'basketball', g: 'm' },
+    { e: '🎮', he: 'מִשְׂחָק',    tr: 'miskhak',  en: 'game',     g: 'm' },
+    { e: '🎬', he: 'סֶרֶט',      tr: 'seret',    en: 'movie',    g: 'm' },
+    { e: '🎵', he: 'מוּזִיקָה',   tr: 'muzika',   en: 'music',    g: 'f' },
+    { e: '🎶', he: 'שִׁיר',      tr: 'shir',     en: 'song',     g: 'm' },
+    { e: '💃', he: 'רִקּוּד',    tr: 'rikud',    en: 'dance',    g: 'm' },
+    { e: '🎨', he: 'צִיּוּר',    tr: 'tziyur',   en: 'drawing',  g: 'm' },
+    { e: '🥾', he: 'טִיּוּל',    tr: 'tiyul',    en: 'trip / hike', g: 'm' },
+    { e: '🏖️', he: 'חֻפְשָׁה',   tr: 'chufsha',  en: 'vacation', g: 'f' },
+    { e: '🎉', he: 'מְסִבָּה',   tr: 'mesiba',   en: 'party',    g: 'f' },
+    { e: '🎯', he: 'לְשַׂחֵק',   tr: 'lesachek', en: 'to play (a game)' },
+    { e: '🎤', he: 'לָשִׁיר',    tr: 'lashir',   en: 'to sing' },
+    { e: '😂', he: 'לִצְחֹק',    tr: 'litzchok', en: 'to laugh' },
+    { e: '😭', he: 'לִבְכּוֹת',  tr: 'livkot',   en: 'to cry' },
+  ]},
+  { id: 'core-clothing', name: '⭐ Core — Clothing', emoji: '👚', words: [
+    { e: '👕', he: 'בְּגָדִים',  tr: 'begadim',  en: 'clothes',  g: 'm' },
+    { e: '🧦', he: 'גֶּרֶב',     tr: 'gerev',    en: 'sock',     g: 'm' },
+    { e: '👟', he: 'נַעֲלַיִם',  tr: 'na’alayim', en: 'shoes',   g: 'f' },
+    { e: '👗', he: 'שִׂמְלָה',   tr: 'simla',    en: 'dress',    g: 'f' },
+    { e: '🩳', he: 'חֲצָאִית',   tr: 'chatza’it', en: 'skirt',   g: 'f' },
+    { e: '🪢', he: 'חֲגוֹרָה',   tr: 'chagora',  en: 'belt',     g: 'f' },
+    { e: '🧤', he: 'כְּפָפוֹת',  tr: 'kfafot',   en: 'gloves',   g: 'f' },
+    { e: '🧣', he: 'צָעִיף',     tr: 'tza’if',   en: 'scarf',    g: 'm' },
+    { e: '👓', he: 'מִשְׁקָפַיִם', tr: 'mishkafayim', en: 'glasses', g: 'm' },
+    { e: '⌚', he: 'שָׁעוֹן',    tr: 'sha’on',   en: 'watch / clock', g: 'm' },
+    { e: '👜', he: 'תִּיק',      tr: 'tik',      en: 'bag',      g: 'm' },
+    { e: '👛', he: 'אַרְנָק',    tr: 'arnak',    en: 'wallet',   g: 'm' },
+    { e: '💍', he: 'טַבַּעַת',   tr: 'taba’at',  en: 'ring',     g: 'f' },
+    { e: '👔', he: 'עֲנִיבָה',   tr: 'aniva',    en: 'tie',      g: 'f' },
+  ]},
+  { id: 'core-health', name: '⭐ Core — Health & doctor', emoji: '🩺', words: [
+    { e: '🤕', he: 'כּוֹאֵב',    tr: 'ko’ev',    en: 'it hurts' },
+    { e: '🤧', he: 'שַׁפַּעַת',  tr: 'shapaat',  en: 'flu',      g: 'f' },
+    { e: '🤒', he: 'הִצְטַנְּנוּת', tr: 'hitztanenut', en: 'a cold', g: 'f' },
+    { e: '🤯', he: 'כְּאֵב רֹאשׁ', tr: 'ke’ev rosh', en: 'headache' },
+    { e: '💊', he: 'בֵּית מִרְקַחַת', tr: 'beit mirkachat', en: 'pharmacy' },
+    { e: '🚑', he: 'מִיּוּן',    tr: 'miyun',    en: 'emergency room', g: 'm' },
+    { e: '💉', he: 'זְרִיקָה',   tr: 'zrika',    en: 'injection / shot', g: 'f' },
+    { e: '🩹', he: 'פֶּצַע',     tr: 'petza',    en: 'wound',    g: 'm' },
+    { e: '💪', he: 'בְּרִיאוּת', tr: 'bri’ut',   en: 'health',   g: 'f' },
+    { e: '🌡️', he: 'מַדְחוֹם',   tr: 'madchom',  en: 'thermometer', g: 'm' },
+    { e: '💊', he: 'כַּדּוּר',   tr: 'kadur',    en: 'pill / tablet', g: 'm' },
+    { e: '😴', he: 'לָנוּחַ',    tr: 'lanuach',  en: 'to rest' },
+    { e: '💗', he: 'לְהַבְרִיא', tr: 'lehavri',  en: 'to recover / get well' },
+  ]},
+  { id: 'core-react', name: '⭐ Core — Reactions & moods', emoji: '😮', words: [
+    { e: '👌', he: 'בָּטוּחַ',   tr: 'batuach',  en: 'sure / confident' },
+    { e: '✅', he: 'מוּכָן',     tr: 'muchan',   en: 'ready' },
+    { e: '🏃', he: 'עָסוּק',     tr: 'asuk',     en: 'busy' },
+    { e: '🆓', he: 'פָּנוּי',    tr: 'panui',    en: 'free / available' },
+    { e: '😞', he: 'מְאֻכְזָב',  tr: 'me’uchzav', en: 'disappointed' },
+    { e: '😌', he: 'מְרֻצֶּה',   tr: 'merutze',  en: 'satisfied / pleased' },
+    { e: '😟', he: 'מֻדְאָג',    tr: 'mud’ag',   en: 'worried' },
+    { e: '🤩', he: 'נִרְגָּשׁ',  tr: 'nirgash',  en: 'excited' },
+    { e: '🥱', he: 'מְשַׁעֲמֵם', tr: 'mesha’amem', en: 'boring' },
+    { e: '😊', he: 'נֶהֱנֶה',    tr: 'neheneh',  en: 'enjoying' },
+    { e: '🤔', he: 'לְקַוּוֹת',  tr: 'lekavot',  en: 'to hope' },
+    { e: '🙏', he: 'לְהַאֲמִין', tr: 'leha’amin', en: 'to believe' },
+    { e: '😰', he: 'לִדְאֹג',    tr: 'lid’og',   en: 'to worry' },
+    { e: '❤️', he: 'אִכְפַּת',   tr: 'ichpat',   en: 'to care' },
+  ]},
+  { id: 'core-adverbs', name: '⭐ Core — More adverbs', emoji: '🪄', words: [
+    { e: '✔️', he: 'בְּוַדַּאי',  tr: 'bevadai',  en: 'certainly' },
+    { e: '👍', he: 'כַּמּוּבָן',  tr: 'kamuvan',  en: 'of course' },
+    { e: '💡', he: 'בְּעֶצֶם',   tr: 'be’etzem', en: 'actually' },
+    { e: '➖', he: 'פָּחוֹת',    tr: 'pachot',   en: 'less' },
+    { e: '➕', he: 'יוֹתֵר',     tr: 'yoter',    en: 'more' },
+    { e: '🛑', he: 'מַסְפִּיק',  tr: 'maspik',   en: 'enough' },
+    { e: '😮‍💨', he: 'בְּקֹשִׁי', tr: 'bekoshi', en: 'barely' },
+    { e: '≈', he: 'כִּמְעַט',   tr: 'kim’at',   en: 'almost' },
+    { e: '🤝', he: 'בְּיַחַד',   tr: 'beyachad', en: 'together' },
+    { e: '🧍', he: 'לְבַד',      tr: 'levad',    en: 'alone' },
+    { e: '🔁', he: 'שׁוּב',      tr: 'shuv',     en: 'again' },
+    { e: '⚡', he: 'מִיָּד',     tr: 'miyad',    en: 'immediately' },
+    { e: '🕐', he: 'לְאַחֲרוֹנָה', tr: 'le’acharona', en: 'recently' },
+    { e: '↩️', he: 'בְּכָל זֹאת', tr: 'bechol zot', en: 'nevertheless' },
+    { e: '➡️', he: 'כְּלוֹמַר',  tr: 'klomar',   en: 'meaning / that is' },
+  ]},
+  { id: 'core-dishes', name: '⭐ Core — Food & dishes', emoji: '🥙', words: [
+    { e: '🥗', he: 'סָלָט',      tr: 'salat',    en: 'salad',    g: 'm' },
+    { e: '🍲', he: 'מָרָק',      tr: 'marak',    en: 'soup',     g: 'm' },
+    { e: '🍕', he: 'פִּיצָה',    tr: 'pitza',    en: 'pizza',    g: 'f' },
+    { e: '🧆', he: 'חוּמוּס',    tr: 'chumus',   en: 'hummus',   g: 'm' },
+    { e: '🧆', he: 'פָלָאפֶל',   tr: 'falafel',  en: 'falafel',  g: 'm' },
+    { e: '🍗', he: 'שְׁנִיצֶל',  tr: 'shnitzel', en: 'schnitzel', g: 'm' },
+    { e: '🥪', he: 'כְּרִיךְ',   tr: 'karich',   en: 'sandwich', g: 'm' },
+    { e: '🥔', he: 'תַּפּוּחַ אֲדָמָה', tr: 'tapuach adama', en: 'potato' },
+    { e: '🧅', he: 'בָּצָל',     tr: 'batzal',   en: 'onion',    g: 'm' },
+    { e: '🧄', he: 'שׁוּם',      tr: 'shum',     en: 'garlic',   g: 'm' },
+    { e: '🥕', he: 'גֶּזֶר',     tr: 'gezer',    en: 'carrot',   g: 'm' },
+    { e: '🥒', he: 'מְלָפְפוֹן', tr: 'melafefon', en: 'cucumber', g: 'm' },
+    { e: '🫑', he: 'פִּלְפֵּל',  tr: 'pilpel',   en: 'pepper',   g: 'm' },
+  ]},
+  { id: 'core-animals2', name: '⭐ Core — More animals', emoji: '🦊', words: [
+    { e: '🐑', he: 'כֶּבֶשׂ',    tr: 'keves',    en: 'sheep',    g: 'm' },
+    { e: '🐐', he: 'עֵז',        tr: 'ez',       en: 'goat',     g: 'f' },
+    { e: '🦆', he: 'בַּרְוָז',   tr: 'barvaz',   en: 'duck',     g: 'm' },
+    { e: '🐰', he: 'אַרְנָב',    tr: 'arnav',    en: 'rabbit',   g: 'm' },
+    { e: '🐭', he: 'עַכְבָּר',   tr: 'achbar',   en: 'mouse',    g: 'm' },
+    { e: '🐍', he: 'נָחָשׁ',     tr: 'nachash',  en: 'snake',    g: 'm' },
+    { e: '🐸', he: 'צְפַרְדֵּעַ', tr: 'tzfardea', en: 'frog',    g: 'f' },
+    { e: '🐝', he: 'דְּבוֹרָה',  tr: 'dvora',    en: 'bee',      g: 'f' },
+    { e: '🐜', he: 'נְמָלָה',    tr: 'nemala',   en: 'ant',      g: 'f' },
+    { e: '🦟', he: 'יַתּוּשׁ',   tr: 'yatush',   en: 'mosquito', g: 'm' },
+    { e: '🕷️', he: 'עֲכָבִישׁ',  tr: 'akavish',  en: 'spider',   g: 'm' },
+    { e: '🐺', he: 'זְאֵב',      tr: 'ze’ev',    en: 'wolf',     g: 'm' },
+    { e: '🦊', he: 'שׁוּעָל',    tr: 'shual',    en: 'fox',      g: 'm' },
+    { e: '🐢', he: 'צָב',        tr: 'tzav',     en: 'turtle',   g: 'm' },
+  ]},
+  { id: 'core-shapes', name: '⭐ Core — Colors & shapes', emoji: '🔺', words: [
+    { e: '⭕', he: 'עִגּוּל',    tr: 'igul',     en: 'circle',   g: 'm' },
+    { e: '🟥', he: 'רִבּוּעַ',   tr: 'ribua',    en: 'square',   g: 'm' },
+    { e: '🔺', he: 'מְשֻׁלָּשׁ',  tr: 'meshulash', en: 'triangle', g: 'm' },
+    { e: '➖', he: 'קַו',        tr: 'kav',      en: 'line',     g: 'm' },
+    { e: '⚫', he: 'נְקֻדָּה',   tr: 'nekuda',   en: 'point / dot', g: 'f' },
+    { e: '🎨', he: 'צֶבַע',      tr: 'tzeva',    en: 'color',    g: 'm' },
+    { e: '🌕', he: 'בָּהִיר',    tr: 'bahir',    en: 'light (shade)' },
+    { e: '🌑', he: 'כֵּהֶה',     tr: 'keheh',    en: 'dark (shade)' },
+    { e: '🥇', he: 'זָהָב',      tr: 'zahav',    en: 'gold',     g: 'm' },
+    { e: '⚪', he: 'אָפֹר',      tr: 'afor',     en: 'gray' },
+  ]},
+  { id: 'core-verbs3', name: '⭐ Core — Verbs (daily)', emoji: '🔄', words: [
+    { e: '📍', he: 'לְהַגִּיעַ',  tr: 'lehagia',   en: 'to arrive' },
+    { e: '🔎', he: 'לְחַפֵּשׂ',   tr: 'lechapes',  en: 'to search' },
+    { e: '✅', he: 'לִבְחֹר',    tr: 'livchor',   en: 'to choose' },
+    { e: '👉', he: 'לְהַרְאוֹת', tr: 'leharot',   en: 'to show' },
+    { e: '💬', he: 'לְהַסְבִּיר', tr: 'lehasbir',  en: 'to explain' },
+    { e: '🗣️', he: 'לְסַפֵּר',   tr: 'lesaper',   en: 'to tell' },
+    { e: '🛡️', he: 'לִשְׁמֹר',   tr: 'lishmor',   en: 'to keep / guard' },
+    { e: '🔁', he: 'לְהַחְלִיף', tr: 'lehachlif', en: 'to change / replace' },
+    { e: '▶️', he: 'לְהַמְשִׁיךְ', tr: 'lehamshich', en: 'to continue' },
+    { e: '🎁', he: 'לְקַבֵּל',   tr: 'lekabel',   en: 'to receive' },
+    { e: '📤', he: 'לִשְׁלֹחַ',  tr: 'lishloach', en: 'to send' },
+    { e: '🛒', he: 'לְהַזְמִין', tr: 'lehazmin',  en: 'to order / invite' },
+    { e: '📏', he: 'לִמְדֹּד',   tr: 'limdod',    en: 'to measure / try on' },
+    { e: '💡', he: 'לְהַצִּיעַ', tr: 'lehatzia',  en: 'to suggest / offer' },
+  ]},
+  { id: 'core-tech', name: '⭐ Core — Office & tech', emoji: '💻', words: [
+    { e: '🖥️', he: 'מָסָךְ',     tr: 'masach',    en: 'screen',   g: 'm' },
+    { e: '⌨️', he: 'מִקְלֶדֶת',  tr: 'mikledet',  en: 'keyboard', g: 'f' },
+    { e: '🌐', he: 'אִינְטֶרְנֶט', tr: 'internet', en: 'internet', g: 'm' },
+    { e: '🔗', he: 'אֲתַר',      tr: 'atar',      en: 'website',  g: 'm' },
+    { e: '📁', he: 'קֹבֶץ',      tr: 'kovetz',    en: 'file',     g: 'm' },
+    { e: '🔑', he: 'סִיסְמָה',   tr: 'sisma',     en: 'password', g: 'f' },
+    { e: '✉️', he: 'הוֹדָעָה',   tr: 'hodaa',     en: 'message',  g: 'f' },
+    { e: '🖨️', he: 'מַדְפֶּסֶת', tr: 'madpeset',  en: 'printer',  g: 'f' },
+    { e: '📱', he: 'אַפְלִיקַצְיָה', tr: 'aplikatzya', en: 'app', g: 'f' },
+    { e: '📶', he: 'רֶשֶׁת',     tr: 'reshet',    en: 'network',  g: 'f' },
+    { e: '📷', he: 'מַצְלֵמָה',  tr: 'matzlema',  en: 'camera',   g: 'f' },
+    { e: '🔋', he: 'סוֹלְלָה',   tr: 'solela',    en: 'battery',  g: 'f' },
+  ]},
+  { id: 'core-quantity', name: '⭐ Core — Quantities', emoji: '📊', words: [
+    { e: '🔢', he: 'הַרְבֵּה',   tr: 'harbe',    en: 'a lot / many' },
+    { e: '🤏', he: 'מְעַט',      tr: 'me’at',    en: 'a little / few' },
+    { e: '❔', he: 'מַשֶּׁהוּ',  tr: 'mashehu',  en: 'something' },
+    { e: '🧑', he: 'מִישֶׁהוּ',  tr: 'mishehu',  en: 'someone' },
+    { e: '🚫', he: 'כְּלוּם',    tr: 'klum',     en: 'nothing' },
+    { e: '🌍', he: 'הַכֹּל',     tr: 'hakol',    en: 'everything' },
+    { e: '🧩', he: 'חֵלֶק',      tr: 'chelek',   en: 'part',     g: 'm' },
+    { e: '👫', he: 'זוּג',       tr: 'zug',      en: 'pair / couple', g: 'm' },
+    { e: '📈', he: 'רֹב',        tr: 'rov',      en: 'most',     g: 'm' },
+    { e: '1️⃣', he: 'פַּעַם',     tr: 'paam',     en: 'once / a time', g: 'f' },
+    { e: '🔁', he: 'פְּעָמִים',  tr: 'pe’amim',  en: 'times' },
+  ]},
+  { id: 'core-seasons', name: '⭐ Core — Seasons & calendar', emoji: '🍂', words: [
+    { e: '🌸', he: 'אָבִיב',     tr: 'aviv',     en: 'spring',   g: 'm' },
+    { e: '☀️', he: 'קַיִץ',      tr: 'kayitz',   en: 'summer',   g: 'm' },
+    { e: '🍂', he: 'סְתָו',      tr: 'stav',     en: 'autumn',   g: 'm' },
+    { e: '❄️', he: 'חֹרֶף',      tr: 'choref',   en: 'winter',   g: 'm' },
+    { e: '🔄', he: 'עוֹנָה',     tr: 'ona',      en: 'season',   g: 'f' },
+    { e: '🎉', he: 'חַג',        tr: 'chag',     en: 'holiday',  g: 'm' },
+    { e: '🎂', he: 'יוֹם הֻלֶּדֶת', tr: 'yom huledet', en: 'birthday' },
+    { e: '💒', he: 'חֲתֻנָּה',   tr: 'chatuna',  en: 'wedding',  g: 'f' },
+    { e: '📆', he: 'תַּאֲרִיךְ', tr: 'ta’arich', en: 'date',     g: 'm' },
+    { e: '⏭️', he: 'מָחֳרָתַיִם', tr: 'machrotayim', en: 'day after tomorrow' },
+    { e: '⏮️', he: 'שִׁלְשׁוֹם', tr: 'shilshom', en: 'day before yesterday' },
+  ]},
+  { id: 'core-routine', name: '⭐ Core — Daily routine', emoji: '⏰', words: [
+    { e: '⏰', he: 'לְהִתְעוֹרֵר', tr: 'lehit’orer', en: 'to wake up' },
+    { e: '👕', he: 'לְהִתְלַבֵּשׁ', tr: 'lehitlabesh', en: 'to get dressed' },
+    { e: '🚿', he: 'לְהִתְקַלֵּחַ', tr: 'lehitkaleach', en: 'to shower' },
+    { e: '🪥', he: 'לְצַחְצֵחַ', tr: 'letzachtzeach', en: 'to brush' },
+    { e: '🍳', he: 'לְהָכִין',   tr: 'lehachin', en: 'to prepare' },
+    { e: '🌅', he: 'מֻקְדָּם',   tr: 'mukdam',   en: 'early' },
+    { e: '🌙', he: 'מְאֻחָר',    tr: 'me’uchar', en: 'late' },
+    { e: '🍽️', he: 'אֲרוּחַת צָהֳרַיִם', tr: 'aruchat tzohorayim', en: 'lunch' },
+    { e: '🍲', he: 'אֲרוּחַת עֶרֶב', tr: 'aruchat erev', en: 'dinner' },
+    { e: '💬', he: 'שִׂיחָה',    tr: 'sicha',    en: 'conversation', g: 'f' },
+    { e: '☕', he: 'הַפְסָקָה',  tr: 'hafsaka',  en: 'break',    g: 'f' },
+  ]},
+  { id: 'core-abstract', name: '⭐ Core — Feelings & ideas', emoji: '✨', words: [
+    { e: '❤️', he: 'אַהֲבָה',    tr: 'ahava',    en: 'love',     g: 'f' },
+    { e: '😨', he: 'פַּחַד',     tr: 'pachad',   en: 'fear',     g: 'm' },
+    { e: '😄', he: 'שִׂמְחָה',   tr: 'simcha',   en: 'joy',      g: 'f' },
+    { e: '😢', he: 'עֶצֶב',      tr: 'etzev',    en: 'sadness',  g: 'm' },
+    { e: '😠', he: 'כַּעַס',     tr: 'ka’as',    en: 'anger',    g: 'm' },
+    { e: '🤞', he: 'תִּקְוָה',   tr: 'tikva',    en: 'hope',     g: 'f' },
+    { e: '✅', he: 'אֱמֶת',      tr: 'emet',     en: 'truth',    g: 'f' },
+    { e: '❌', he: 'שֶׁקֶר',     tr: 'sheker',   en: 'lie',      g: 'm' },
+    { e: '💭', he: 'חֲלוֹם',     tr: 'chalom',   en: 'dream',    g: 'm' },
+    { e: '🍀', he: 'מַזָּל',     tr: 'mazal',    en: 'luck',     g: 'm' },
+    { e: '💪', he: 'כֹּחַ',      tr: 'koach',    en: 'strength / power', g: 'm' },
+    { e: '🪫', he: 'חֻלְשָׁה',   tr: 'chulsha',  en: 'weakness', g: 'f' },
+    { e: '🧘', he: 'סַבְלָנוּת', tr: 'savlanut', en: 'patience', g: 'f' },
+    { e: '🙏', he: 'כָּבוֹד',    tr: 'kavod',    en: 'respect / honor', g: 'm' },
+  ]},
+  { id: 'core-society', name: '⭐ Core — Society & concepts', emoji: '🌍', words: [
+    { e: '🚩', he: 'דֶּגֶל',     tr: 'degel',    en: 'flag',     g: 'm' },
+    { e: '⚔️', he: 'מִלְחָמָה',  tr: 'milchama', en: 'war',      g: 'f' },
+    { e: '👥', he: 'עַם',        tr: 'am',       en: 'people / nation', g: 'm' },
+    { e: '🕍', he: 'דָּת',       tr: 'dat',      en: 'religion', g: 'f' },
+    { e: '🏛️', he: 'מֶמְשָׁלָה', tr: 'memshala', en: 'government', g: 'f' },
+    { e: '⚖️', he: 'חֹק',        tr: 'chok',     en: 'law',      g: 'm' },
+    { e: '✊', he: 'זְכוּת',     tr: 'zchut',    en: 'right',    g: 'f' },
+    { e: '🎨', he: 'אָמָּנוּת',  tr: 'omanut',   en: 'art',      g: 'f' },
+    { e: '🔬', he: 'מַדָּע',     tr: 'mada',     en: 'science',  g: 'm' },
+    { e: '📜', he: 'הִיסְטוֹרְיָה', tr: 'historiya', en: 'history', g: 'f' },
+    { e: '🌳', he: 'טֶבַע',      tr: 'teva',     en: 'nature',   g: 'm' },
+    { e: '🎭', he: 'תַּרְבּוּת', tr: 'tarbut',   en: 'culture',  g: 'f' },
+  ]},
+  { id: 'core-adj2', name: '⭐ Core — Describing things', emoji: '📐', words: [
+    { e: '🔘', he: 'רָגִיל',     tr: 'ragil',    en: 'usual / ordinary' },
+    { e: '⭐', he: 'מְיֻחָד',    tr: 'meyuchad', en: 'special' },
+    { e: '🔀', he: 'שׁוֹנֶה',    tr: 'shoneh',   en: 'different' },
+    { e: '🪞', he: 'דּוֹמֶה',    tr: 'domeh',    en: 'similar' },
+    { e: '✔️', he: 'אֲמִתִּי',   tr: 'amiti',    en: 'real / true' },
+    { e: '🎭', he: 'מְזֻיָּף',   tr: 'mezuyaf',  en: 'fake' },
+    { e: '🧼', he: 'נָקִי',      tr: 'naki',     en: 'clean' },
+    { e: '🫧', he: 'מְלֻכְלָךְ', tr: 'meluchlach', en: 'dirty' },
+    { e: '💧', he: 'רָטֹב',      tr: 'ratov',    en: 'wet' },
+    { e: '🌵', he: 'יָבֵשׁ',     tr: 'yavesh',   en: 'dry' },
+    { e: '🔪', he: 'חַד',        tr: 'chad',     en: 'sharp' },
+    { e: '⚫', he: 'עָגֹל',      tr: 'agol',     en: 'round' },
+    { e: '🏋️', he: 'כָּבֵד',     tr: 'kaved',    en: 'heavy' },
+  ]},
+  { id: 'core-jobs', name: '⭐ Core — Jobs', emoji: '🧑‍🔧', words: [
+    { e: '👨‍🍳', he: 'טַבָּח',   tr: 'tabach',   en: 'cook / chef', g: 'm' },
+    { e: '🧑‍🍳', he: 'אוֹפֶה',   tr: 'ofe',      en: 'baker',    g: 'm' },
+    { e: '🪚', he: 'נַגָּר',     tr: 'nagar',    en: 'carpenter', g: 'm' },
+    { e: '💡', he: 'חַשְׁמַלַּאי', tr: 'chashmalai', en: 'electrician', g: 'm' },
+    { e: '🚜', he: 'חַקְלַאי',   tr: 'chaklai',  en: 'farmer',   g: 'm' },
+    { e: '🎣', he: 'דַּיָּג',    tr: 'dayag',    en: 'fisherman', g: 'm' },
+    { e: '✈️', he: 'טַיָּס',     tr: 'tayas',    en: 'pilot',    g: 'm' },
+    { e: '🪖', he: 'חַיָּל',     tr: 'chayal',   en: 'soldier',  g: 'm' },
+    { e: '🎭', he: 'שַׂחְקָן',   tr: 'sachkan',  en: 'actor',    g: 'm' },
+    { e: '🎤', he: 'זַמָּר',     tr: 'zamar',    en: 'singer',   g: 'm' },
+    { e: '✍️', he: 'סוֹפֵר',     tr: 'sofer',    en: 'writer / author', g: 'm' },
+    { e: '📷', he: 'צַלָּם',     tr: 'tzalam',   en: 'photographer', g: 'm' },
+    { e: '👷', he: 'מְהַנְדֵּס', tr: 'mehandes', en: 'engineer', g: 'm' },
+    { e: '⚖️', he: 'עוֹרֵךְ דִּין', tr: 'orech din', en: 'lawyer' },
+  ]},
+  { id: 'core-verbs4', name: '⭐ Core — Action verbs', emoji: '🤸', words: [
+    { e: '🚗', he: 'לִנְהֹג',    tr: 'linhog',   en: 'to drive' },
+    { e: '🛫', he: 'לָטוּס',     tr: 'latus',    en: 'to fly' },
+    { e: '🏊', he: 'לִשְׂחוֹת',  tr: 'liskhot',  en: 'to swim' },
+    { e: '🦘', he: 'לִקְפֹּץ',   tr: 'likpotz',  en: 'to jump' },
+    { e: '🍂', he: 'לִפֹּל',     tr: 'lipol',    en: 'to fall' },
+    { e: '🤾', he: 'לִזְרֹק',    tr: 'lizrok',   en: 'to throw' },
+    { e: '🧤', he: 'לִתְפֹּס',   tr: 'litfos',   en: 'to catch' },
+    { e: '🏗️', he: 'לִבְנוֹת',   tr: 'livnot',   en: 'to build' },
+    { e: '💥', he: 'לִשְׁבֹּר',  tr: 'lishbor',  en: 'to break' },
+    { e: '🔧', he: 'לְתַקֵּן',   tr: 'letaken',  en: 'to fix / repair' },
+    { e: '🎨', he: 'לְצַיֵּר',   tr: 'letzayer', en: 'to draw / paint' },
+    { e: '📸', he: 'לְצַלֵּם',   tr: 'letzalem', en: 'to photograph' },
+    { e: '💃', he: 'לִרְקֹד',    tr: 'lirkod',   en: 'to dance' },
+    { e: '🎸', he: 'לְנַגֵּן',   tr: 'lenagen',  en: 'to play (an instrument)' },
+  ]},
+  { id: 'core-household', name: '⭐ Core — Household items', emoji: '🧺', words: [
+    { e: '🧻', he: 'מַגֶּבֶת',   tr: 'magevet',  en: 'towel',    g: 'f' },
+    { e: '🧼', he: 'סַבּוֹן',    tr: 'sabon',    en: 'soap',     g: 'm' },
+    { e: '🪥', he: 'מִבְרֶשֶׁת', tr: 'mivreshet', en: 'brush',   g: 'f' },
+    { e: '🛏️', he: 'כָּרִית',    tr: 'karit',    en: 'pillow',   g: 'f' },
+    { e: '🛌', he: 'שְׂמִיכָה',  tr: 'smicha',   en: 'blanket',  g: 'f' },
+    { e: '🪞', he: 'מַרְאָה',    tr: 'mar’a',    en: 'mirror',   g: 'f' },
+    { e: '🍲', he: 'סִיר',       tr: 'sir',      en: 'pot',      g: 'm' },
+    { e: '🍳', he: 'מַחֲבַת',    tr: 'machavat', en: 'pan',      g: 'f' },
+    { e: '🥛', he: 'כּוֹס',      tr: 'kos',      en: 'cup / glass', g: 'f' },
+    { e: '🍾', he: 'בַּקְבּוּק', tr: 'bakbuk',   en: 'bottle',   g: 'm' },
+    { e: '🍽️', he: 'מַגָּשׁ',    tr: 'magash',   en: 'tray',     g: 'm' },
+    { e: '📦', he: 'אַרְגָּז',   tr: 'argaz',    en: 'box / crate', g: 'm' },
+    { e: '🛍️', he: 'שַׁקִּית',   tr: 'sakit',    en: 'bag',      g: 'f' },
+  ]},
+  { id: 'core-produce', name: '⭐ Core — Fruit & produce', emoji: '🍉', words: [
+    { e: '🍊', he: 'תַּפּוּז',   tr: 'tapuz',    en: 'orange',   g: 'm' },
+    { e: '🍇', he: 'עֲנָבִים',   tr: 'anavim',   en: 'grapes',   g: 'm' },
+    { e: '🍉', he: 'אֲבַטִּיחַ', tr: 'avatiach', en: 'watermelon', g: 'm' },
+    { e: '🍓', he: 'תּוּת',      tr: 'tut',      en: 'strawberry', g: 'm' },
+    { e: '🍑', he: 'אֲפַרְסֵק',  tr: 'afarsek',  en: 'peach',    g: 'm' },
+    { e: '🥜', he: 'אֱגוֹז',     tr: 'egoz',     en: 'nut',      g: 'm' },
+    { e: '🍒', he: 'דֻּבְדְּבָן', tr: 'duvdevan', en: 'cherry',  g: 'm' },
+    { e: '🍋', he: 'לִימוֹן',    tr: 'limon',    en: 'lemon',    g: 'm' },
+    { e: '🍈', he: 'מֵלוֹן',     tr: 'melon',    en: 'melon',    g: 'm' },
+    { e: '🥛', he: 'יוֹגוּרְט',  tr: 'yogurt',   en: 'yogurt',   g: 'm' },
+    { e: '🥣', he: 'דְּגָנִים',  tr: 'dganim',   en: 'cereal / grains', g: 'm' },
+    { e: '🍪', he: 'עוּגִיָּה',  tr: 'ugiya',    en: 'cookie',   g: 'f' },
+  ]},
+  { id: 'core-location', name: '⭐ Core — Where things are', emoji: '📍', words: [
+    { e: '⬅️', he: 'לִפְנֵי',    tr: 'lifnei',   en: 'before / in front of' },
+    { e: '➡️', he: 'אַחֲרֵי',    tr: 'acharei',  en: 'after' },
+    { e: '🔙', he: 'מֵאֲחוֹרֵי', tr: 'me’achorei', en: 'behind' },
+    { e: '↔️', he: 'בֵּין',      tr: 'bein',     en: 'between' },
+    { e: '⬇️', he: 'מִתַּחַת',   tr: 'mitachat', en: 'under' },
+    { e: '⬆️', he: 'מֵעַל',      tr: 'me’al',    en: 'above / over' },
+    { e: '↪️', he: 'לְיַד',      tr: 'leyad',    en: 'next to' },
+    { e: '🔄', he: 'מוּל',       tr: 'mul',      en: 'opposite / facing' },
+    { e: '📥', he: 'בְּתוֹךְ',   tr: 'betoch',   en: 'inside' },
+    { e: '🚪', he: 'בַּחוּץ',    tr: 'bachutz',  en: 'outside' },
+    { e: '🏠', he: 'בִּפְנִים',  tr: 'bifnim',   en: 'inside (indoors)' },
+    { e: '🔁', he: 'סְבִיב',     tr: 'sviv',     en: 'around' },
+    { e: '⚔️', he: 'נֶגֶד',      tr: 'neged',    en: 'against' },
+  ]},
+  { id: 'core-verbs5', name: '⭐ Core — Communication verbs', emoji: '🗨️', words: [
+    { e: '🗣️', he: 'לְהַגִּיד',  tr: 'lehagid',   en: 'to say / tell' },
+    { e: '🙏', he: 'לְהוֹדוֹת',  tr: 'lehodot',   en: 'to thank' },
+    { e: '😔', he: 'לְהִתְנַצֵּל', tr: 'lehitnatzel', en: 'to apologize' },
+    { e: '🙋', he: 'לְבַקֵּשׁ',  tr: 'levakesh',  en: 'to request / ask for' },
+    { e: '👍', he: 'לְהַסְכִּים', tr: 'lehaskim',  en: 'to agree' },
+    { e: '🙅', he: 'לְסָרֵב',    tr: 'lesarev',   en: 'to refuse' },
+    { e: '🤝', he: 'לְהַבְטִיחַ', tr: 'lehavtiach', en: 'to promise' },
+    { e: '🤥', he: 'לְשַׁקֵּר',  tr: 'leshaker',  en: 'to lie' },
+    { e: '🧩', he: 'לְהַחְלִיט', tr: 'lehachlit', en: 'to decide' },
+    { e: '🤗', he: 'לְהַכִּיר',  tr: 'lehakir',   en: 'to meet / get to know' },
+    { e: '🎉', he: 'לְהַפְתִּיעַ', tr: 'lehaftia',  en: 'to surprise' },
+    { e: '🏆', he: 'לְהַצְלִיחַ', tr: 'lehatzliach', en: 'to succeed' },
+    { e: '🥇', he: 'לְנַצֵּחַ',  tr: 'lenatzeach', en: 'to win' },
+    { e: '😞', he: 'לְהַפְסִיד', tr: 'lehafsid',  en: 'to lose (a game)' },
+    { e: '💭', he: 'לַחֲלוֹם',   tr: 'lachalom',  en: 'to dream' },
+  ]},
+  { id: 'core-ideas', name: '⭐ Core — Thoughts & ideas', emoji: '💡', words: [
+    { e: '🎯', he: 'מַטָּרָה',   tr: 'matara',   en: 'goal',     g: 'f' },
+    { e: '❓', he: 'סִבָּה',     tr: 'siba',     en: 'reason / cause', g: 'f' },
+    { e: '➡️', he: 'תּוֹצָאָה',  tr: 'totzaa',   en: 'result',   g: 'f' },
+    { e: '📋', he: 'דֻּגְמָה',   tr: 'dugma',    en: 'example',  g: 'f' },
+    { e: '↔️', he: 'הֶבְדֵּל',   tr: 'hevdel',   en: 'difference', g: 'm' },
+    { e: '🔀', he: 'בְּחִירָה',  tr: 'bchira',   en: 'choice',   g: 'f' },
+    { e: '✅', he: 'הַחְלָטָה',  tr: 'hachlata', en: 'decision', g: 'f' },
+    { e: '🔓', he: 'אֶפְשָׁרוּת', tr: 'efsharut', en: 'possibility', g: 'f' },
+    { e: '💬', he: 'מַשְׁמָעוּת', tr: 'mashmaut', en: 'meaning',  g: 'f' },
+    { e: '❤️', he: 'רֶגֶשׁ',     tr: 'regesh',   en: 'emotion',  g: 'm' },
+    { e: '🧠', he: 'מַחֲשָׁבָה', tr: 'machshava', en: 'thought', g: 'f' },
+    { e: '💭', he: 'דֵּעָה',     tr: 'dea',      en: 'opinion',  g: 'f' },
+    { e: '📰', he: 'יְדִיעָה',   tr: 'yedia',    en: 'knowledge / news', g: 'f' },
+    { e: '🧪', he: 'נִסָּיוֹן',  tr: 'nisayon',  en: 'experience / attempt', g: 'm' },
+  ]},
+  { id: 'core-outdoors', name: '⭐ Core — Outdoors & land', emoji: '⛰️', words: [
+    { e: '🌱', he: 'דֶּשֶׁא',    tr: 'deshe',    en: 'grass / lawn', g: 'm' },
+    { e: '🌿', he: 'שִׂיחַ',     tr: 'siach',    en: 'bush',     g: 'm' },
+    { e: '🌴', he: 'עָנָף',      tr: 'anaf',     en: 'branch',   g: 'm' },
+    { e: '🌳', he: 'שֹׁרֶשׁ',    tr: 'shoresh',  en: 'root',     g: 'm' },
+    { e: '🌰', he: 'זֶרַע',      tr: 'zera',     en: 'seed',     g: 'm' },
+    { e: '🍎', he: 'פְּרִי',     tr: 'pri',      en: 'a fruit',  g: 'm' },
+    { e: '🕳️', he: 'מְעָרָה',    tr: 'me’ara',   en: 'cave',     g: 'f' },
+    { e: '⛰️', he: 'גִּבְעָה',   tr: 'giv’a',    en: 'hill',     g: 'f' },
+    { e: '🏞️', he: 'עֵמֶק',      tr: 'emek',     en: 'valley',   g: 'm' },
+    { e: '🏕️', he: 'אֲגַם',      tr: 'agam',     en: 'lake',     g: 'm' },
+    { e: '💦', he: 'מַפַּל',     tr: 'mapal',    en: 'waterfall', g: 'm' },
+    { e: '🏝️', he: 'אִי',        tr: 'i',        en: 'island',   g: 'm' },
+    { e: '🏜️', he: 'מִדְבָּר',   tr: 'midbar',   en: 'desert',   g: 'm' },
+    { e: '🏖️', he: 'חוֹף',       tr: 'chof',     en: 'beach / shore', g: 'm' },
+  ]},
+  { id: 'core-measure', name: '⭐ Core — Measurements', emoji: '📏', words: [
+    { e: '📏', he: 'מֶטֶר',      tr: 'meter',    en: 'meter',    g: 'm' },
+    { e: '🛣️', he: 'קִילוֹמֶטֶר', tr: 'kilometer', en: 'kilometer', g: 'm' },
+    { e: '⚖️', he: 'קִילוֹ',     tr: 'kilo',     en: 'kilo',     g: 'm' },
+    { e: '🧴', he: 'לִיטֶר',     tr: 'liter',    en: 'liter',    g: 'm' },
+    { e: '📊', he: 'דַּרְגָּה',  tr: 'darga',    en: 'degree / level', g: 'f' },
+    { e: '🌡️', he: 'מַעֲלָה',    tr: 'maala',    en: 'degree (temp.)', g: 'f' },
+    { e: '％', he: 'אָחוּז',     tr: 'achuz',    en: 'percent',  g: 'm' },
+    { e: '➕', he: 'חִבּוּר',    tr: 'chibur',   en: 'addition', g: 'm' },
+    { e: '➖', he: 'חִסּוּר',    tr: 'chisur',   en: 'subtraction', g: 'm' },
+    { e: '✖️', he: 'כֶּפֶל',     tr: 'kefel',    en: 'multiplication', g: 'm' },
+    { e: '➗', he: 'חִלּוּק',    tr: 'chiluk',   en: 'division', g: 'm' },
+    { e: '¼', he: 'רֶבַע',      tr: 'reva',     en: 'quarter',  g: 'm' },
+    { e: '🟰', he: 'שָׁלֵם',     tr: 'shalem',   en: 'whole / complete' },
+  ]},
   { id: 'greetings', name: 'Greetings & Basics', emoji: '👋', words: [
     { e: '👋', he: 'שָׁלוֹם',       tr: 'shalom',       en: 'hello / peace' },
     { e: '🙏', he: 'תּוֹדָה',       tr: 'toda',         en: 'thank you' },
@@ -2696,6 +3599,8 @@ const STRINGS = {
     immReadIt:         'Read it (sounds)',
     immWordByWord:     'Word by word — tap a word to hear it and see its meaning',
     immTapHint:        'Tap any word above.',
+    immTogTranslit:    'Transliteration',
+    immTogMeaning:     'Meaning under words',
     immStoryLib:       '📚 Hebrew children\'s stories library ↗',
     immStoryLibHint:   'Open a story, copy a sentence, and paste it below.',
     immGrammarTitle:   'How it fits together',
@@ -2712,8 +3617,16 @@ const STRINGS = {
     immAddHe:          'Hebrew word',
     immAddMean:        'what it means',
     immAddBtn:         '➕ Add',
-    immFlashcards:     '🗂️ Flashcards',
-    immQuizMe:         '🎯 Quiz me',
+    immFlashcards:     '🔄 Flashcards',
+    immQuizMe:         '🗣️ Say it',
+    immLevels:         'Study levels — easy → hard:',
+    immChoose:         '🔤 Choose',
+    immSpell:          '⌨️ Spell it',
+    immSpellPrompt:    'Spell it in Hebrew (tap the keyboard below):',
+    immSpellPh:        'type the Hebrew word…',
+    immSrcMine:        '⭐ My cards',
+    immSrcVocab:       '📚 All vocabulary',
+    immVocabCount:     '📚 Studying all {n} vocabulary words — hit Flashcards or Quiz me.',
     immNoCards:        'Add words above (or tap a word and “Add to my cards”) to start a deck.',
     immAdded:          'Added to your cards ✓',
     immFlip:           'Tap to flip',
@@ -2733,6 +3646,34 @@ const STRINGS = {
     immQuizDone:       '🎉 Deck complete!',
     immAgain:          '↻ Again',
     immKbLabel:        '⌨️ Keyboard',
+    tabProgress:       'Progress',
+    progIntro:         'Track what you’ve learned, level up, and test your fluency. Everything you do in Vocabulary, Immerse, and Grammar counts here.',
+    progLevel:         'Level',
+    progStreak:        '{n}-day streak',
+    progToNext:        'XP to level {n}',
+    progFluency:       'Fluency',
+    progFluencyBtn:    '🎯 Fluency check',
+    progReviewBtn:     '🔁 Review due words',
+    progDecks:         'Progress by topic',
+    progReset:         'Reset progress',
+    progResetConfirm:  'Reset ALL your progress — levels, XP, and mastered words? This can’t be undone.',
+    progResetDone:     'Progress reset',
+    progStatSeen:      'Seen',
+    progStatLearning:  'Learning',
+    progStatKnown:     'Known',
+    progStatMastered:  'Mastered',
+    progStatLessons:   'Lessons',
+    progQuizDone:      'Quiz complete!',
+    progNoReview:      'Nothing to review yet — take a Fluency check or a Vocabulary quiz to start learning words.',
+    progFluencyYouAre: 'Based on this check, you’re around',
+    progLastCheck:     'last check {p}% ({c})',
+    progBand0:         'Just starting',
+    progBand1:         'First words',
+    progBand2:         'Survival Hebrew',
+    progBand3:         'Basic phrases',
+    progBand4:         'Everyday basics',
+    progBand5:         'Conversational',
+    progBand6:         'Confident basics',
     gamesIntro:        'Play and learn — find hidden words, or fill in the crossword.',
     gameWordSearch:    '🔍 Word Search',
     gameCrossword:     '✏️ Crossword',
@@ -2747,6 +3688,23 @@ const STRINGS = {
     gameClueDown:      'Down ↓',
     gameCwWin:         '🎉 Solved!',
     gameCwWrong:       'Not quite — keep trying.',
+    gameShooter:       '🚀 Sound Shooter',
+    gameMixed:         '🎲 Mixed (all topics)',
+    gameShootHow:      'A sound plays — tap the falling letter that makes it before it lands. A wrong tap, or letting the right letter fall, costs a life.',
+    gameStart:         '▶ Start',
+    gameScore:         'Score',
+    gameLives:         'Lives',
+    gameLevel:         'Level',
+    gameReplaySound:   '🔊 Hear it again',
+    gameShootPrompt:   'Tap the letter that makes this sound:',
+    gameOver:          'Game over',
+    gamePlayAgain:     '↻ Play again',
+    gameRunner:        '🏃 Letter Runner',
+    gameRunnerHow:     'Run and spell the word in order! Jump (↑ / Space) to grab high letters and leap spikes; duck (↓) under bars. Catch the highlighted next letter — skip the wrong ones.',
+    gameRunnerTarget:  'Spell:',
+    gameRunnerKeys:    '↑ / Space = jump · ↓ = duck',
+    gameBest:          'Best',
+    gameNewBest:       '🏆 New best!',
     libIntro:          'Read real Hebrew from the Sefaria library. Tap any word to hear it and study it — letters, transliteration, and dictionary — in the side panel.',
     libRefPlaceholder: 'Paste a Sefaria link, or type a chapter — e.g. Genesis 28, Psalms 121',
     libGo:             'Read',
@@ -2768,9 +3726,13 @@ const STRINGS = {
     libDictNote:       'Dictionary shows the root/base meaning — not always the sense in this verse.',
     libOpenSefaria:    'Open in Sefaria ↗',
     libHearWord:       '🔊 Hear word',
-    vocabIntro:        'Tap any card to hear it. Pick a deck, then hit Quiz to test yourself.',
+    vocabIntro:        'Tap cards to hear them. Pick one or more decks (or Select all), then Browse or Quiz. Turn on blur to self-test — tap a card to reveal.',
     vocabQuiz:         '🎯 Quiz me',
     vocabBrowse:       '📖 Browse',
+    vocabAll:          '✓ Select all',
+    vocabClear:        '✕ Clear',
+    vocabBlurTr:       'Blur transliteration',
+    vocabBlurEn:       'Blur meaning',
     quizScore:         'Score',
     quizNext:          'Next →',
     quizAgain:         '↻ Again',
@@ -2887,6 +3849,8 @@ const STRINGS = {
     immReadIt:         'קריאה (צלילים)',
     immWordByWord:     'מילה-במילה — הקישו על מילה כדי לשמוע ולראות את משמעותה',
     immTapHint:        'הקישו על מילה למעלה.',
+    immTogTranslit:    'תעתיק',
+    immTogMeaning:     'משמעות מתחת למילים',
     immStoryLib:       '📚 ספריית סיפורי ילדים בעברית ↗',
     immStoryLibHint:   'פתחו סיפור, העתיקו משפט, והדביקו אותו למטה.',
     immGrammarTitle:   'איך זה מתחבר',
@@ -2903,8 +3867,16 @@ const STRINGS = {
     immAddHe:          'מילה בעברית',
     immAddMean:        'מה המשמעות',
     immAddBtn:         '➕ הוסף',
-    immFlashcards:     '🗂️ כרטיסיות',
-    immQuizMe:         '🎯 בחן אותי',
+    immFlashcards:     '🔄 כרטיסיות',
+    immQuizMe:         '🗣️ אמור',
+    immLevels:         'רמות לימוד — קל ← קשה:',
+    immChoose:         '🔤 בחירה',
+    immSpell:          '⌨️ איות',
+    immSpellPrompt:    'אַיְּתוּ בעברית (הקישו על המקלדת למטה):',
+    immSpellPh:        'הקלידו את המילה בעברית…',
+    immSrcMine:        '⭐ הכרטיסים שלי',
+    immSrcVocab:       '📚 כל אוצר המילים',
+    immVocabCount:     '📚 לומדים את כל {n} המילים — הקישו כרטיסיות או בחן אותי.',
     immNoCards:        'הוסיפו מילים למעלה (או הקישו על מילה ו״הוסף לכרטיסים״) כדי להתחיל.',
     immAdded:          'נוסף לכרטיסים שלך ✓',
     immFlip:           'הקישו להיפוך',
@@ -2924,6 +3896,34 @@ const STRINGS = {
     immQuizDone:       '🎉 סיימתם את החפיסה!',
     immAgain:          '↻ שוב',
     immKbLabel:        '⌨️ מקלדת',
+    tabProgress:       'התקדמות',
+    progIntro:         'עקבו אחרי מה שלמדתם, עלו רמות, ובחנו את השטף שלכם. כל מה שאתם עושים באוצר מילים, בהטמעה ובדקדוק נספר כאן.',
+    progLevel:         'רמה',
+    progStreak:        'רצף {n} ימים',
+    progToNext:        'נק״ד לרמה {n}',
+    progFluency:       'שטף',
+    progFluencyBtn:    '🎯 מבחן שטף',
+    progReviewBtn:     '🔁 חזרה על מילים',
+    progDecks:         'התקדמות לפי נושא',
+    progReset:         'איפוס התקדמות',
+    progResetConfirm:  'לאפס את כל ההתקדמות — רמות, נקודות ומילים שנלמדו? אי אפשר לבטל.',
+    progResetDone:     'ההתקדמות אופסה',
+    progStatSeen:      'נראו',
+    progStatLearning:  'בלימוד',
+    progStatKnown:     'ידועות',
+    progStatMastered:  'שולטים',
+    progStatLessons:   'שיעורים',
+    progQuizDone:      'הבוחן הושלם!',
+    progNoReview:      'אין על מה לחזור עדיין — התחילו במבחן שטף או בבוחן אוצר מילים.',
+    progFluencyYouAre: 'לפי הבדיקה, אתם בערך ברמה',
+    progLastCheck:     'בדיקה אחרונה {p}% ({c})',
+    progBand0:         'רק מתחילים',
+    progBand1:         'מילים ראשונות',
+    progBand2:         'עברית בסיסית',
+    progBand3:         'ביטויים בסיסיים',
+    progBand4:         'יומיום',
+    progBand5:         'שיחה',
+    progBand6:         'ביטחון בסיסי',
     gamesIntro:        'לשחק וללמוד — מצאו מילים חבויות, או פתרו את התשבץ.',
     gameWordSearch:    '🔍 תפזורת',
     gameCrossword:     '✏️ תשבץ',
@@ -2938,6 +3938,23 @@ const STRINGS = {
     gameClueDown:      'מאונך ↓',
     gameCwWin:         '🎉 נפתר!',
     gameCwWrong:       'לא בדיוק — נסו עוד.',
+    gameShooter:       '🚀 יורה הצלילים',
+    gameMixed:         '🎲 מעורב (כל הנושאים)',
+    gameShootHow:      'צליל מתנגן — הקישו על האות הנופלת שמשמיעה אותו לפני שתנחת. הקשה שגויה, או אות נכונה שנופלת, עולה חיים.',
+    gameStart:         '▶ התחל',
+    gameScore:         'ניקוד',
+    gameLives:         'חיים',
+    gameLevel:         'שלב',
+    gameReplaySound:   '🔊 שמעו שוב',
+    gameShootPrompt:   'הקישו על האות שמשמיעה את הצליל:',
+    gameOver:          'המשחק נגמר',
+    gamePlayAgain:     '↻ שחקו שוב',
+    gameRunner:        '🏃 ריצת אותיות',
+    gameRunnerHow:     'רוצו ואַיְּתוּ את המילה לפי הסדר! קפצו (↑ / רווח) כדי לתפוס אותיות גבוהות ולדלג על קוצים; התכופפו (↓) מתחת למוטות. תפסו את האות המודגשת הבאה — דלגו על השגויות.',
+    gameRunnerTarget:  'אַיֵּת:',
+    gameRunnerKeys:    '↑ / רווח = קפיצה · ↓ = התכופפות',
+    gameBest:          'שיא',
+    gameNewBest:       '🏆 שיא חדש!',
     libIntro:          'קרא עברית אמיתית מספריית ספריא. הקש על כל מילה כדי לשמוע וללמוד אותה — אותיות, תעתיק ומילון — בפאנל הצדדי.',
     libRefPlaceholder: 'הדבק קישור מספריא, או הקלד פרק — למשל בראשית כ״ח, תהילים קכ״א',
     libGo:             'קרא',
@@ -2959,9 +3976,13 @@ const STRINGS = {
     libDictNote:       'המילון מציג את משמעות השורש — לא תמיד המובן בפסוק זה.',
     libOpenSefaria:    'פתח בספריא ↗',
     libHearWord:       '🔊 שמע מילה',
-    vocabIntro:        'הקש על כל כרטיס כדי לשמוע אותו. בחר חבילה, ואז הקש "בוחן".',
+    vocabIntro:        'הקישו על כרטיסים כדי לשמוע. בחרו חבילה אחת או יותר (או "בחר הכול"), ואז עיון או בוחן. הפעילו טשטוש לתרגול עצמי — הקישו על כרטיס לחשיפה.',
     vocabQuiz:         '🎯 בוחן',
     vocabBrowse:       '📖 עיון',
+    vocabAll:          '✓ בחר הכול',
+    vocabClear:        '✕ נקה',
+    vocabBlurTr:       'טשטוש תעתיק',
+    vocabBlurEn:       'טשטוש משמעות',
     quizScore:         'ניקוד',
     quizNext:          'הבא →',
     quizAgain:         '↻ שוב',
@@ -5758,18 +6779,26 @@ document.getElementById('translate-play-all').addEventListener('click', playAllT
 // so functions called during initial render can read them.)
 
 // ===== VOCABULARY TAB =====
-let vocabDeckIndex = 0;
+let vocabSelected = new Set([0]);   // indices of decks being studied (multi-select)
 let vocabMode = 'browse';
+let vocabBlurTr = false, vocabBlurEn = false;
 
+// Combined, de-duplicated word list from every selected deck.
+function vocabActiveWords() {
+  const seen = new Set(), out = [];
+  VOCAB.forEach((d, i) => { if (vocabSelected.has(i)) d.words.forEach(w => { if (!seen.has(w.he)) { seen.add(w.he); out.push(w); } }); });
+  return out;
+}
 function renderDeckTabs() {
   const host = document.getElementById('deck-tabs');
   host.innerHTML = '';
   VOCAB.forEach((deck, i) => {
     const chip = document.createElement('button');
-    chip.className = 'deck-chip' + (i === vocabDeckIndex ? ' active' : '');
+    chip.className = 'deck-chip' + (vocabSelected.has(i) ? ' active' : '');
     chip.textContent = deck.emoji + ' ' + deck.name;
     chip.addEventListener('click', () => {
-      vocabDeckIndex = i;
+      if (vocabSelected.has(i)) vocabSelected.delete(i); else vocabSelected.add(i);
+      if (!vocabSelected.size) vocabSelected.add(i);   // keep at least one selected
       renderDeckTabs();
       if (vocabMode === 'quiz') startQuiz(); else renderVocabDeck();
     });
@@ -5778,25 +6807,23 @@ function renderDeckTabs() {
 }
 
 function renderVocabDeck() {
-  const deck = VOCAB[vocabDeckIndex];
+  const words = vocabActiveWords();
   const host = document.getElementById('vocab-deck');
   const learningEnglish = currentDirection === 'en';
+  const blurCls = (vocabBlurTr ? ' blur-tr' : '') + (vocabBlurEn ? ' blur-en' : '');
   host.style.display = '';
   document.getElementById('quiz-area').style.display = 'none';
   host.innerHTML = '';
-  deck.words.forEach(w => {
+  words.forEach(w => {
     const card = document.createElement('div');
-    card.className = 'vocab-card';
+    card.className = 'vocab-card' + blurCls;
     if (learningEnglish) {
-      // Learning English: the ENGLISH word is the target (big). Hebrew is the
-      // helper. English has NO grammatical gender, so no m./f. badge here.
       card.innerHTML =
         '<div class="em">' + w.e + '</div>' +
         '<div class="vocab-card-he" style="direction:ltr">' + w.en + '</div>' +
         '<div class="vocab-card-en" style="direction:rtl">' + w.he + '</div>';
-      card.addEventListener('click', () => speakEnglish(w.en));
+      card.addEventListener('click', () => { card.classList.add('revealed'); speakEnglish(w.en); });
     } else {
-      // Learning Hebrew: Hebrew word is the target; gender matters, so show it.
       let g = '';
       if (w.g) g = '<span class="gender ' + w.g + '">' + (w.g === 'm' ? 'm.' : 'f.') + '</span>';
       card.innerHTML =
@@ -5805,17 +6832,18 @@ function renderVocabDeck() {
         '<div class="vocab-card-tr">' + w.tr + '</div>' +
         '<div class="vocab-card-en">' + w.en + '</div>' +
         g;
-      card.addEventListener('click', () => speakHebrew(w.he, w.tr));
+      // Tap reveals blurred fields (study mode) and speaks the word.
+      card.addEventListener('click', () => { card.classList.add('revealed'); speakHebrew(w.he, w.tr); });
     }
     host.appendChild(card);
   });
 }
 
 // --- Quiz: show a word, pick its English meaning from 4 choices ---
-let quizState = null;
+let quizState = null, quizWords = [];
 function startQuiz() {
-  const deck = VOCAB[vocabDeckIndex];
-  const order = deck.words.map((_, i) => i);
+  quizWords = vocabActiveWords();
+  const order = quizWords.map((_, i) => i);
   for (let i = order.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [order[i], order[j]] = [order[j], order[i]];
@@ -5827,7 +6855,7 @@ function startQuiz() {
 }
 
 function renderQuizCard() {
-  const deck = VOCAB[vocabDeckIndex];
+  const deck = { words: quizWords };
   const area = document.getElementById('quiz-area');
   if (quizState.pos >= quizState.order.length) {
     area.innerHTML =
@@ -5887,6 +6915,7 @@ function renderQuizCard() {
         b.classList.add('wrong');
         all.forEach(x => { if (x.textContent === w.en) x.classList.add('correct'); });
       }
+      if (typeof progRecord === 'function') progRecord(w.he, o.en === w.en);
       const nextBtn = document.createElement('button');
       nextBtn.className = 'btn small';
       nextBtn.style.marginTop = '0.9rem';
@@ -5899,6 +6928,25 @@ function renderQuizCard() {
 }
 
 function setupVocabTab() {
+  // restore blur preferences
+  try {
+    vocabBlurTr = localStorage.getItem('otiyot-vocab-blur-tr') === '1';
+    vocabBlurEn = localStorage.getItem('otiyot-vocab-blur-en') === '1';
+  } catch (e) {}
+  const trBox = document.getElementById('vocab-blur-tr'), enBox = document.getElementById('vocab-blur-en');
+  if (trBox) trBox.checked = vocabBlurTr;
+  if (enBox) enBox.checked = vocabBlurEn;
+  const reRender = () => { if (vocabMode === 'browse') renderVocabDeck(); };
+  if (trBox) trBox.addEventListener('change', () => { vocabBlurTr = trBox.checked; try { localStorage.setItem('otiyot-vocab-blur-tr', vocabBlurTr ? '1' : '0'); } catch (e) {} reRender(); });
+  if (enBox) enBox.addEventListener('change', () => { vocabBlurEn = enBox.checked; try { localStorage.setItem('otiyot-vocab-blur-en', vocabBlurEn ? '1' : '0'); } catch (e) {} reRender(); });
+  document.getElementById('vocab-all').addEventListener('click', () => {
+    VOCAB.forEach((_, i) => vocabSelected.add(i));
+    renderDeckTabs(); if (vocabMode === 'quiz') startQuiz(); else renderVocabDeck();
+  });
+  document.getElementById('vocab-clear').addEventListener('click', () => {
+    vocabSelected = new Set([0]);   // keep the first deck so there's always something
+    renderDeckTabs(); if (vocabMode === 'quiz') startQuiz(); else renderVocabDeck();
+  });
   renderDeckTabs();
   renderVocabDeck();
   document.getElementById('vocab-mode-browse').addEventListener('click', () => {
@@ -6001,6 +7049,7 @@ function renderLesson() {
           btn.classList.add('correct');
           fb.textContent = t('correct');
           fb.style.color = 'var(--good)';
+          if (typeof progMarkLesson === 'function') progMarkLesson(L.id);
         } else {
           btn.classList.add('wrong');
           fb.textContent = t('tryAgain');
@@ -6413,11 +7462,22 @@ const HEB_FILL = 'אבגדהוזחטיכלמנסעפצקרשת'.split('');
 function stripNik(s) { return s.replace(/[֑-ׇ]/g, ''); }
 
 // --- Word Search -------------------------------------------------------
+function wsShuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function wsWordsFromDeck(deck) {
-  return deck.words
+  const arr = deck.words
     .map(w => ({ he: stripNik(w.he), en: w.en, e: w.e }))
-    .filter(w => !/\s/.test(w.he) && w.he.length >= 2 && w.he.length <= 6)
-    .slice(0, 8);
+    .filter(w => !/\s/.test(w.he) && w.he.length >= 2 && w.he.length <= 6);
+  return wsShuffle(arr).slice(0, 8);   // shuffle so each puzzle is fresh
+}
+// Mixed corpus: short words sampled from across every deck (all 350+ words).
+function wsMixedWords() {
+  const seen = new Set(), pool = [];
+  VOCAB.forEach(d => d.words.forEach(w => {
+    const he = stripNik(w.he);
+    if (/\s/.test(he) || he.length < 2 || he.length > 6 || seen.has(he)) return;
+    seen.add(he); pool.push({ he, en: w.en, e: w.e });
+  }));
+  return wsShuffle(pool).slice(0, 9);
 }
 function buildWSGrid(words, size) {
   const grid = Array.from({ length: size }, () => Array(size).fill(''));
@@ -6452,17 +7512,19 @@ function buildWSGrid(words, size) {
 }
 let wsState = null;
 function renderWordSearch() {
+  ssStop(); lrStop();
   const area = document.getElementById('game-area');
-  const deck = VOCAB[wsDeckIndex];
-  const words = wsWordsFromDeck(deck);
+  const words = (wsDeckIndex === 'mix') ? wsMixedWords() : wsWordsFromDeck(VOCAB[wsDeckIndex]);
   const size = 10;
   const { grid, placements } = buildWSGrid(words, size);
   wsState = { size, placements, foundWords: new Set(), foundCells: new Set(), sel: null };
 
-  // deck picker + grid + list
-  let deckChips = VOCAB.map((d, i) =>
-    '<button class="deck-chip' + (i === wsDeckIndex ? ' active' : '') + '" data-wsdeck="' + i + '">' +
-    d.emoji + ' ' + d.name + '</button>').join('');
+  // deck picker (Mixed first) + grid + list
+  let deckChips = '<button class="deck-chip' + (wsDeckIndex === 'mix' ? ' active' : '') +
+      '" data-wsdeck="mix">' + t('gameMixed') + '</button>' +
+    VOCAB.map((d, i) =>
+      '<button class="deck-chip' + (i === wsDeckIndex ? ' active' : '') + '" data-wsdeck="' + i + '">' +
+      d.emoji + ' ' + d.name + '</button>').join('');
   const listHtml = placements.map(p =>
     '<div class="ws-word" data-w="' + p.he + '"><span class="wsw-he">' + p.he + '</span>' +
     '<span>' + p.e + ' ' + p.en + '</span></div>').join('');
@@ -6481,7 +7543,7 @@ function renderWordSearch() {
     '</div>';
 
   area.querySelectorAll('[data-wsdeck]').forEach(b =>
-    b.addEventListener('click', () => { wsDeckIndex = +b.dataset.wsdeck; renderWordSearch(); }));
+    b.addEventListener('click', () => { wsDeckIndex = b.dataset.wsdeck === 'mix' ? 'mix' : +b.dataset.wsdeck; renderWordSearch(); }));
   document.getElementById('ws-new').addEventListener('click', renderWordSearch);
   area.querySelectorAll('.ws-cell').forEach(cell =>
     cell.addEventListener('click', () => wsCellClick(+cell.dataset.idx)));
@@ -6517,20 +7579,84 @@ function wsCellClick(idx) {
   }
 }
 
-// --- Crossword (curated mini puzzle) -----------------------------------
-const CROSSWORD = {
-  rows: 4, cols: 3,
-  answers: { '1,0': 'ב', '1,1': 'ל', '1,2': 'כ', '2,1': 'ח', '3,1': 'ם', '3,2': 'ש' },
-  numbers: { '1,2': 1, '1,1': 2, '3,2': 3 },
-  clues: [
-    { n: 1, dir: 'across', clue: '🐕 dog' },
-    { n: 2, dir: 'down',   clue: '🍞 bread' },
-    { n: 3, dir: 'across', clue: '🏷️ name' },
-  ],
-};
+// --- Crossword (auto-generated from the whole vocabulary) --------------
+// A small greedy generator: place a seed word, then keep adding words that
+// cross an existing letter. Draws on the full 350+ word corpus, so every
+// puzzle is different.
+let cwPuzzle = null;
+function cwCandidates() {
+  const seen = new Set(), out = [];
+  VOCAB.forEach(d => d.words.forEach(w => {
+    const he = stripNik(w.he);
+    if (!/^[א-ת]{3,6}$/.test(he) || seen.has(he)) return;
+    seen.add(he); out.push({ he, en: w.en, e: w.e });
+  }));
+  return out;
+}
+function genCrossword(target) {
+  target = target || 7;
+  const cand = wsShuffle(cwCandidates());
+  const cells = new Map();              // "r,c" -> letter
+  const placed = [];
+  const get = (r, c) => cells.get(r + ',' + c);
+  const canPlace = (word, r, c, dr, dc) => {
+    const len = word.length, pr = dc, pc = dr;   // perpendicular dir
+    if (get(r - dr, c - dc) || get(r + dr * len, c + dc * len)) return false;  // ends must be clear
+    let crosses = 0;
+    for (let k = 0; k < len; k++) {
+      const rr = r + dr * k, cc = c + dc * k, ex = get(rr, cc);
+      if (ex) { if (ex !== word[k]) return false; crosses++; }
+      else if (get(rr + pr, cc + pc) || get(rr - pr, cc - pc)) return false;   // no side-by-side
+    }
+    return crosses;
+  };
+  const put = (entry, r, c, dr, dc) => {
+    for (let k = 0; k < entry.he.length; k++) cells.set((r + dr * k) + ',' + (c + dc * k), entry.he[k]);
+    placed.push({ ...entry, r, c, dr, dc });
+  };
+  put(cand[0], 0, 0, 0, 1);
+  for (let i = 1; i < cand.length && placed.length < target; i++) {
+    const w = cand[i].he; let done = false;
+    for (const [key, ch] of [...cells.entries()]) {
+      if (done) break;
+      for (let k = 0; k < w.length && !done; k++) {
+        if (w[k] !== ch) continue;
+        const [r, c] = key.split(',').map(Number);
+        for (const [dr, dc] of [[1, 0], [0, 1]]) {
+          const sr = r - dr * k, sc = c - dc * k;
+          if (canPlace(w, sr, sc, dr, dc)) { put(cand[i], sr, sc, dr, dc); done = true; break; }
+        }
+      }
+    }
+  }
+  // Normalize to a 0-based grid.
+  let minR = Infinity, minC = Infinity, maxR = -Infinity, maxC = -Infinity;
+  cells.forEach((_, k) => { const [r, c] = k.split(',').map(Number); minR = Math.min(minR, r); minC = Math.min(minC, c); maxR = Math.max(maxR, r); maxC = Math.max(maxC, c); });
+  const answers = {}, filled = new Set();
+  cells.forEach((ch, k) => { const [r, c] = k.split(',').map(Number); const nk = (r - minR) + ',' + (c - minC); answers[nk] = ch; filled.add(nk); });
+  const rows = maxR - minR + 1, cols = maxC - minC + 1;
+  const isF = (r, c) => filled.has(r + ',' + c);
+  // Standard numbering: a cell that begins an across or down run gets a number.
+  let num = 0; const numAt = {};
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    if (!isF(r, c)) continue;
+    const startA = !isF(r, c - 1) && isF(r, c + 1);
+    const startD = !isF(r - 1, c) && isF(r + 1, c);
+    if (startA || startD) numAt[r + ',' + c] = ++num;
+  }
+  const clues = placed.map(p => {
+    const k = (p.r - minR) + ',' + (p.c - minC);
+    return { n: numAt[k], dir: p.dc === 1 ? 'across' : 'down', clue: p.e + ' ' + p.en };
+  }).filter(c => c.n).sort((a, b) => a.n - b.n);
+  return { rows, cols, answers, numbers: numAt, clues, count: placed.length };
+}
 function renderCrossword() {
+  ssStop(); lrStop();
+  // Try a few times to get a reasonably full puzzle.
+  cwPuzzle = genCrossword(7);
+  for (let i = 0; i < 4 && cwPuzzle.count < 5; i++) cwPuzzle = genCrossword(7);
   const area = document.getElementById('game-area');
-  const cw = CROSSWORD;
+  const cw = cwPuzzle;
   let cells = '';
   for (let r = 0; r < cw.rows; r++) for (let c = 0; c < cw.cols; c++) {
     const key = r + ',' + c;
@@ -6554,14 +7680,16 @@ function renderCrossword() {
         '<div class="row" style="justify-content:flex-start;margin-top:0.8rem">' +
           '<button class="btn small" id="cw-check">' + t('gameCheck') + '</button>' +
           '<button class="btn small ghost" id="cw-reveal">' + t('gameReveal') + '</button>' +
+          '<button class="btn small alt" id="cw-new">' + t('gameNewPuzzle') + '</button>' +
         '</div>' +
       '</div>' +
     '</div>';
   document.getElementById('cw-check').addEventListener('click', () => checkCrossword(false));
   document.getElementById('cw-reveal').addEventListener('click', () => checkCrossword(true));
+  document.getElementById('cw-new').addEventListener('click', renderCrossword);
 }
 function checkCrossword(reveal) {
-  const cw = CROSSWORD;
+  const cw = cwPuzzle;
   let allOk = true;
   document.querySelectorAll('.cw-cell input').forEach(inp => {
     const want = cw.answers[inp.dataset.key];
@@ -6574,8 +7702,263 @@ function checkCrossword(reveal) {
     allOk ? t('gameCwWin') : (reveal ? '' : t('gameCwWrong'));
 }
 
+// --- Sound Shooter (hear a sound, tap the falling letter that makes it) ---
+// Per-game high scores in localStorage.
+function gameHiGet(key) { try { return +(localStorage.getItem(key) || 0); } catch (e) { return 0; } }
+function gameHiSet(key, score) {
+  const best = gameHiGet(key);
+  if (score > best) { try { localStorage.setItem(key, String(score)); } catch (e) {} return { best: score, isNew: true }; }
+  return { best, isNew: false };
+}
+function gameBestLine(finalScore, hi, key) {
+  const best = (finalScore != null) ? hi.best : gameHiGet(key);
+  if (!best) return '';
+  const tag = (finalScore != null && hi.isNew) ? '<span class="g-newbest">' + t('gameNewBest') + '</span> ' : '';
+  return '<p class="ss-best">' + tag + t('gameBest') + ': ' + best + '</p>';
+}
+
+let ssState = null, ssTimer = 0, ssStars = null;
+// Driven by setInterval (not requestAnimationFrame) so the game keeps running
+// even when the page isn't the foreground tab — rAF fully pauses when hidden.
+function ssStop() { if (ssTimer) clearInterval(ssTimer); ssTimer = 0; if (ssState) ssState.running = false; }
+function ssLetterSound(L) { speakHebrew(L.heb + 'ַ', (L.cons || '') + 'ah'); }
+function ssStartScreen(finalScore) {
+  const area = document.getElementById('game-area');
+  const hi = (finalScore != null) ? gameHiSet('otiyot-hs-shooter', finalScore) : null;
+  area.innerHTML =
+    '<div class="ss-start">' +
+      (finalScore != null ? '<div class="quiz-emoji">🚀</div><h2>' + t('gameOver') + '</h2>' +
+        '<p class="quiz-score">' + t('gameScore') + ': ' + finalScore + '</p>' : '<div class="quiz-emoji">🚀🔊</div>') +
+      gameBestLine(finalScore, hi, 'otiyot-hs-shooter') +
+      '<p class="ss-how">' + t('gameShootHow') + '</p>' +
+      '<button class="btn" id="ss-start-btn">' + (finalScore != null ? t('gamePlayAgain') : t('gameStart')) + '</button>' +
+    '</div>';
+  document.getElementById('ss-start-btn').addEventListener('click', ssBegin);
+}
+function ssBegin() {
+  const area = document.getElementById('game-area');
+  area.innerHTML =
+    '<div class="ss-wrap">' +
+      '<div class="ss-hud"><span id="ss-score">' + t('gameScore') + ': 0</span>' +
+        '<span id="ss-level">' + t('gameLevel') + ' 1</span>' +
+        '<span id="ss-lives">❤️❤️❤️</span></div>' +
+      '<div class="ss-prompt">' + t('gameShootPrompt') +
+        ' <button class="btn small" id="ss-replay">' + t('gameReplaySound') + '</button></div>' +
+      '<canvas id="ss-canvas" class="ss-canvas" width="440" height="400"></canvas>' +
+    '</div>';
+  const canvas = document.getElementById('ss-canvas');
+  ssStars = Array.from({ length: 40 }, () => ({ x: Math.random() * 440, y: Math.random() * 400, r: Math.random() * 1.5 + 0.3 }));
+  ssState = { running: true, score: 0, lives: 3, level: 1, letters: [], target: null, acc: 0, fx: null, last: performance.now() };
+  canvas.addEventListener('click', ssClick);
+  document.getElementById('ss-replay').addEventListener('click', () => { if (ssState.target) ssLetterSound(ssState.target); });
+  ssNewTarget();
+  ssTimer = setInterval(ssTick, 16);
+}
+function ssNewTarget() {
+  ssState.target = letters[Math.floor(Math.random() * letters.length)];
+  ssSpawn(true);                // make sure the target is on screen
+  setTimeout(() => { if (ssState && ssState.running) ssLetterSound(ssState.target); }, 150);
+}
+function ssSpawn(forceTarget) {
+  const hasTarget = ssState.letters.some(o => o.L === ssState.target);
+  const L = (forceTarget || (!hasTarget && Math.random() < 0.5))
+    ? ssState.target
+    : letters[Math.floor(Math.random() * letters.length)];
+  ssState.letters.push({ L, x: 34 + Math.random() * 372, y: -24, vy: 66 + ssState.level * 14 });
+}
+function ssHud() {
+  document.getElementById('ss-score').textContent = t('gameScore') + ': ' + ssState.score;
+  document.getElementById('ss-level').textContent = t('gameLevel') + ' ' + ssState.level;
+  document.getElementById('ss-lives').textContent = '❤️'.repeat(Math.max(0, ssState.lives)) || '—';
+}
+function ssClick(e) {
+  if (!ssState || !ssState.running) return;
+  const canvas = document.getElementById('ss-canvas');
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+  const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+  let hitIdx = -1, best = 30;
+  ssState.letters.forEach((o, i) => { const d = Math.hypot(o.x - x, o.y - y); if (d < best) { best = d; hitIdx = i; } });
+  if (hitIdx < 0) return;
+  const o = ssState.letters[hitIdx];
+  ssState.letters.splice(hitIdx, 1);
+  if (o.L === ssState.target) {
+    ssState.score += 10;
+    ssState.level = 1 + Math.floor(ssState.score / 80);
+    ssState.fx = { x: o.x, y: o.y, color: '#67CCA1', ttl: 0.35 };   // green hit
+    ssHud();
+    ssNewTarget();
+  } else {
+    ssState.fx = { x: o.x, y: o.y, color: '#DE5E78', ttl: 0.35 };   // red miss
+    ssState.lives--; ssHud();                                       // wrong shot costs a life
+    if (ssState.lives <= 0) { ssState.running = false; ssStop(); ssStartScreen(ssState.score); }
+  }
+}
+function ssTick() {
+  const now = performance.now();
+  const gamesActive = document.getElementById('games') && document.getElementById('games').classList.contains('active');
+  if (!ssState || !ssState.running || !document.getElementById('ss-canvas') || !gamesActive) { ssStop(); return; }
+  const dt = Math.min(0.05, (now - ssState.last) / 1000); ssState.last = now;
+  if (ssState.fx) { ssState.fx.ttl -= dt; if (ssState.fx.ttl <= 0) ssState.fx = null; }
+  ssState.acc += dt * 1000;
+  const spawnInt = Math.max(650, 1500 - ssState.level * 120);
+  if (ssState.acc >= spawnInt) { ssState.acc = 0; ssSpawn(false); }
+  // move + cull
+  for (let i = ssState.letters.length - 1; i >= 0; i--) {
+    const o = ssState.letters[i]; o.y += o.vy * dt;
+    if (o.y > 400 + 24) {
+      ssState.letters.splice(i, 1);
+      if (o.L === ssState.target) {                 // the right letter got away
+        ssState.lives--; ssHud();
+        if (ssState.lives <= 0) { ssState.running = false; ssStop(); ssStartScreen(ssState.score); return; }
+        ssNewTarget();
+      }
+    }
+  }
+  ssDraw();
+}
+function ssDraw() {
+  const canvas = document.getElementById('ss-canvas'); if (!canvas) return;
+  const g = canvas.getContext('2d'), W = canvas.width, H = canvas.height;
+  g.fillStyle = '#0b1026'; g.fillRect(0, 0, W, H);
+  g.fillStyle = 'rgba(255,255,255,0.7)';
+  ssStars.forEach(s => { g.beginPath(); g.arc(s.x, s.y, s.r, 0, 7); g.fill(); });
+  // ship
+  g.fillStyle = '#F0C065'; g.strokeStyle = '#fff'; g.lineWidth = 2;
+  g.beginPath(); g.moveTo(W / 2, H - 10); g.lineTo(W / 2 - 16, H - 34); g.lineTo(W / 2 + 16, H - 34); g.closePath(); g.fill(); g.stroke();
+  // falling letters
+  ssState.letters.forEach(o => {
+    g.beginPath(); g.arc(o.x, o.y, 22, 0, 7);
+    g.fillStyle = '#DE5E78'; g.fill();
+    g.lineWidth = 3; g.strokeStyle = '#fff'; g.stroke();
+    g.fillStyle = '#fff'; g.font = '600 30px "Frank Ruhl Libre", serif';
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(o.L.heb, o.x, o.y + 1);
+  });
+  // hit/miss burst
+  if (ssState.fx) {
+    const f = ssState.fx, k = 1 - f.ttl / 0.35;
+    g.strokeStyle = f.color; g.lineWidth = 4; g.globalAlpha = 1 - k;
+    g.beginPath(); g.arc(f.x, f.y, 18 + k * 26, 0, 7); g.stroke(); g.globalAlpha = 1;
+  }
+}
+
+// --- Letter Runner (side-scroller: spell the word in order) --------------
+// Auto-run; jump (↑/Space) for high letters + to clear spikes, duck (↓) under
+// bars. Grab the highlighted NEXT letter of the target word in order; wrong
+// letters and obstacles cost a life.
+let lr = null, lrTimer = 0;
+function lrStop() { if (lrTimer) clearInterval(lrTimer); lrTimer = 0; if (lr) lr.running = false; }
+function lrSpeakLetter(ch) { speakHebrew(ch + 'ַ', null); }
+function lrStartScreen(finalScore) {
+  const area = document.getElementById('game-area');
+  const hi = (finalScore != null) ? gameHiSet('otiyot-hs-runner', finalScore) : null;
+  area.innerHTML = '<div class="ss-start">' +
+    (finalScore != null ? '<div class="quiz-emoji">🏃</div><h2>' + t('gameOver') + '</h2><p class="quiz-score">' + t('gameScore') + ': ' + finalScore + '</p>' : '<div class="quiz-emoji">🏃🔤</div>') +
+    gameBestLine(finalScore, hi, 'otiyot-hs-runner') +
+    '<p class="ss-how">' + t('gameRunnerHow') + '</p>' +
+    '<button class="btn" id="lr-start-btn">' + (finalScore != null ? t('gamePlayAgain') : t('gameStart')) + '</button></div>';
+  document.getElementById('lr-start-btn').addEventListener('click', lrBegin);
+}
+function lrBegin() {
+  const area = document.getElementById('game-area');
+  area.innerHTML = '<div class="ss-wrap">' +
+    '<div class="ss-hud"><span id="lr-score">' + t('gameScore') + ': 0</span>' +
+      '<span id="lr-level">' + t('gameLevel') + ' 1</span><span id="lr-lives">❤️❤️❤️</span></div>' +
+    '<div class="lr-target" id="lr-target"></div>' +
+    '<canvas id="lr-canvas" class="ss-canvas" width="480" height="320"></canvas>' +
+    '<div class="ss-prompt">' + t('gameRunnerKeys') + '</div></div>';
+  lr = { running: true, score: 0, lives: 3, level: 1, items: [], h: 0, vh: 0, ducking: false,
+    phrase: '', phraseEn: '', progress: 0, acc: 600, last: performance.now(), cand: cwCandidates() };
+  lrNewPhrase();
+  lrTimer = setInterval(lrTick, 16);
+}
+function lrNewPhrase() {
+  const c = lr.cand[Math.floor(Math.random() * lr.cand.length)];
+  lr.phrase = c.he; lr.phraseEn = c.en; lr.progress = 0; lrTargetHud();
+}
+function lrTargetHud() {
+  const el = document.getElementById('lr-target'); if (!el) return;
+  const chars = [...lr.phrase].map((ch, i) =>
+    '<span class="lr-l' + (i < lr.progress ? ' got' : (i === lr.progress ? ' next' : '')) + '">' + ch + '</span>').join('');
+  el.innerHTML = '<span class="lr-tlabel">' + t('gameRunnerTarget') + '</span> ' +
+    '<span class="lr-word" dir="rtl">' + chars + '</span> <span class="lr-ten">' + lr.phraseEn + '</span>';
+}
+function lrSpawn() {
+  const needed = lr.phrase[lr.progress];
+  const r = Math.random(); let it;
+  if (r < 0.44) it = { kind: 'letter', ch: needed, pos: Math.random() < 0.5 ? 'low' : 'high' };
+  else if (r < 0.70) { let ch; do { ch = letters[Math.floor(Math.random() * letters.length)].heb; } while (ch === needed); it = { kind: 'letter', ch, pos: Math.random() < 0.5 ? 'low' : 'high' }; }
+  else it = { kind: Math.random() < 0.5 ? 'spike' : 'bar' };
+  it.x = 510; it.hit = false; lr.items.push(it);
+}
+function lrBands() { if (lr.h > 20) return ['HIGH']; if (lr.ducking) return ['LOW']; return ['LOW', 'MID']; }
+function lrItemBands(it) { if (it.kind === 'letter') return it.pos === 'high' ? ['HIGH'] : ['LOW']; if (it.kind === 'spike') return ['LOW', 'MID']; return ['MID', 'HIGH']; }
+function lrLoseLife() { lr.lives--; lrHud(); if (lr.lives <= 0) { lr.running = false; lrStop(); lrStartScreen(lr.score); return true; } return false; }
+function lrTick() {
+  const now = performance.now();
+  const active = document.getElementById('games') && document.getElementById('games').classList.contains('active');
+  if (!lr || !lr.running || !document.getElementById('lr-canvas') || !active) { lrStop(); return; }
+  const dt = Math.min(0.05, (now - lr.last) / 1000); lr.last = now;
+  const G = 2200;
+  lr.h += lr.vh * dt; lr.vh -= G * dt; if (lr.h <= 0) { lr.h = 0; lr.vh = 0; }
+  lr.acc += dt * 1000; const si = Math.max(620, 1150 - lr.level * 55);
+  if (lr.acc >= si) { lr.acc = 0; lrSpawn(); }
+  const speed = 150 + lr.level * 20, RX = 90, RW = 40;
+  for (let i = lr.items.length - 1; i >= 0; i--) {
+    const it = lr.items[i]; it.x -= speed * dt;
+    if (!it.hit && Math.abs(it.x - RX) < (RW / 2 + 20)) {
+      const mine = lrBands(), theirs = lrItemBands(it);
+      if (mine.some(b => theirs.includes(b))) {
+        it.hit = true;
+        if (it.kind === 'letter' && it.ch === lr.phrase[lr.progress]) {
+          lr.progress++; lr.score += 10; lrSpeakLetter(it.ch);
+          if (lr.progress >= lr.phrase.length) { lr.score += 50; speakHebrew(lr.phrase, null); lr.level++; lrNewPhrase(); }
+          lrTargetHud(); lrHud();
+        } else { it.bad = true; if (lrLoseLife()) return; }
+      }
+    }
+    if (it.x < -40) lr.items.splice(i, 1);
+  }
+  lrDraw();
+}
+function lrHud() {
+  document.getElementById('lr-score').textContent = t('gameScore') + ': ' + lr.score;
+  document.getElementById('lr-level').textContent = t('gameLevel') + ' ' + lr.level;
+  document.getElementById('lr-lives').textContent = '❤️'.repeat(Math.max(0, lr.lives)) || '—';
+}
+function lrDraw() {
+  const c = document.getElementById('lr-canvas'); if (!c) return;
+  const g = c.getContext('2d'), W = c.width, H = c.height, GL = H - 16;   // ground line
+  g.fillStyle = '#bfe3f0'; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#9ccbb5'; g.fillRect(0, GL, W, H - GL);
+  g.strokeStyle = '#2c3e50'; g.lineWidth = 3; g.beginPath(); g.moveTo(0, GL); g.lineTo(W, GL); g.stroke();
+  // runner
+  const rx = 90, duck = lr.ducking && lr.h <= 0, bodyH = duck ? 26 : 46, feetY = GL - lr.h;
+  g.fillStyle = '#DE5E78'; g.strokeStyle = '#2c3e50'; g.lineWidth = 3;
+  g.fillRect(rx - 16, feetY - bodyH, 32, bodyH); g.strokeRect(rx - 16, feetY - bodyH, 32, bodyH);
+  g.beginPath(); g.arc(rx, feetY - bodyH - 10, 11, 0, 7); g.fillStyle = '#F0C065'; g.fill(); g.stroke();
+  // items
+  lr.items.forEach(it => {
+    if (it.kind === 'letter') {
+      const y = it.pos === 'high' ? GL - 74 : GL - 20;
+      g.beginPath(); g.arc(it.x, y, 20, 0, 7); g.fillStyle = it.bad ? '#999' : '#4F94A8'; g.fill();
+      g.lineWidth = 3; g.strokeStyle = '#fff'; g.stroke();
+      g.fillStyle = '#fff'; g.font = '600 26px "Frank Ruhl Libre", serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(it.ch, it.x, y + 1);
+    } else if (it.kind === 'spike') {
+      g.fillStyle = '#2c3e50'; g.beginPath(); g.moveTo(it.x - 16, GL); g.lineTo(it.x, GL - 34); g.lineTo(it.x + 16, GL); g.closePath(); g.fill();
+    } else {
+      g.fillStyle = '#6F62A5'; g.fillRect(it.x - 18, GL - 78, 36, 34); g.strokeStyle = '#2c3e50'; g.lineWidth = 3; g.strokeRect(it.x - 18, GL - 78, 36, 34);
+    }
+  });
+}
+
 function renderGame() {
-  if (currentGame === 'crossword') renderCrossword(); else renderWordSearch();
+  ssStop(); lrStop();
+  if (currentGame === 'crossword') renderCrossword();
+  else if (currentGame === 'shooter') ssStartScreen();
+  else if (currentGame === 'runner') lrStartScreen();
+  else renderWordSearch();
 }
 function setupGamesTab() {
   document.querySelectorAll('#game-tabs [data-game]').forEach(btn =>
@@ -6585,6 +7968,15 @@ function setupGamesTab() {
         b.classList.toggle('active', b === btn));
       renderGame();
     }));
+  // Letter Runner controls — only act while it's the running game on-screen.
+  const lrActive = () => lr && lr.running && currentGame === 'runner' &&
+    document.getElementById('games') && document.getElementById('games').classList.contains('active');
+  window.addEventListener('keydown', e => {
+    if (!lrActive()) return;
+    if (e.code === 'ArrowUp' || e.code === 'Space') { e.preventDefault(); if (lr.h <= 0) lr.vh = 780; }
+    else if (e.code === 'ArrowDown') { e.preventDefault(); lr.ducking = true; }
+  });
+  window.addEventListener('keyup', e => { if (lr && e.code === 'ArrowDown') lr.ducking = false; });
   renderGame();
 }
 
@@ -6744,6 +8136,73 @@ function immGrammar(words) {
   return html;
 }
 
+// Per-word English gloss shown under each word. First from the app's own vocab
+// (instant, offline, accurate — and it grows as the word list grows), then the
+// rest filled lazily from the translation API and cached so repeats are free.
+let IMM_GLOSS = null, IMM_GLOSS_V = null, IMM_GLOSS_CACHE = null;
+function immBareWord(w) { return stripNikkud(w || '').replace(/[^א-ת]/g, ''); }
+// Vowelled key: letters + nikkud, punctuation stripped. Distinguishes words
+// that look identical without vowels (e.g. אֶת "the object" vs אַתְּ "you f.").
+function immVocKey(w) { return stripTrope(w || '').replace(/[^א-תְ-ׇ]/g, ''); }
+function immBuildGloss() {
+  if (IMM_GLOSS) return;
+  IMM_GLOSS = {}; IMM_GLOSS_V = {};
+  const add = (he, en) => {
+    if (!en) return;
+    const bk = immBareWord(he); if (bk && !IMM_GLOSS[bk]) IMM_GLOSS[bk] = en;
+    const vk = immVocKey(he); if (vk && !IMM_GLOSS_V[vk]) IMM_GLOSS_V[vk] = en;
+  };
+  try { VOCAB.forEach(d => d.words.forEach(w => add(w.he, w.en))); } catch (e) {}
+  try { words.forEach(w => add(w.hebrew, w.english)); } catch (e) {}
+  try { texts.forEach(tx => tx.stanzas.forEach(s => (s.vocab || []).forEach(v => add(v.he, v.en)))); } catch (e) {}
+}
+function immGlossCache() {
+  if (IMM_GLOSS_CACHE) return IMM_GLOSS_CACHE;
+  try { IMM_GLOSS_CACHE = JSON.parse(localStorage.getItem('otiyot-gloss') || '{}'); } catch (e) { IMM_GLOSS_CACHE = {}; }
+  return IMM_GLOSS_CACHE;
+}
+function immGlossSave() { try { localStorage.setItem('otiyot-gloss', JSON.stringify(IMM_GLOSS_CACHE || {})); } catch (e) {} }
+// Prefer an exact vowelled match (disambiguates lookalikes), then the vowel-less
+// vocab match, then the API cache.
+function immKnownGloss(w) {
+  immBuildGloss();
+  return IMM_GLOSS_V[immVocKey(w)] || IMM_GLOSS[immBareWord(w)] || immGlossCache()[immBareWord(w)] || '';
+}
+function immApplyToggles() {
+  const trOn = document.getElementById('imm-t-translit');
+  const enOn = document.getElementById('imm-t-meaning');
+  const wrap = document.querySelector('#imm-result .imm-words');
+  if (wrap) { wrap.classList.toggle('no-tr', trOn && !trOn.checked); wrap.classList.toggle('no-en', enOn && !enOn.checked); }
+  try {
+    if (trOn) localStorage.setItem('otiyot-imm-tr', trOn.checked ? '1' : '0');
+    if (enOn) localStorage.setItem('otiyot-imm-en', enOn.checked ? '1' : '0');
+  } catch (e) {}
+}
+// Fill in the under-word English: known words instantly, misses via the API
+// (only while "Meaning" is on, so we don't spend calls when it's hidden).
+async function immFillGlosses(wordList, wrap) {
+  if (!wrap) return;
+  immBuildGloss();
+  const cache = immGlossCache();
+  const seen = new Set(), need = [];
+  wordList.forEach(w => {
+    const bare = immBareWord(w); if (!bare || seen.has(bare)) return; seen.add(bare);
+    if (immKnownGloss(w)) return;   // already shown at render (vocab or cache)
+    need.push(bare);
+  });
+  const enOn = document.getElementById('imm-t-meaning');
+  if (enOn && !enOn.checked) return;
+  for (const bare of need.slice(0, 25)) {
+    let en = ''; try { en = await translateSentence(bare, 'he|en'); } catch (e) {}
+    en = (en || '').trim();
+    if (en && !/[א-ת]/.test(en)) {   // ignore the API echoing Hebrew back
+      cache[bare] = en;
+      wrap.querySelectorAll('.iw-en[data-bare="' + bare + '"]').forEach(s => s.textContent = en);
+    }
+  }
+  immGlossSave();
+}
+
 async function immBreakdown() {
   let text = document.getElementById('imm-text').value.trim();
   const status = document.getElementById('imm-status');
@@ -6765,10 +8224,14 @@ async function immBreakdown() {
   const translitLine = words.map(w => translitWord(w)).join(' ');
 
   // Render the word-by-word immediately (no API needed); fetch meaning after.
-  const tokens = words.map(w =>
-    '<span class="imm-word" data-he="' + w.replace(/"/g, '&quot;') + '">' +
+  const tokens = words.map(w => {
+    const bare = immBareWord(w);
+    return '<span class="imm-word" data-he="' + w.replace(/"/g, '&quot;') + '">' +
       '<span class="iw-he">' + w + '</span>' +
-      '<span class="iw-tr">' + translitWord(w) + '</span></span>').join('');
+      '<span class="iw-tr">' + translitWord(w) + '</span>' +
+      '<span class="iw-en" data-bare="' + bare + '">' + immKnownGloss(w) + '</span>' +
+    '</span>';
+  }).join('');
   result.innerHTML =
     '<div class="imm-label">' + t('immEssence') + '</div>' +
     '<div class="imm-essence-txt" id="imm-essence-txt">…</div>' +
@@ -6788,6 +8251,11 @@ async function immBreakdown() {
       speakHebrew(el.dataset.he, null);
       immShowWord(el.dataset.he);
     }));
+
+  // Apply the show/hide toggles, then fill the per-word English meanings.
+  const wordsWrap = result.querySelector('.imm-words');
+  immApplyToggles();
+  immFillGlosses(words, wordsWrap);
 
   // Full natural translation = the "essence".
   status.textContent = t('immWorking');
@@ -6827,10 +8295,27 @@ function immAddCard(he, meaning) {
   arr.unshift({ he, tr: translitWord(he), meaning: (meaning || '').trim() });
   immStoreSaved(arr); immRenderSaved(); toast(t('immAdded'));
 }
+// Flashcards/Quiz can study either your personal cards or the whole Vocabulary
+// library (mapped to the same {he, tr, meaning} shape).
+let immCardSource = 'mine';   // 'mine' | 'vocab'
+let immStudyList = [];
+function immVocabCards() {
+  const seen = new Set(), out = [];
+  VOCAB.forEach(d => d.words.forEach(w => { if (!seen.has(w.he)) { seen.add(w.he); out.push({ he: w.he, tr: w.tr, meaning: w.en }); } }));
+  return out;
+}
+function immStudyPool() { return immCardSource === 'vocab' ? immVocabCards() : immLoadSaved(); }
+
 function immRenderSaved() {
   const host = document.getElementById('imm-saved');
   const actions = document.getElementById('imm-card-actions');
   if (!host) return;
+  if (immCardSource === 'vocab') {
+    if (actions) actions.style.display = 'flex';   // vocab is always studyable
+    host.innerHTML = '<p class="flash-hint" style="text-align:center">' +
+      t('immVocabCount').replace('{n}', immVocabCards().length) + '</p>';
+    return;
+  }
   const list = immLoadSaved();
   if (actions) actions.style.display = list.length ? 'flex' : 'none';
   if (!list.length) { host.innerHTML = '<p class="flash-hint" style="text-align:center">' + t('immNoCards') + '</p>'; return; }
@@ -6850,8 +8335,14 @@ function immRenderSaved() {
 
 // --- Flashcards ---
 let flashIdx = 0, flashFlipped = false;
+function immStartFlash() {
+  immStudyList = immStudyPool();
+  if (immCardSource === 'vocab')   // shuffle the big library so it's fresh each time
+    for (let i = immStudyList.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [immStudyList[i], immStudyList[j]] = [immStudyList[j], immStudyList[i]]; }
+  flashIdx = 0; flashFlipped = false; renderFlash();
+}
 function renderFlash() {
-  const list = immLoadSaved();
+  const list = immStudyList;
   const area = document.getElementById('imm-cardstudy');
   if (flashIdx >= list.length) {
     area.innerHTML = '<div class="flash-mean">' + t('immQuizDone') + '</div>' +
@@ -6897,7 +8388,7 @@ function sayVerdict(user, target) {
 }
 let quizOrder = [], quizPos = 0, quizScore = 0, quizChecked = false;
 function renderQuiz() {
-  const list = immLoadSaved();
+  const list = immStudyList;
   const area = document.getElementById('imm-cardstudy');
   if (quizPos >= quizOrder.length) {
     area.innerHTML = '<div class="flash-he">🎉</div><div class="flash-mean">' + t('immQuizDone') + '</div>' +
@@ -6932,6 +8423,7 @@ function renderQuiz() {
     fb.className = 'q-fb ' + (v === 'miss' ? 'miss' : v === 'good' ? 'good' : 'close');
     fb.textContent = v === 'good' ? t('immSayGood') : v === 'close' ? t('immSayClose') : t('immSayMiss');
     if (v !== 'miss') quizScore++;
+    if (typeof progRecord === 'function') progRecord(c.he, v !== 'miss');
     speakHebrew(c.he, null);
     document.getElementById('q-reveal').innerHTML =
       '<div class="q-actual">' + t('immActual') + ' <b>' + c.he + '</b> — <i>' + target + '</i></div>' +
@@ -6949,10 +8441,130 @@ function renderQuiz() {
   input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
 }
 function immStartQuiz() {
-  const list = immLoadSaved(); if (!list.length) return;
-  quizOrder = list.map((_, i) => i);
+  immStudyList = immStudyPool(); if (!immStudyList.length) return;
+  quizOrder = immStudyList.map((_, i) => i);
   for (let i = quizOrder.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [quizOrder[i], quizOrder[j]] = [quizOrder[j], quizOrder[i]]; }
   quizPos = 0; quizScore = 0; renderQuiz();
+}
+
+// --- Level 2: Choose (multiple-choice meaning) ---
+let chooseOrder = [], choosePos = 0, chooseScore = 0;
+function immMeaningOf(x) { return x.meaning || x.essence || x.en || ''; }
+function immStartChoose() {
+  immStudyList = immStudyPool(); if (!immStudyList.length) return;
+  chooseOrder = immStudyList.map((_, i) => i);
+  for (let i = chooseOrder.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [chooseOrder[i], chooseOrder[j]] = [chooseOrder[j], chooseOrder[i]]; }
+  choosePos = 0; chooseScore = 0; renderChoose();
+}
+function renderChoose() {
+  const area = document.getElementById('imm-cardstudy'), list = immStudyList;
+  if (choosePos >= chooseOrder.length) {
+    area.innerHTML = '<div class="flash-he">🎉</div><div class="flash-mean">' + t('immQuizDone') + '</div>' +
+      '<p class="q-mean">' + t('immScore') + ': ' + chooseScore + ' / ' + chooseOrder.length + '</p>' +
+      '<button class="btn small" id="ch-again">' + t('immAgain') + '</button> <button class="btn small ghost" id="ch-close">' + t('immClose') + '</button>';
+    document.getElementById('ch-again').onclick = immStartChoose;
+    document.getElementById('ch-close').onclick = () => area.innerHTML = '';
+    return;
+  }
+  const c = list[chooseOrder[choosePos]], correct = immMeaningOf(c);
+  const pool = list.filter(x => immMeaningOf(x) !== correct);
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  const opts = [correct].concat(pool.slice(0, 3).map(immMeaningOf));
+  for (let i = opts.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [opts[i], opts[j]] = [opts[j], opts[i]]; }
+  area.innerHTML =
+    '<div class="q-he">' + c.he + '</div><div class="flash-tr">' + (c.tr || translitWord(c.he)) + '</div>' +
+    '<button class="btn small ghost" id="ch-hear">🔊</button>' +
+    '<div class="q-prompt">' + t('quizPrompt') + '</div>' +
+    '<div class="quiz-options" style="margin-top:0.4rem"></div>' +
+    '<div class="q-status"><span class="q-score">' + t('immScore') + ': ' + chooseScore + '</span><span>' + (choosePos + 1) + ' / ' + chooseOrder.length + '</span></div>';
+  document.getElementById('ch-hear').onclick = () => speakHebrew(c.he, null);
+  speakHebrew(c.he, null);
+  const host = area.querySelector('.quiz-options');
+  opts.forEach(o => {
+    const b = document.createElement('button'); b.className = 'quiz-opt'; b.textContent = o;
+    b.onclick = () => {
+      if (b.disabled) return;
+      host.querySelectorAll('.quiz-opt').forEach(x => x.disabled = true);
+      const ok = o === correct;
+      if (ok) { b.classList.add('correct'); chooseScore++; }
+      else { b.classList.add('wrong'); host.querySelectorAll('.quiz-opt').forEach(x => { if (x.textContent === correct) x.classList.add('correct'); }); }
+      if (typeof progRecord === 'function') progRecord(c.he, ok);
+      const nx = document.createElement('button'); nx.className = 'btn small'; nx.style.marginTop = '0.8rem'; nx.textContent = t('immNext');
+      nx.onclick = () => { choosePos++; renderChoose(); };
+      area.appendChild(nx);
+    };
+    host.appendChild(b);
+  });
+}
+
+// --- Level 4: Spell it (type the Hebrew word, on-screen keyboard on desktop) ---
+let spellOrder = [], spellPos = 0, spellScore = 0, spellChecked = false;
+function spellBare(s) { return stripNikkud(s || '').replace(/[^א-ת]/g, ''); }
+function immStartSpell() {
+  immStudyList = immStudyPool(); if (!immStudyList.length) return;
+  spellOrder = immStudyList.map((_, i) => i);
+  for (let i = spellOrder.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [spellOrder[i], spellOrder[j]] = [spellOrder[j], spellOrder[i]]; }
+  spellPos = 0; spellScore = 0; immRenderSpell();
+}
+function immRenderSpell() {
+  const area = document.getElementById('imm-cardstudy'), list = immStudyList;
+  if (spellPos >= spellOrder.length) {
+    area.innerHTML = '<div class="flash-he">🎉</div><div class="flash-mean">' + t('immQuizDone') + '</div>' +
+      '<p class="q-mean">' + t('immScore') + ': ' + spellScore + ' / ' + spellOrder.length + '</p>' +
+      '<button class="btn small" id="sp-again">' + t('immAgain') + '</button> <button class="btn small ghost" id="sp-close">' + t('immClose') + '</button>';
+    document.getElementById('sp-again').onclick = immStartSpell;
+    document.getElementById('sp-close').onclick = () => area.innerHTML = '';
+    return;
+  }
+  const c = list[spellOrder[spellPos]], mean = c.meaning || c.essence || c.en || '';
+  area.innerHTML =
+    '<div class="q-mean">' + mean + '</div>' +
+    '<button class="btn small ghost" id="sp-hear">🔊</button>' +
+    '<div class="q-prompt">' + t('immSpellPrompt') + '</div>' +
+    '<input class="q-input" id="sp-input" dir="rtl" autocomplete="off" placeholder="' + t('immSpellPh') + '" />' +
+    '<div class="imm-kb" id="sp-kb"></div>' +
+    '<div class="q-fb" id="sp-fb"></div><div id="sp-reveal"></div>' +
+    '<div class="q-status"><span class="q-score">' + t('immScore') + ': ' + spellScore + '</span><span>' + (spellPos + 1) + ' / ' + spellOrder.length + '</span></div>' +
+    '<div style="margin-top:0.5rem"><button class="btn small" id="sp-check">' + t('immCheck') + '</button></div>';
+  spellChecked = false;
+  const input = document.getElementById('sp-input');
+  immKbTarget = input;
+  input.addEventListener('focus', () => { immKbTarget = input; });
+  buildSpellKb();
+  document.getElementById('sp-hear').onclick = () => speakHebrew(c.he, null);
+  const check = () => {
+    if (spellChecked) return; spellChecked = true;
+    const got = spellBare(input.value), want = spellBare(c.he);
+    let v; if (got && got === want) v = 'good';
+    else if (got && levDist(got, want) <= Math.max(1, Math.floor(want.length / 4))) v = 'close';
+    else v = 'miss';
+    const fb = document.getElementById('sp-fb');
+    fb.className = 'q-fb ' + (v === 'miss' ? 'miss' : v === 'good' ? 'good' : 'close');
+    fb.textContent = v === 'good' ? t('immSayGood') : v === 'close' ? t('immSayClose') : t('immSayMiss');
+    if (v !== 'miss') spellScore++;
+    if (typeof progRecord === 'function') progRecord(c.he, v !== 'miss');
+    speakHebrew(c.he, null);
+    document.getElementById('sp-reveal').innerHTML =
+      '<div class="q-actual">' + t('immActual') + ' <b>' + c.he + '</b> — <i>' + (c.tr || translitWord(c.he)) + '</i></div>';
+    document.getElementById('sp-check').style.display = 'none';
+    document.querySelector('#imm-cardstudy .q-score').textContent = t('immScore') + ': ' + spellScore;
+    const nx = document.createElement('button'); nx.className = 'btn small'; nx.style.marginTop = '0.6rem'; nx.textContent = t('immNext');
+    nx.onclick = () => { spellPos++; immRenderSpell(); };
+    area.appendChild(nx);
+  };
+  document.getElementById('sp-check').onclick = check;
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+}
+function buildSpellKb() {
+  const kb = document.getElementById('sp-kb'); if (!kb) return;
+  const rows = [['א','ב','ג','ד','ה','ו','ז','ח'], ['ט','י','כ','ל','מ','נ','ס','ע'], ['פ','צ','ק','ר','ש','ת'], ['ך','ם','ן','ף','ץ']];
+  let html = rows.map(r => '<div class="kb-row">' + r.map(ch => '<button type="button" class="kb-key" data-ch="' + ch + '">' + ch + '</button>').join('') + '</div>').join('');
+  html += '<div class="kb-row"><button type="button" class="kb-key kb-wide" data-sp="1">␣</button><button type="button" class="kb-key kb-wide" data-bs="1">⌫</button></div>';
+  kb.innerHTML = html;
+  kb.querySelectorAll('.kb-key').forEach(b => b.addEventListener('mousedown', e => {
+    e.preventDefault();
+    if (b.dataset.bs) immKbBackspace(); else if (b.dataset.sp) immKbInsert(' '); else immKbInsert(b.dataset.ch);
+  }));
 }
 
 // --- Virtual Hebrew keyboard ---
@@ -7028,12 +8640,35 @@ function setupImmerseTab() {
     const mn = document.getElementById('imm-add-mean');
     immAddCard(he.value, mn.value); he.value = ''; mn.value = '';
   });
-  document.getElementById('imm-flash').addEventListener('click', () => { flashIdx = 0; flashFlipped = false; renderFlash(); });
+  document.getElementById('imm-flash').addEventListener('click', immStartFlash);
+  document.getElementById('imm-choose').addEventListener('click', immStartChoose);
   document.getElementById('imm-quiz').addEventListener('click', immStartQuiz);
+  document.getElementById('imm-spell').addEventListener('click', immStartSpell);
+  // Study source: your own cards, or the whole Vocabulary library.
+  document.querySelectorAll('#imm-card-src [data-src]').forEach(b =>
+    b.addEventListener('click', () => {
+      immCardSource = b.dataset.src;
+      document.querySelectorAll('#imm-card-src [data-src]').forEach(x => x.classList.toggle('active', x === b));
+      document.getElementById('imm-cardstudy').innerHTML = '';   // close any open study view
+      immRenderSaved();
+    }));
   // Virtual keyboard: target whichever Hebrew field was last focused; toggle it.
   ['imm-text', 'imm-add-he'].forEach(id => {
     const el = document.getElementById(id);
     el.addEventListener('focus', () => { immKbTarget = el; });
+  });
+  // Under-word toggles (translit + meaning), Sefaria-style, with saved state.
+  try {
+    if (localStorage.getItem('otiyot-imm-tr') === '0') document.getElementById('imm-t-translit').checked = false;
+    if (localStorage.getItem('otiyot-imm-en') === '0') document.getElementById('imm-t-meaning').checked = false;
+  } catch (e) {}
+  const trEl = document.getElementById('imm-t-translit');
+  const enEl = document.getElementById('imm-t-meaning');
+  if (trEl) trEl.addEventListener('change', immApplyToggles);
+  if (enEl) enEl.addEventListener('change', () => {
+    immApplyToggles();
+    // Turning Meaning on after a breakdown: fetch any meanings we skipped.
+    if (enEl.checked && immLast) immFillGlosses(immLast.he.split(/\s+/).filter(Boolean), document.querySelector('#imm-result .imm-words'));
   });
   immKbTarget = document.getElementById('imm-text');
   document.getElementById('imm-kb-toggle').addEventListener('click', () => {
@@ -7041,6 +8676,234 @@ function setupImmerseTab() {
     kb.hidden = !kb.hidden;
     document.getElementById('imm-kb-toggle').classList.toggle('kb-act', !kb.hidden);
     if (!kb.hidden) document.getElementById('imm-text').focus();
+  });
+}
+
+// ===== PROGRESS / LEVELS / FLUENCY =====
+// One localStorage record tracks every word's mastery (Leitner box 0–5), total
+// XP, completed grammar lessons, a daily streak, and the last fluency check.
+// Vocabulary quizzes, the Immerse quiz, and Grammar lessons all feed it.
+const PROG_KEY = 'otiyot-progress';
+function progLoad() { try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; } catch (e) { return {}; } }
+function progSaveRaw(p) { try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) {} }
+function progInit() {
+  const p = progLoad();
+  if (!p.words) p.words = {};
+  if (!p.lessons) p.lessons = {};
+  if (typeof p.xp !== 'number') p.xp = 0;
+  return p;
+}
+// Unique vocab pool (fluency is measured against this).
+function progAllWords() {
+  const seen = new Set(), out = [];
+  VOCAB.forEach(d => d.words.forEach(w => { if (!seen.has(w.he)) { seen.add(w.he); out.push(w); } }));
+  return out;
+}
+function progState(box) {
+  if (!box || box <= 0) return 'new';
+  if (box >= 5) return 'mastered';
+  if (box >= 3) return 'known';
+  return 'learning';
+}
+function progTouchStreak(p) {
+  const today = new Date().toISOString().slice(0, 10);
+  p.streak = p.streak || { count: 0, last: null };
+  if (p.streak.last === today) return;
+  const yesterday = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  p.streak.count = (p.streak.last === yesterday) ? (p.streak.count + 1) : 1;
+  p.streak.last = today;
+}
+// Record a quiz/flashcard result for one Hebrew word; a right answer bumps its
+// box (toward mastery), a wrong answer knocks it back down.
+function progRecord(he, correct) {
+  he = (he || '').trim(); if (!he) return;
+  const p = progInit();
+  const rec = p.words[he] || { box: 0, correct: 0, wrong: 0, seen: 0 };
+  const before = progState(rec.box);
+  rec.seen++;
+  if (correct) { rec.correct++; rec.box = Math.min(5, (rec.box || 0) + 1); p.xp += 10; }
+  else { rec.wrong++; rec.box = Math.max(1, (rec.box || 0) - 1); p.xp += 2; }
+  rec.last = Date.now();
+  p.words[he] = rec;
+  if (progState(rec.box) === 'mastered' && before !== 'mastered') p.xp += 25; // mastery bonus
+  progTouchStreak(p);
+  progSaveRaw(p);
+  const sec = document.getElementById('progress');
+  if (sec && sec.classList.contains('active')) renderProgress();
+}
+function progMarkLesson(id) {
+  if (!id) return;
+  const p = progInit();
+  if (!p.lessons[id]) { p.lessons[id] = true; p.xp += 15; progTouchStreak(p); progSaveRaw(p);
+    const sec = document.getElementById('progress');
+    if (sec && sec.classList.contains('active')) renderProgress(); }
+}
+// Level curve: each level costs a little more XP than the last.
+function progLevelInfo(xp) {
+  xp = xp || 0;
+  let lvl = 1, used = 0, need = 100;
+  while (xp >= used + need) { used += need; lvl++; need = 100 + (lvl - 1) * 50; }
+  return { level: lvl, into: xp - used, need, pct: Math.round((xp - used) / need * 100) };
+}
+// Friendly fluency ladder + a familiar CEFR tag, driven by mastered words
+// (each completed grammar lesson counts like a few words).
+const PROG_BANDS = [
+  { min: 0,   key: 'progBand0', cefr: 'Pre-A1' },
+  { min: 20,  key: 'progBand1', cefr: 'Pre-A1' },
+  { min: 75,  key: 'progBand2', cefr: 'A1' },
+  { min: 200, key: 'progBand3', cefr: 'A1+' },
+  { min: 400, key: 'progBand4', cefr: 'A2' },
+  { min: 650, key: 'progBand5', cefr: 'A2+' },
+  { min: 900, key: 'progBand6', cefr: 'B1' },
+];
+function progBandFor(mastered, lessons) {
+  const score = mastered + lessons * 3;
+  let idx = 0;
+  PROG_BANDS.forEach((x, i) => { if (score >= x.min) idx = i; });
+  return { band: PROG_BANDS[idx], idx };
+}
+function progTotals() {
+  const p = progInit();
+  const all = progAllWords();
+  let seen = 0, learning = 0, known = 0, mastered = 0;
+  all.forEach(w => {
+    const rec = p.words[w.he]; if (!rec) return;
+    seen++;
+    const s = progState(rec.box);
+    if (s === 'learning') learning++; else if (s === 'known') known++; else if (s === 'mastered') mastered++;
+  });
+  return { total: all.length, seen, learning, known, mastered, lessons: Object.keys(p.lessons || {}).length };
+}
+function progStatCard(emoji, n, label) {
+  return '<div class="pstat"><div class="ps-em">' + emoji + '</div>' +
+    '<div class="ps-n">' + n + '</div><div class="ps-l">' + label + '</div></div>';
+}
+function renderProgress() {
+  if (!document.getElementById('prog-badge')) return;
+  const p = progInit();
+  const li = progLevelInfo(p.xp);
+  const tt = progTotals();
+  const fl = progBandFor(tt.mastered, tt.lessons);
+
+  document.getElementById('prog-badge').textContent = li.level;
+  document.getElementById('prog-level-title').textContent = t('progLevel') + ' ' + li.level;
+  const streak = (p.streak && p.streak.count) || 0;
+  document.getElementById('prog-level-sub').textContent =
+    (p.xp || 0) + ' XP · ' + t('progStreak').replace('{n}', streak);
+  document.getElementById('prog-xp-fill').style.width = li.pct + '%';
+  document.getElementById('prog-xp-text').textContent =
+    li.into + ' / ' + li.need + ' ' + t('progToNext').replace('{n}', li.level + 1);
+
+  document.getElementById('prog-band').textContent = t(fl.band.key);
+  let sub = fl.band.cefr;
+  if (p.fluency) sub += ' · ' + t('progLastCheck').replace('{p}', p.fluency.pct).replace('{c}', p.fluency.cefr);
+  document.getElementById('prog-band-sub').textContent = sub;
+  document.getElementById('prog-gauge').innerHTML =
+    PROG_BANDS.map((b, i) => '<span class="pf-seg' + (i <= fl.idx ? ' on' : '') + '"></span>').join('');
+
+  document.getElementById('prog-stats').innerHTML =
+    progStatCard('👀', tt.seen, t('progStatSeen')) +
+    progStatCard('📖', tt.learning, t('progStatLearning')) +
+    progStatCard('✅', tt.known, t('progStatKnown')) +
+    progStatCard('⭐', tt.mastered + ' / ' + tt.total, t('progStatMastered')) +
+    progStatCard('🧩', tt.lessons, t('progStatLessons'));
+
+  document.getElementById('prog-decks').innerHTML = VOCAB.map(d => {
+    let m = 0, k = 0;
+    d.words.forEach(w => { const r = p.words[w.he]; if (!r) return; const s = progState(r.box);
+      if (s === 'mastered') m++; else if (s === 'known' || s === 'learning') k++; });
+    const mastPct = Math.round(m / d.words.length * 100);
+    const knownPct = Math.round((m + k) / d.words.length * 100);
+    return '<div class="pd-row"><div class="pd-name">' + d.emoji + ' ' + d.name + '</div>' +
+      '<div class="pd-bar"><i class="pd-known" style="width:' + knownPct + '%"></i>' +
+      '<i class="pd-mast" style="width:' + mastPct + '%"></i></div>' +
+      '<div class="pd-count">' + m + '/' + d.words.length + '</div></div>';
+  }).join('');
+}
+
+// Shared multiple-choice quiz for the Progress tab (fluency check + review).
+let progQ = null;
+function progQuizStart(items, mode) {
+  items = items.slice();
+  for (let i = items.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [items[i], items[j]] = [items[j], items[i]]; }
+  progQ = { items: items.slice(0, 12), pos: 0, score: 0, mode };
+  progQuizRender();
+  document.getElementById('prog-quiz').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function progQuizRender() {
+  const area = document.getElementById('prog-quiz');
+  const S = progQ;
+  if (S.pos >= S.items.length) {
+    const pct = Math.round(S.score / S.items.length * 100);
+    let extra = '';
+    if (S.mode === 'fluency') {
+      const cefr = pct >= 90 ? 'A2' : pct >= 70 ? 'A1+' : pct >= 45 ? 'A1' : 'Pre-A1';
+      const p = progInit(); p.fluency = { pct, cefr, date: Date.now() }; p.xp += 20; progSaveRaw(p);
+      extra = '<p class="pq-band">' + t('progFluencyYouAre') + ' <b>' + cefr + '</b></p>';
+    }
+    renderProgress();
+    area.innerHTML = '<div class="quiz-area"><div class="quiz-emoji">🎉</div>' +
+      '<h2>' + t('progQuizDone') + '</h2>' +
+      '<p class="quiz-score">' + t('immScore') + ': ' + S.score + ' / ' + S.items.length + ' (' + pct + '%)</p>' +
+      extra + '<button class="btn" id="pq-close">' + t('immClose') + '</button></div>';
+    document.getElementById('pq-close').onclick = () => { area.innerHTML = ''; };
+    return;
+  }
+  const w = S.items[S.pos];
+  const pool = progAllWords().filter(x => x.en !== w.en);
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  const opts = [w, ...pool.slice(0, 3)];
+  for (let i = opts.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [opts[i], opts[j]] = [opts[j], opts[i]]; }
+  const pct = Math.round(S.pos / S.items.length * 100);
+  area.innerHTML = '<div class="quiz-area">' +
+    '<div class="quiz-prompt">' + t('quizPrompt') + '</div>' +
+    '<div class="quiz-emoji">' + (w.e || '') + '</div>' +
+    '<div class="quiz-he">' + w.he + '</div><div class="quiz-tr">' + (w.tr || '') + '</div>' +
+    '<div class="quiz-options"></div>' +
+    '<div class="quiz-status"><span class="quiz-score">' + t('immScore') + ': ' + S.score + '</span>' +
+      '<span>' + (S.pos + 1) + ' / ' + S.items.length + '</span></div>' +
+    '<div class="quiz-progress"><i style="width:' + pct + '%"></i></div></div>';
+  speakHebrew(w.he, w.tr);
+  const host = area.querySelector('.quiz-options');
+  opts.forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'quiz-opt'; b.textContent = o.en;
+    b.onclick = () => {
+      if (b.disabled) return;
+      host.querySelectorAll('.quiz-opt').forEach(x => x.disabled = true);
+      const correct = o.en === w.en;
+      if (correct) { b.classList.add('correct'); S.score++; }
+      else { b.classList.add('wrong'); host.querySelectorAll('.quiz-opt').forEach(x => { if (x.textContent === w.en) x.classList.add('correct'); }); }
+      progRecord(w.he, correct);
+      const next = document.createElement('button');
+      next.className = 'btn small'; next.style.marginTop = '0.8rem'; next.textContent = t('quizNext');
+      next.onclick = () => { S.pos++; progQuizRender(); };
+      area.querySelector('.quiz-area').appendChild(next);
+    };
+    host.appendChild(b);
+  });
+}
+function progFluencyStart() { progQuizStart(progAllWords(), 'fluency'); }
+function progReviewStart() {
+  const p = progInit();
+  const due = progAllWords().filter(w => { const r = p.words[w.he]; return r && r.box >= 1 && r.box < 5; });
+  if (!due.length) {
+    document.getElementById('prog-quiz').innerHTML =
+      '<p class="flash-hint" style="text-align:center">' + t('progNoReview') + '</p>';
+    return;
+  }
+  progQuizStart(due, 'review');
+}
+function setupProgressTab() {
+  renderProgress();
+  document.getElementById('prog-fluency-btn').addEventListener('click', progFluencyStart);
+  document.getElementById('prog-review-btn').addEventListener('click', progReviewStart);
+  document.getElementById('prog-reset').addEventListener('click', () => {
+    if (confirm(t('progResetConfirm'))) {
+      try { localStorage.removeItem(PROG_KEY); } catch (e) {}
+      document.getElementById('prog-quiz').innerHTML = '';
+      renderProgress(); toast(t('progResetDone'));
+    }
   });
 }
 
@@ -7116,6 +8979,7 @@ function applyDirection(dir) {
   if (typeof renderLessonTabs === 'function') { renderLessonTabs(); renderLesson(); }
   if (typeof renderGame === 'function') renderGame();
   if (typeof immRenderSuggest === 'function') { immRenderSuggest(); renderImmReaders(); renderImmPrayers(); immRenderSaved(); }
+  if (typeof renderProgress === 'function') renderProgress();
 }
 
 // Apply strings + seed the vowel cheat sheet + set body direction once at load.
@@ -7128,6 +8992,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (typeof setupLibraryTab === 'function') setupLibraryTab();
   if (typeof setupGamesTab === 'function') setupGamesTab();
   if (typeof setupImmerseTab === 'function') setupImmerseTab();
+  if (typeof setupProgressTab === 'function') setupProgressTab();
 });
 
 document.querySelectorAll('[data-theme]').forEach(b => {
