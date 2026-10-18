@@ -1673,6 +1673,19 @@
   .imm-card-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 0.6rem; }
   .imm-card-src { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.6rem; }
   .imm-level-label { text-align: center; font-size: 0.72rem; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem; }
+  /* Letter drill */
+  .imm-drill { max-width: 540px; margin: 0 auto 0.7rem; background: var(--bg); border: 2px solid var(--accent2);
+    border-radius: 12px; padding: 0.7rem; }
+  .imm-drill-presets-label { text-align: center; font-size: 0.72rem; font-weight: 800; color: var(--accent2);
+    text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem; }
+  .imm-drill-presets { display: flex; flex-wrap: wrap; gap: 0.3rem; justify-content: center; margin-bottom: 0.6rem; }
+  .imm-drill-presets .deck-chip { font-family: var(--heb); font-size: 1.1rem; padding: 0.15rem 0.6rem; }
+  .imm-drill-row { display: flex; gap: 0.9rem; justify-content: center; flex-wrap: wrap; align-items: flex-start; }
+  .imm-drill-field { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.72rem; font-weight: 700;
+    color: var(--muted); text-align: center; }
+  .imm-drill-field select { font-family: inherit; padding: 0.3rem 0.4rem; border: 2px solid var(--ink);
+    border-radius: 8px; background: var(--card); color: var(--ink); }
+  #imm-drill-letters { font-family: var(--heb); font-size: 1.05rem; min-width: 150px; }
   #sp-input { display: block; width: 90%; max-width: 280px; margin: 0.4rem auto; }
   #sp-kb { margin-top: 0.3rem; }
   .imm-cardstudy:not(:empty) {
@@ -2065,6 +2078,22 @@
     <div class="imm-card-src" id="imm-card-src">
       <button class="deck-chip active" data-src="mine" data-i18n="immSrcMine">⭐ My cards</button>
       <button class="deck-chip" data-src="vocab" data-i18n="immSrcVocab">📚 All vocabulary</button>
+      <button class="deck-chip" data-src="drill" data-i18n="immSrcDrill">🎯 Letter drill</button>
+    </div>
+    <div class="imm-drill" id="imm-drill" hidden>
+      <div class="imm-drill-presets-label" data-i18n="immDrillPresets">Quick look-alike pairs:</div>
+      <div class="imm-drill-presets" id="imm-drill-presets"></div>
+      <div class="imm-drill-row">
+        <label class="imm-drill-field"><span data-i18n="immDrillLetters">Letters (⌘/Ctrl-click for more)</span>
+          <select id="imm-drill-letters" multiple size="5"></select></label>
+        <label class="imm-drill-field"><span data-i18n="immDrillPosition">Where in the word</span>
+          <select id="imm-drill-pos">
+            <option value="any" data-i18n="immPosAny">Anywhere</option>
+            <option value="start" data-i18n="immPosStart">At the beginning</option>
+            <option value="mid" data-i18n="immPosMid">In the middle</option>
+            <option value="end" data-i18n="immPosEnd">At the end</option>
+          </select></label>
+      </div>
     </div>
     <div class="imm-addcard">
       <input type="text" id="imm-add-he" dir="rtl" autocomplete="off" data-i18n-placeholder="immAddHe" placeholder="Hebrew word" />
@@ -3705,7 +3734,18 @@ const STRINGS = {
     immSpellPh:        'type the Hebrew word…',
     immSrcMine:        '⭐ My cards',
     immSrcVocab:       '📚 All vocabulary',
+    immSrcDrill:       '🎯 Letter drill',
     immVocabCount:     '📚 Studying all {n} vocabulary words — hit Flashcards or Quiz me.',
+    immDrillPresets:   'Quick look-alike pairs:',
+    immDrillLetters:   'Letters (⌘/Ctrl-click for more)',
+    immDrillPosition:  'Where in the word',
+    immPosAny:         'Anywhere',
+    immPosStart:       'At the beginning',
+    immPosMid:         'In the middle',
+    immPosEnd:         'At the end',
+    immDrillPick:      'Pick a letter above (or a look-alike pair) to filter the words.',
+    immDrillCount:     '🎯 {n} words with {l} — now pick a study level above.',
+    immDrillNone:      'No words found with {l} there — try a different position or letter.',
     immNoCards:        'Add words above (or tap a word and “Add to my cards”) to start a deck.',
     immAdded:          'Added to your cards ✓',
     immFlip:           'Tap to flip',
@@ -3961,7 +4001,18 @@ const STRINGS = {
     immSpellPh:        'הקלידו את המילה בעברית…',
     immSrcMine:        '⭐ הכרטיסים שלי',
     immSrcVocab:       '📚 כל אוצר המילים',
+    immSrcDrill:       '🎯 תרגול אותיות',
     immVocabCount:     '📚 לומדים את כל {n} המילים — הקישו כרטיסיות או בחן אותי.',
+    immDrillPresets:   'זוגות אותיות דומות:',
+    immDrillLetters:   'אותיות (⌘/Ctrl לבחירת כמה)',
+    immDrillPosition:  'היכן במילה',
+    immPosAny:         'בכל מקום',
+    immPosStart:       'בהתחלה',
+    immPosMid:         'באמצע',
+    immPosEnd:         'בסוף',
+    immDrillPick:      'בחרו אות למעלה (או זוג דומה) כדי לסנן את המילים.',
+    immDrillCount:     '🎯 {n} מילים עם {l} — עכשיו בחרו רמת לימוד למעלה.',
+    immDrillNone:      'לא נמצאו מילים עם {l} שם — נסו מיקום או אות אחרת.',
     immNoCards:        'הוסיפו מילים למעלה (או הקישו על מילה ו״הוסף לכרטיסים״) כדי להתחיל.',
     immAdded:          'נוסף לכרטיסים שלך ✓',
     immFlip:           'הקישו להיפוך',
@@ -8438,14 +8489,44 @@ function immAddCard(he, meaning) {
 }
 // Flashcards/Quiz can study either your personal cards or the whole Vocabulary
 // library (mapped to the same {he, tr, meaning} shape).
-let immCardSource = 'mine';   // 'mine' | 'vocab'
+let immCardSource = 'mine';   // 'mine' | 'vocab' | 'drill'
 let immStudyList = [];
+let immDrillLetters = new Set();   // base Hebrew letters selected for the drill
+let immDrillPos = 'any';           // 'any' | 'start' | 'mid' | 'end'
 function immVocabCards() {
   const seen = new Set(), out = [];
   VOCAB.forEach(d => d.words.forEach(w => { if (!seen.has(w.he)) { seen.add(w.he); out.push({ he: w.he, tr: w.tr, meaning: w.en }); } }));
   return out;
 }
-function immStudyPool() { return immCardSource === 'vocab' ? immVocabCards() : immLoadSaved(); }
+// Letter drill: vocabulary words containing the chosen letter(s) at the chosen
+// position. Final (sofit) forms are matched to their base letter, so selecting
+// מ also catches words ending in ם.
+function immDrillWords() {
+  if (!immDrillLetters.size) return [];
+  const norm = s => [...stripNikkud(s).replace(/[^א-ת]/g, '')].map(c => sofitMap[c] || c);
+  return immVocabCards().filter(w => {
+    if (/\s/.test(stripNikkud(w.he))) return false;   // single words only (clean positions)
+    const a = norm(w.he); if (!a.length) return false;
+    for (const L of immDrillLetters) {
+      if (immDrillPos === 'any' && a.includes(L)) return true;
+      if (immDrillPos === 'start' && a[0] === L) return true;
+      if (immDrillPos === 'end' && a[a.length - 1] === L) return true;
+      if (immDrillPos === 'mid' && a.slice(1, -1).includes(L)) return true;
+    }
+    return false;
+  });
+}
+function immStudyPool() {
+  if (immCardSource === 'drill') return immDrillWords();
+  if (immCardSource === 'vocab') return immVocabCards();
+  return immLoadSaved();
+}
+function immDrillUpdate() {
+  const lsel = document.getElementById('imm-drill-letters');
+  immDrillLetters = new Set([...lsel.selectedOptions].map(o => o.value));
+  immDrillPos = document.getElementById('imm-drill-pos').value;
+  immRenderSaved();
+}
 
 function immRenderSaved() {
   const host = document.getElementById('imm-saved');
@@ -8455,6 +8536,16 @@ function immRenderSaved() {
     if (actions) actions.style.display = 'flex';   // vocab is always studyable
     host.innerHTML = '<p class="flash-hint" style="text-align:center">' +
       t('immVocabCount').replace('{n}', immVocabCards().length) + '</p>';
+    return;
+  }
+  if (immCardSource === 'drill') {
+    const n = immDrillWords().length;
+    if (actions) actions.style.display = n ? 'flex' : 'none';
+    const lets = [...immDrillLetters].join(' ');
+    host.innerHTML = '<p class="flash-hint" style="text-align:center">' +
+      (!immDrillLetters.size ? t('immDrillPick')
+        : n ? t('immDrillCount').replace('{n}', n).replace('{l}', lets)
+            : t('immDrillNone').replace('{l}', lets)) + '</p>';
     return;
   }
   const list = immLoadSaved();
@@ -8785,14 +8876,33 @@ function setupImmerseTab() {
   document.getElementById('imm-choose').addEventListener('click', immStartChoose);
   document.getElementById('imm-quiz').addEventListener('click', immStartQuiz);
   document.getElementById('imm-spell').addEventListener('click', immStartSpell);
-  // Study source: your own cards, or the whole Vocabulary library.
+  // Study source: your own cards, the whole Vocabulary, or a letter drill.
   document.querySelectorAll('#imm-card-src [data-src]').forEach(b =>
     b.addEventListener('click', () => {
       immCardSource = b.dataset.src;
       document.querySelectorAll('#imm-card-src [data-src]').forEach(x => x.classList.toggle('active', x === b));
+      document.getElementById('imm-drill').hidden = (immCardSource !== 'drill');
       document.getElementById('imm-cardstudy').innerHTML = '';   // close any open study view
       immRenderSaved();
     }));
+  // Letter-drill controls: fill the letter dropdown, build look-alike presets.
+  const lsel = document.getElementById('imm-drill-letters');
+  if (lsel) {
+    letters.forEach(L => { const o = document.createElement('option'); o.value = L.heb; o.textContent = L.heb + ' — ' + L.name; lsel.appendChild(o); });
+    lsel.addEventListener('change', immDrillUpdate);
+    document.getElementById('imm-drill-pos').addEventListener('change', immDrillUpdate);
+    const pre = document.getElementById('imm-drill-presets');
+    LOOKALIKES.forEach(G => {
+      const base = [...new Set(G.items.map(it => sofitMap[it.heb] || it.heb))];
+      const chip = document.createElement('button');
+      chip.className = 'deck-chip'; chip.textContent = base.join(' · ');
+      chip.addEventListener('click', () => {
+        [...lsel.options].forEach(o => { o.selected = base.includes(o.value); });
+        immDrillUpdate();
+      });
+      pre.appendChild(chip);
+    });
+  }
   // Virtual keyboard: target whichever Hebrew field was last focused; toggle it.
   ['imm-text', 'imm-add-he'].forEach(id => {
     const el = document.getElementById(id);
