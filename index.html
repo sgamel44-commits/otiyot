@@ -1146,6 +1146,37 @@
   .dagesh-half .dh-word { font-size: 0.9rem; margin-top: 0.15rem; direction: rtl; }
   .dagesh-half .dh-en { font-size: 0.66rem; color: var(--muted); }
 
+  /* ===== Look-alike letters ===== */
+  .lookalike-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.75rem; max-width: 760px; margin: 0 auto;
+  }
+  .lookalike-card {
+    background: var(--card); border: 3px solid var(--ink); border-radius: 14px;
+    box-shadow: 3px 3px 0 var(--ink); padding: 0.75rem;
+  }
+  .la-glyphs { display: flex; align-items: center; justify-content: center; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .la-vs { font-size: 0.7rem; color: var(--muted); font-weight: 700; }
+  .la-glyph {
+    flex: 0 0 auto; display: flex; flex-direction: column; align-items: center;
+    border: 2px solid var(--ink); border-radius: 10px; background: var(--bg);
+    padding: 0.3rem 0.55rem; cursor: pointer; font-family: inherit; color: var(--ink);
+    transition: background 0.1s, transform 0.08s;
+  }
+  .la-glyph:hover { background: var(--warm); }
+  .la-glyph:active { transform: translate(1px, 1px); }
+  .la-glyph .la-heb { font-size: 2.4rem; line-height: 1.1; }
+  .la-glyph .la-sound { font-size: 0.78rem; font-weight: 800; color: var(--accent2); }
+  .la-glyph .la-name { font-size: 0.62rem; color: var(--muted); }
+  .la-tip { font-size: 0.85rem; line-height: 1.45; }
+  .la-hook { font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem; }
+  .la-lines-note {
+    max-width: 760px; margin: 1rem auto 0; padding: 0.8rem 1rem;
+    background: var(--bg); border-left: 6px solid var(--accent2); border-radius: 8px;
+    font-size: 0.88rem; line-height: 1.55; text-align: left;
+  }
+  .la-lines-note b { color: var(--accent2); }
+
   /* ===== Shared section intro ===== */
   .section-intro {
     max-width: 640px; margin: 0.25rem auto 1rem; text-align: center;
@@ -2144,6 +2175,36 @@ const dageshPairs = [
                           soft: { heb: 'כ', sound: 'KH', cons: 'kh', word: 'לֶחֶם', tr: 'lechem', en: 'bread' } },
   { name: 'Pe / Fe',    hard: { heb: 'פּ', sound: 'P', cons: 'p', word: 'פֶּה',  tr: 'peh', en: 'mouth' },
                           soft: { heb: 'פ', sound: 'F', cons: 'f', word: 'יָפֶה', tr: 'yafeh', en: 'nice' } },
+];
+
+// Look-alike letters — the pairs/trios beginners mix up most. Each item has the
+// letters (with the vowel used to voice them), the distinguishing feature, and a
+// memory hook. Grounded in standard Hebrew confusable-pair pedagogy.
+const LOOKALIKES = [
+  { items: [{ heb: 'ד', say: 'דָּ', name: 'Dalet', sound: 'D' }, { heb: 'ר', say: 'רָ', name: 'Resh', sound: 'R' }],
+    tip: 'Dalet has a sharp corner with a little heel poking out top-right. Resh is smoothly rounded there — no corner.',
+    hook: 'Dalet = door (square frame) · Resh = rosh/head (round).' },
+  { items: [{ heb: 'ב', say: 'בָּ', name: 'Bet', sound: 'B/V' }, { heb: 'כ', say: 'כָּ', name: 'Kaf', sound: 'K/KH' }],
+    tip: 'Bet has a flat base with a heel sticking out at the bottom-right. Kaf is fully rounded, like a backwards C.',
+    hook: 'Bet = bayit, a house with a solid floor.' },
+  { items: [{ heb: 'ג', say: 'גָּ', name: 'Gimel', sound: 'G' }, { heb: 'נ', say: 'נָ', name: 'Nun', sound: 'N' }],
+    tip: 'Gimel has a little leg kicking out to the lower-right. Nun is a plain bent line with no kicking leg.',
+    hook: 'Gimel = gamal/camel, a leg mid-stride.' },
+  { items: [{ heb: 'ה', say: 'הָ', name: 'Hey', sound: 'H' }, { heb: 'ח', say: 'חָ', name: 'Chet', sound: 'KH' }, { heb: 'ת', say: 'תָּ', name: 'Tav', sound: 'T' }],
+    tip: 'Hey has a floating left leg with a gap at the top-left. Chet is sealed across the top — no gap. Tav has a left leg with a little foot curling left at the bottom.',
+    hook: 'Hey has an escape hatch (gap) · Chet is a closed wall · Tav has a foot.' },
+  { items: [{ heb: 'ט', say: 'טָ', name: 'Tet', sound: 'T' }, { heb: 'מ', say: 'מָ', name: 'Mem', sound: 'M' }],
+    tip: 'Tet is one rounded pot with the top-left curling INWARD. Mem has a flat shoulder on top and an opening at the bottom-left.',
+    hook: 'Mem = mayim/water — open, pouring · Tet is sealed and curled in.' },
+  { items: [{ heb: 'ו', say: 'וָ', name: 'Vav', sound: 'V · o/u' }, { heb: 'ז', say: 'זָ', name: 'Zayin', sound: 'Z' }, { heb: 'ן', say: 'נָ', name: 'final Nun', sound: 'N' }],
+    tip: 'All three are vertical lines. Vav is SHORT, sitting on the baseline (V, or the vowel O/U when it carries a dot). Zayin has a wide hat across the top (Z). Final Nun is a LONG line that drops BELOW the baseline (N).',
+    hook: 'Tail hanging below the line = final Nun, never a vav.' },
+  { items: [{ heb: 'ס', say: 'סָ', name: 'Samekh', sound: 'S' }, { heb: 'ם', say: 'מָ', name: 'final Mem', sound: 'M' }],
+    tip: 'Both are fully closed. Samekh is round/oval; final Mem is square-ish with straight sides.',
+    hook: 'Samekh = circle · final Mem = box.' },
+  { items: [{ heb: 'ע', say: 'עָ', name: 'Ayin', sound: '(silent)' }, { heb: 'צ', say: 'צָ', name: 'Tzadi', sound: 'TS' }],
+    tip: 'Ayin is a V/Y of two arms meeting low (a silent guttural). Tzadi has a similar branch but with a flag-head joined to the right arm.',
+    hook: 'Tzadi has a little flag on top; Ayin is bare.' },
 ];
 
 const nikkud = [
@@ -3776,6 +3837,10 @@ const STRINGS = {
     quizLetterPrompt:  'What sound does this letter make?',
     quizNikkudPrompt:  'Which vowel sound is this?',
     quizExit:          '✕ Close quiz',
+    lookalikesHeading: 'Look-alike letters (don’t mix them up)',
+    lookalikesHint:    'The letters beginners confuse most. Tap a letter to hear its sound, then read the tell-them-apart tip.',
+    linesNoteTitle:    'Why does a “line” make an o / ah sound?',
+    linesNote:         'Three line-shapes trip people up. The LETTER <b>vav (ו)</b> is a short vertical line — “v”, or the vowel <b>o</b> (dot on top: וֹ) / <b>u</b> (dot inside: וּ). The <b>final letters</b> ך ן ף are tall lines that drop below the baseline but are still consonants (kh, n, f). The vowel mark <b>qamatz (ָ)</b> is a little horizontal line UNDER a letter = “ah” (occasionally “o”). So: short line with a dot = a vowel from vav · tall tail below the line = a final consonant · little line under a letter = the “ah” vowel.',
     finalsHeading:     'Final letters (Sofit)',
     finalsHint:        'Five letters change shape at the end of a word — same sound. Tap one to hear an example word ending in it.',
     dageshHeading:     'One dot changes the sound (Pe / Fe…)',
@@ -4028,6 +4093,10 @@ const STRINGS = {
     quizLetterPrompt:  'איזה צליל האות הזו עושה?',
     quizNikkudPrompt:  'איזו תנועה זו?',
     quizExit:          '✕ סגור בוחן',
+    lookalikesHeading: 'אותיות דומות (לא להתבלבל)',
+    lookalikesHint:    'האותיות שמתחילים הכי מתבלבלים בהן. הקישו על אות כדי לשמוע, וקראו את ההבדל.',
+    linesNoteTitle:    'למה "קו" עושה צליל o / ah?',
+    linesNote:         'שלושה סוגי קווים מבלבלים: האות <b>ו (וו)</b> היא קו קצר — "v", או התנועה <b>o</b> (נקודה למעלה: וֹ) / <b>u</b> (נקודה באמצע: וּ). האותיות הסופיות ך ן ף הן קווים ארוכים היורדים מתחת לשורה אך עדיין עיצורים. הסימן <b>קמץ (ָ)</b> הוא קו אופקי קטן מתחת לאות = "ah".',
     finalsHeading:     'אותיות סופיות',
     finalsHint:        'חמש אותיות משנות צורה בסוף מילה — אותו צליל. הקש לשמיעת מילה לדוגמה המסתיימת באות.',
     dageshHeading:     'נקודה אחת משנה את הצליל (פ/פ…)',
@@ -5640,6 +5709,40 @@ function renderAlphaExtra() {
   });
   dSec.appendChild(dGrid);
   host.appendChild(dSec);
+
+  // --- Look-alike letters (don't mix them up) ---
+  const lSec = document.createElement('div');
+  lSec.className = 'alpha-sub';
+  lSec.innerHTML =
+    '<h3>' + t('lookalikesHeading') + '</h3>' +
+    '<p class="sub-hint">' + t('lookalikesHint') + '</p>';
+  const lGrid = document.createElement('div');
+  lGrid.className = 'lookalike-grid';
+  LOOKALIKES.forEach(G => {
+    const card = document.createElement('div');
+    card.className = 'lookalike-card';
+    const glyphs = G.items.map(it =>
+      '<button class="la-glyph" data-say="' + it.say + '" title="' + it.name + '">' +
+        '<span class="la-heb heb">' + it.heb + '</span>' +
+        '<span class="la-sound">' + it.sound + '</span>' +
+        '<span class="la-name">' + it.name + '</span>' +
+      '</button>').join('<span class="la-vs">vs</span>');
+    card.innerHTML =
+      '<div class="la-glyphs" dir="rtl">' + glyphs + '</div>' +
+      '<div class="la-tip">' + G.tip + '</div>' +
+      '<div class="la-hook">💡 ' + G.hook + '</div>';
+    card.querySelectorAll('.la-glyph').forEach(b =>
+      b.addEventListener('click', () => speakHebrew(b.dataset.say, null)));
+    lGrid.appendChild(card);
+  });
+  lSec.appendChild(lGrid);
+
+  // The "why does a line make o/ah?" note.
+  const note = document.createElement('div');
+  note.className = 'la-lines-note';
+  note.innerHTML = '<b>' + t('linesNoteTitle') + '</b> ' + t('linesNote');
+  lSec.appendChild(note);
+  host.appendChild(lSec);
 }
 
 renderAlphabet();
